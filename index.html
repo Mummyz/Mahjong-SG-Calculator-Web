@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Singapore Mahjong Scorer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh;display:flex;flex-direction:column}
+#mainApp{flex:1}
+
+/* SETUP */
+#setupOverlay{position:fixed;inset:0;background:#1a1a1a;display:flex;align-items:flex-start;justify-content:center;z-index:100;padding:24px;overflow-y:auto}
+.setup-box{background:#fff;border-radius:16px;padding:28px 32px;width:100%;max-width:500px;margin:auto}
+.setup-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.setup-sub{font-size:13px;color:#888;margin-bottom:22px}
+.setup-section{margin-bottom:20px}
+.setup-sl{font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.name-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.name-field{display:flex;flex-direction:column;gap:4px}
+.name-field label{font-size:12px;color:#555;font-weight:600}
+.name-field input{padding:8px 10px;border-radius:8px;border:1px solid #ddd;font-size:14px}
+.name-field input:focus{outline:none;border-color:#2563eb}
+.wind-info-box{background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:10px 14px}
+.wind-info-box b{display:block;margin-bottom:4px;font-size:13px;color:#1d4ed8}
+.wind-info-box ul{padding-left:16px;line-height:1.8;color:#374151;font-size:12px}
+.setup-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.setup-row label{font-size:14px;color:#444;font-weight:600;white-space:nowrap}
+.setup-row input{padding:8px 10px;border-radius:8px;border:1px solid #ddd;font-size:14px;width:120px}
+.setup-row span{font-size:12px;color:#888}
+.start-btn{width:100%;padding:13px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px}
+.start-btn:hover{background:#333}
+.err-msg{font-size:12px;color:#b91c1c;margin-top:6px;display:none;padding:6px 10px;background:#fee2e2;border-radius:6px}
+
+/* CONGRATS PAGE */
+#congratsPage{display:none;padding:16px}
+.congrats-wrap{max-width:820px;margin:0 auto;padding-bottom:48px}
+.congrats-header{text-align:center;padding:40px 20px 30px;background:linear-gradient(135deg,#1a1a1a,#374151);border-radius:16px;color:#fff;margin-bottom:20px}
+.congrats-header h1{font-size:32px;font-weight:700;margin-bottom:8px}
+.congrats-header p{font-size:15px;color:#d1d5db}
+.final-table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px}
+.final-table th{background:#1a1a1a;color:#fff;padding:10px 12px;text-align:center;font-weight:700}
+.final-table td{padding:10px 12px;border:1px solid #e5e7eb;text-align:center;background:#fff}
+.final-table tr:nth-child(even) td{background:#f9f8f5}
+.td-pos{color:#15803d;font-weight:700}.td-neg{color:#b91c1c;font-weight:700}.td-zero{color:#888}
+.restart-btn{width:100%;padding:15px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:16px}
+.restart-btn:hover{background:#333}
+.result-card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:16px 20px;margin-bottom:12px}
+
+/* MAIN */
+#mainApp{display:none;padding:16px}
+.wrap{max-width:820px;margin:0 auto;padding-bottom:24px}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+.top-bar h1{font-size:20px;font-weight:700}
+.top-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.round-badge{background:#1a1a1a;color:#fff;font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px}
+.rules-btn{background:#fff;color:#1a1a1a;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;border:1px solid #ccc;cursor:pointer}
+.rules-btn:hover{background:#f3f4f6}
+
+/* RULES MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:14px;padding:24px 28px;width:100%;max-width:700px;margin:auto}
+.modal-box h2{font-size:18px;font-weight:700;margin-bottom:16px}
+.modal-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:#888;margin-top:-4px}
+.rs{margin-bottom:16px}
+.rs h3{font-size:14px;font-weight:700;color:#1d4ed8;margin-bottom:6px;border-bottom:1px solid #e5e7eb;padding-bottom:4px}
+.rs p,.rs li{font-size:13px;color:#374151;line-height:1.7}
+.rs ul{padding-left:18px}
+.fan-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+.fan-table th{background:#f3f4f6;padding:5px 8px;text-align:left;font-weight:700;border:1px solid #e5e7eb}
+.fan-table td{padding:5px 8px;border:1px solid #e5e7eb}
+
+/* WINNER SELECTOR */
+.winner-selector-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.winner-selector-row label{font-size:14px;font-weight:700;color:#444;white-space:nowrap}
+select{padding:7px 10px;border-radius:8px;border:1px solid #ccc;background:#fff;color:#1a1a1a;font-size:14px;cursor:pointer}
+
+/* PLAYER CARD */
+.player-card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:16px 20px;margin-bottom:12px}
+.player-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.wind-char{font-size:22px;font-weight:700;color:#1d4ed8;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#dbeafe;flex-shrink:0}
+.player-title{font-size:16px;font-weight:700}
+.section-label{font-size:11px;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+
+/* HAND DISPLAY */
+.hand-display{min-height:56px;display:flex;flex-wrap:wrap;gap:3px;padding:8px;background:#f9f8f5;border-radius:8px;margin-bottom:8px;align-items:center;border:1px solid #e8e6e0}
+.hand-tile{width:36px;height:50px;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:9px;border:1px solid #ddd;background:#fff;cursor:pointer;user-select:none}
+.hand-tile:hover{opacity:.6}
+.hand-tile .ht-sym{font-size:14px;line-height:1}
+.hand-tile.c-man{color:#374151;border-color:#d1d5db}
+.hand-tile.c-pin{color:#1d4ed8;border-color:#93c5fd}
+.hand-tile.c-sou{color:#15803d;border-color:#86efac}
+.hand-tile.c-wind{color:#1d4ed8;border-color:#93c5fd;font-weight:700}
+.hand-tile.c-red-dragon{color:#dc2626;border-color:#fca5a5}
+.hand-tile.c-green-dragon{color:#15803d;border-color:#86efac}
+.hand-tile.c-white-dragon{color:#374151;border-color:#9ca3af}
+.count-badge{font-size:12px;color:#666;padding:2px 8px;background:#eee;border-radius:6px;border:1px solid #ddd;align-self:center}
+.kang-badge{font-size:11px;color:#854d0e;padding:2px 8px;background:#fef3c7;border-radius:6px;border:1px solid #fcd34d;align-self:center;margin-left:2px}
+
+/* SET STATUS */
+.set-status-box{border-radius:8px;padding:10px 14px;margin-bottom:6px;border:1px solid #e5e7eb;background:#fafaf9}
+.set-status-row{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:4px}
+.set-status-row:last-child{margin-bottom:0}
+.set-check{color:#15803d;font-weight:700;font-size:14px}
+.set-pending{color:#9ca3af;font-size:14px}
+.set-label{color:#374151}
+.set-label.done{color:#15803d;font-weight:600}
+.set-label.pending{color:#9ca3af}
+
+/* BONUS DISPLAY */
+.bonus-display{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;align-items:center}
+.bonus-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700;border:1px solid;cursor:pointer;user-select:none}
+.bonus-chip:hover{opacity:.75}
+.bonus-chip.own{background:#dcfce7;color:#166534;border-color:#86efac}
+.bonus-chip.other{background:#fef9c3;color:#854d0e;border-color:#fde68a}
+.bonus-chip.animal-single{background:#fffbeb;color:#92400e;border-color:#fcd34d}
+.bonus-chip.animal-pair{background:#fce7f3;color:#9d174d;border-color:#f9a8d4}
+
+/* TILES */
+.cat-label{font-size:11px;color:#777;margin-top:11px;margin-bottom:5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.tile-grid{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:2px}
+.tile{width:40px;height:52px;border-radius:4px;border:1px solid #ddd;background:#f9f8f5;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:2px;transition:background .08s;user-select:none}
+.tile:hover{border-color:#888;background:#fff}
+.tile.sel{border:2px solid #2563eb;background:#dbeafe}
+.tile .tsym{font-size:16px;line-height:1}
+.tile .tlbl{font-size:9px;line-height:1;color:#888}
+.tile.t-man{color:#374151}.tile.t-man.sel{color:#1e3a5f;background:#e0e7ff}
+.tile.t-pin{color:#1d4ed8}.tile.t-pin.sel{color:#1e3a8a;background:#dbeafe}
+.tile.t-sou{color:#15803d}.tile.t-sou.sel{color:#14532d;background:#dcfce7}
+.tile.t-wind{color:#1d4ed8;font-weight:700}.tile.t-wind.sel{background:#dbeafe;border-color:#2563eb;border-width:2px}
+.tile.t-red-dragon .tsym{color:#dc2626;font-size:20px;font-weight:700}
+.tile.t-red-dragon .tlbl{color:#555}
+.tile.t-red-dragon.sel{background:#fee2e2;border-color:#dc2626;border-width:2px}
+.tile.t-green-dragon .tsym{color:#15803d;font-size:20px;font-weight:700}
+.tile.t-green-dragon .tlbl{color:#555}
+.tile.t-green-dragon.sel{background:#dcfce7;border-color:#15803d;border-width:2px}
+.tile.t-white-dragon .tsym{color:#374151;font-size:20px;font-weight:700}
+.tile.t-white-dragon .tlbl{color:#555}
+.tile.t-white-dragon.sel{background:#f3f4f6;border-color:#374151;border-width:2px}
+.tile.t-flower{color:#be185d;background:#fdf2f8;border-color:#f9a8d4;width:56px;height:58px}
+.tile.t-flower.sel{background:#fce7f3;border-color:#db2777;border-width:2px}
+.tile.t-flower.own-seat{border:2px solid #1a1a1a}
+.tile.t-flower.own-seat.sel{border:2.5px solid #db2777}
+.tile.t-season{color:#7c3aed;background:#f5f3ff;border-color:#c4b5fd;width:56px;height:58px}
+.tile.t-season.sel{background:#ede9fe;border-color:#7c3aed;border-width:2px}
+.tile.t-season.own-seat{border:2px solid #1a1a1a}
+.tile.t-season.own-seat.sel{border:2.5px solid #7c3aed}
+.tile.t-animal{color:#92400e;background:#fffbeb;border-color:#fcd34d;width:56px;height:58px}
+.tile.t-animal.sel{background:#fef3c7;border-color:#d97706;border-width:2px}
+
+/* DETECTION */
+.det-box{border-radius:8px;padding:10px 14px;margin-bottom:8px;border:1px solid}
+.det-box.ok{background:#f0fdf4;border-color:#86efac}
+.det-box.multi{background:#eff6ff;border-color:#93c5fd}
+.det-box.none{background:#fafaf9;border-color:#e5e7eb}
+.det-box.invalid{background:#fff7ed;border-color:#fdba74}
+.det-box.incomplete{background:#fafaf9;border-color:#e5e7eb}
+
+/* SUGGESTIONS */
+.sug-box{background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:10px 14px;margin-bottom:8px}
+.sug-box h4{font-size:12px;font-weight:700;color:#1d4ed8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.sug-line{font-size:12px;color:#374151;padding:4px 0;border-bottom:1px solid #dbeafe;line-height:1.6}
+.sug-line:last-child{border-bottom:none}
+.sug-fan{display:inline-block;background:#1d4ed8;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-right:4px}
+.sug-need{color:#9a3412;font-size:11px;display:block;margin-top:2px}
+
+/* EXTRAS */
+.extra-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.extra-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid #e8e6e0;background:#fafaf9;cursor:pointer}
+.extra-item:hover{border-color:#ccc;background:#f3f4f6}
+.et-name{font-size:13px;font-weight:700;color:#1a1a1a}
+.et-fan{font-size:12px;color:#2563eb;font-weight:700}
+.et-desc{font-size:11px;color:#888;margin-top:2px;line-height:1.4}
+.discard-row{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px}
+.discard-row label{font-size:13px;font-weight:700;color:#9a3412;white-space:nowrap}
+
+/* BUTTONS */
+.calc-btn{width:100%;padding:13px;border-radius:8px;border:none;background:#1a1a1a;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px}
+.calc-btn:hover{background:#333}
+.new-round-btn{width:100%;padding:13px;border-radius:8px;border:2px solid #1a1a1a;background:#fff;color:#1a1a1a;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px}
+.new-round-btn:hover{background:#f3f4f6}
+.complete-game-btn{width:100%;padding:13px;border-radius:8px;border:none;background:#15803d;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px}
+.complete-game-btn:hover{background:#166534}
+
+/* RESULTS */
+.result-section{margin-top:20px}
+.result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.winner-badge{font-size:12px;padding:3px 10px;border-radius:6px;background:#dcfce7;color:#166534;border:1px solid #86efac;font-weight:700}
+.fan-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #f0ede6}
+.fan-row:last-child{border-bottom:none}
+.fan-name{color:#555}
+.fan-val{font-weight:700}
+.points-line{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:10px;border-top:1px solid #ddd}
+.pts-label{font-size:13px;color:#666}
+.pts-val{font-size:24px;font-weight:700;color:#15803d}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px}
+.sum-card{background:#f9f8f5;border-radius:8px;padding:10px;text-align:center;border:1px solid #e8e6e0}
+.sum-name{font-size:11px;color:#888;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sum-pts{font-size:18px;font-weight:700}
+.sum-pts.pos{color:#15803d}.sum-pts.neg{color:#b91c1c}.sum-pts.zero{color:#888}
+.sum-money{font-size:12px;font-weight:600;margin-top:2px}
+.sum-money.pos{color:#15803d}.sum-money.neg{color:#b91c1c}.sum-money.zero{color:#888}
+.fan-ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(74px,1fr));gap:5px}
+.fan-ref-cell{text-align:center;padding:6px 4px;border-radius:6px;border:1px solid #e8e6e0;background:#f9f8f5}
+.fan-ref-cell.active{background:#dbeafe;border:2px solid #2563eb}
+.fan-ref-cell.capped{opacity:.3}
+.fan-ref-num{font-size:11px;color:#888}
+.fan-ref-num.active{color:#1d4ed8;font-weight:700}
+.fan-ref-pts{font-size:13px;font-weight:700;color:#1a1a1a}
+.fan-ref-pts.active{color:#1d40ae}
+.history-table{width:100%;border-collapse:collapse;font-size:12px}
+.history-table th{background:#f3f4f6;padding:6px 8px;text-align:center;border:1px solid #e5e7eb;font-weight:700;font-size:11px}
+.history-table td{padding:6px 8px;border:1px solid #e5e7eb;text-align:center}
+.err{font-size:13px;color:#b91c1c;padding:8px 12px;background:#fee2e2;border-radius:8px;margin-top:8px;border:1px solid #fca5a5}
+.note{font-size:11px;color:#999;margin-top:8px}
+hr{border:none;border-top:1px solid #ece9e0;margin:14px 0}
+
+/* ================================================================ MOBILE RESPONSIVE ================================================================ */
+@media (max-width: 600px) {
+  body{font-size:14px}
+
+  /* Setup */
+  #setupOverlay{padding:12px;align-items:flex-start}
+  .setup-box{padding:20px 16px;border-radius:12px}
+  .setup-title{font-size:18px}
+  .name-grid{grid-template-columns:1fr}
+  .setup-row{flex-direction:column;align-items:flex-start;gap:6px}
+  .setup-row input{width:100%}
+
+  /* Main layout */
+  #mainApp{padding:10px}
+  .wrap{padding-bottom:20px}
+  .top-bar{flex-direction:column;align-items:flex-start;gap:6px}
+  .top-right{width:100%;justify-content:space-between}
+  .round-badge{font-size:12px;padding:5px 10px}
+  .rules-btn{font-size:12px;padding:5px 10px}
+
+  /* Winner selector */
+  .winner-selector-row{flex-direction:column;align-items:flex-start;gap:6px}
+  .winner-selector-row select{width:100%}
+
+  /* Player card */
+  .player-card{padding:12px 14px}
+  .player-header{gap:8px}
+  .wind-char{width:32px;height:32px;font-size:18px}
+  .player-title{font-size:15px}
+
+  /* Hand tiles — smaller on mobile */
+  .hand-tile{width:30px;height:42px;font-size:8px}
+  .hand-tile .ht-sym{font-size:12px}
+
+  /* Tile pickers — tighter grid */
+  .tile{width:34px;height:44px}
+  .tile .tsym{font-size:14px}
+  .tile .tlbl{font-size:8px}
+  .tile.t-flower,.tile.t-season,.tile.t-animal{width:46px;height:50px}
+  .tile.t-wind{width:42px!important}
+  .tile.t-red-dragon,.tile.t-green-dragon,.tile.t-white-dragon{width:66px!important}
+
+  /* Set status */
+  .set-status-box{padding:8px 10px}
+  .set-status-row{font-size:12px}
+
+  /* Detection boxes */
+  .det-box{padding:8px 10px}
+
+  /* Suggestion box */
+  .sug-box{padding:8px 10px}
+  .sug-line{font-size:11px}
+
+  /* Extra fan grid — single column on mobile */
+  .extra-grid{grid-template-columns:1fr}
+  .extra-item{padding:7px 8px}
+  .et-name{font-size:12px}
+  .et-desc{font-size:10px}
+
+  /* Discard row */
+  .discard-row{flex-direction:column;align-items:flex-start;gap:6px}
+  .discard-row select{width:100%}
+
+  /* Results */
+  .result-section{margin-top:12px}
+  .result-card{padding:12px 14px}
+  .summary-grid{grid-template-columns:1fr 1fr}
+  .sum-pts{font-size:15px}
+  .sum-money{font-size:11px}
+  .pts-val{font-size:18px}
+
+  /* Fan reference table — smaller cells */
+  .fan-ref-grid{grid-template-columns:repeat(7,1fr);gap:3px}
+  .fan-ref-cell{padding:4px 2px}
+  .fan-ref-num{font-size:9px}
+  .fan-ref-pts{font-size:11px}
+
+  /* History table */
+  .history-table{font-size:10px}
+  .history-table th,.history-table td{padding:4px 5px}
+
+  /* Buttons */
+  .calc-btn,.new-round-btn,.complete-game-btn{padding:11px;font-size:14px}
+
+  /* Congrats page */
+  #congratsPage{padding:10px}
+  .congrats-header{padding:24px 14px 20px}
+  .congrats-header h1{font-size:24px}
+  .congrats-wrap{padding-bottom:24px}
+
+  /* Bonus chips */
+  .bonus-chip{font-size:10px;padding:3px 7px}
+}
+
+footer{text-align:center;padding:16px;font-size:13px;color:#aaa;border-top:1px solid #e8e6e0;background:#fff;margin-top:auto}
+footer b{color:#888}
+</style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setupOverlay">
+  <div class="setup-box">
+    <div style="margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+        <div style="font-size:32px;font-weight:700;color:#dc2626;line-height:1">中</div>
+        <div>
+          <div class="setup-title">Singapore Mahjong</div>
+          <div style="font-size:11px;color:#888;margin-top:1px">by Mummyz</div>
+        </div>
+      </div>
+    </div>
+    <div class="setup-sub">Set up your game to begin</div>
+    <div class="setup-section">
+      <div class="setup-sl">&#128100; Player Names</div>
+      <div class="name-grid">
+        <div class="name-field"><label>Player 1 — East 東 (Dealer)</label><input id="pname0" value="Player 1"></div>
+        <div class="name-field"><label>Player 2 — South 南</label><input id="pname1" value="Player 2"></div>
+        <div class="name-field"><label>Player 3 — West 西</label><input id="pname2" value="Player 3"></div>
+        <div class="name-field"><label>Player 4 — North 北</label><input id="pname3" value="Player 4"></div>
+      </div>
+    </div>
+    <div class="setup-section">
+      <div class="setup-sl">&#127795; Singapore Standard Rules</div>
+      <div class="wind-info-box">
+        <ul>
+          <li>Player 1 = East 東 (Dealer, Round 1 prevailing wind)</li>
+          <li>Player 2 = South 南 &nbsp;|&nbsp; Player 3 = West 西 &nbsp;|&nbsp; Player 4 = North 北</li>
+          <li>Dealer wins → winds stay, same dealer keeps East</li>
+          <li>Any other player wins → winds rotate anti-clockwise</li>
+          <li>Flower 1 &amp; Season 1 = East · Flower 2 &amp; Season 2 = South · Flower 3 &amp; Season 3 = West · Flower 4 &amp; Season 4 = North</li>
+          <li>Round ends when all 4 players have completed a turn as Dealer (East)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="setup-section">
+      <div class="setup-sl">&#128176; Scoring</div>
+      <div class="setup-row">
+        <label>1 Point =</label>
+        <input id="pointValue" type="number" min="1" value="1000">
+        <span>per point</span>
+      </div>
+      <div class="setup-row">
+        <label>Fan Cap:</label>
+        <input id="fanCap" type="number" min="1" max="13" value="13">
+        <span>max fan (house rule; official = 13)</span>
+      </div>
+    </div>
+    <div id="setupErr" class="err-msg">Please enter a name for every player.</div>
+    <button class="start-btn" onclick="startGame()">&#9654;&#xFE0E; Start Game</button>
+  </div>
+</div>
+
+<!-- RULES MODAL -->
+<div class="modal-overlay" id="rulesModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeRules()">&#10005;</button>
+    <h2>&#127183; Singapore Mahjong — Official Rules</h2>
+    <div class="rs"><h3>Tiles</h3>
+      <ul>
+        <li><b>144 tiles total</b></li>
+        <li>3 Suits × 9 values × 4 copies = 108 (Characters/Man, Circles/Pin, Bamboo/Sou)</li>
+        <li>4 Wind tiles × 4 copies = 16 (East, South, West, North)</li>
+        <li>3 Dragon tiles × 4 copies = 12 (Red 中, Green 發, White 白)</li>
+        <li>4 Flower bonus tiles × 1 = 4 (Flower 1–4, one per seat)</li>
+        <li>4 Season bonus tiles × 1 = 4 (Season 1–4, one per seat)</li>
+        <li>4 Animal bonus tiles × 1 = 4 (Cat, Mouse, Rooster, Worm)</li>
+      </ul>
+    </div>
+    <div class="rs"><h3>Hand Structure</h3>
+      <p><b>Standard hand = 4 melds + 1 pair (14 tiles total)</b><br>
+      A meld is a <b>Sequence</b> (3 consecutive same-suit) or a <b>Triplet</b> (3 identical tiles).<br>
+      A <b>Kang</b> (4 identical tiles) counts as a meld but requires drawing 1 replacement tile, increasing hand size to 15 (or more for multiple Kangs).<br>
+      Bonus tiles (Flowers, Seasons, Animals) are drawn separately and are never part of the 14-tile count.</p>
+    </div>
+    <div class="rs"><h3>Dealer &amp; Wind Rotation</h3>
+      <ul>
+        <li>East (Player 1) is the dealer in Round 1. East Wind is the prevailing wind.</li>
+        <li><b>If East (dealer) wins</b> → winds do NOT rotate. Same dealer plays again.</li>
+        <li><b>If any other player wins</b> → all seat winds rotate anti-clockwise one step.</li>
+        <li>After every player has held East once (4 wind changes), the prevailing wind changes: East → South → West → North.</li>
+        <li>A full game = all 4 players complete their turn as dealer = one complete "round cycle".</li>
+      </ul>
+    </div>
+    <div class="rs"><h3>Traditional Singapore Scoring (Payment)</h3>
+      <p><b>Points formula: 2^(fan)</b>. Minimum 0 fan = 1 point (Chicken Hand).</p>
+      <p style="margin-top:8px"><b>Discard Win:</b><br>
+      — Discarder pays winner: <b>2× base points</b><br>
+      — Each of the other 2 non-winning, non-discarding players pays winner: <b>1× base points</b><br>
+      — Total received by winner: <b>4× base points</b></p>
+      <p style="margin-top:8px"><b>Self Draw (Zimo) — more profitable:</b><br>
+      — Each of the 3 losing players pays winner: <b>2× base points</b><br>
+      — Total received by winner: <b>6× base points</b></p>
+    </div>
+    <div class="rs"><h3>Fan Values</h3>
+      <table class="fan-table">
+        <tr><th>Fan</th><th>Hand / Condition</th></tr>
+        <tr><td>0</td><td>Chicken Hand — valid hand, no special pattern</td></tr>
+        <tr><td>1</td><td>All Sequences (4 sequences + 1 pair)</td></tr>
+        <tr><td>1</td><td>Self Draw (Zimo) — win by drawing from wall yourself</td></tr>
+        <tr><td>1</td><td>Own Seat Wind Triplet/Kang</td></tr>
+        <tr><td>1</td><td>Prevailing Wind Triplet/Kang</td></tr>
+        <tr><td>1</td><td>Each Dragon Triplet/Kang (Red, Green, or White)</td></tr>
+        <tr><td>1</td><td>Fully Concealed Hand</td></tr>
+        <tr><td>1</td><td>Last Tile in Wall / Robbing Kang / Win on Kang</td></tr>
+        <tr><td>1</td><td>All Simples (no terminals 1/9, no honor tiles)</td></tr>
+        <tr><td>1</td><td>Own Flower or Own Season tile (matching seat, per tile)</td></tr>
+        <tr><td>1</td><td>Non-own Flower or Season tile (per tile)</td></tr>
+        <tr><td>1</td><td>Animal pair: Cat+Mouse or Rooster+Worm</td></tr>
+        <tr><td>3</td><td>All Triplets (4 triplets/kangs + 1 pair)</td></tr>
+        <tr><td>3</td><td>Mixed One Suit (one suit + honors)</td></tr>
+        <tr><td>3</td><td>Complete set: all 4 Flowers (Flower 1+2+3+4)</td></tr>
+        <tr><td>3</td><td>Complete set: all 4 Seasons (Season 1+2+3+4)</td></tr>
+        <tr><td>3</td><td>All 4 Animals (Cat+Mouse+Rooster+Worm)</td></tr>
+        <tr><td>5</td><td>Small Three Dragons (2 dragon triplets + 1 dragon pair)</td></tr>
+        <tr><td>6</td><td>Small Four Winds (3 wind triplets + 1 wind pair)</td></tr>
+        <tr><td>7</td><td>Pure One Suit (one suit only, no honors)</td></tr>
+        <tr><td>8</td><td>Big Three Dragons (3 dragon triplets/kangs)</td></tr>
+        <tr><td>10</td><td>All Honors (only winds and dragons)</td></tr>
+        <tr><td>13</td><td>Big Four Winds, Thirteen Orphans, Nine Gates, Four Kangs, Heavenly/Earthly Hand</td></tr>
+      </table>
+    </div>
+    <div class="rs"><h3>Flowers, Seasons &amp; Animals</h3>
+      <ul>
+        <li>There are exactly <b>4 Flower tiles</b> (Flower 1–4), <b>4 Season tiles</b> (Season 1–4), and <b>4 Animal tiles</b> (Cat, Mouse, Rooster, Worm) — one of each.</li>
+        <li>Bonus tiles are drawn when a player draws one — they place it aside and draw a replacement from the wall.</li>
+        <li>Flower 1 &amp; Season 1 belong to the East seat player (+1 fan each if held by matching seat).</li>
+        <li>All 4 Flowers collected = +3 fan; All 4 Seasons collected = +3 fan (separate bonuses).</li>
+        <li>Animals: Cat pairs with Mouse (+1 fan per pair); Rooster pairs with Worm (+1 fan per pair); All 4 Animals = +3 fan.</li>
+        <li>Non-own Flower/Season (wrong seat) = +1 fan each.</li>
+      </ul>
+    </div>
+    <button onclick="closeRules()" style="margin-top:12px;padding:8px 20px;border-radius:8px;border:1px solid #ccc;background:#f3f4f6;cursor:pointer;font-size:14px">Close</button>
+  </div>
+</div>
+
+<!-- CONGRATS PAGE -->
+<div id="congratsPage">
+  <div class="congrats-wrap">
+    <div class="congrats-header">
+      <div style="font-size:48px;margin-bottom:12px">&#127881;</div>
+      <h1>Game Complete!</h1>
+      <p id="congratsSubtitle">Full cycle completed — all players have been dealer.</p>
+    </div>
+    <div class="result-card">
+      <div style="font-weight:700;font-size:16px;margin-bottom:12px">&#127942; Final Payout</div>
+      <div id="finalPayoutTable"></div>
+    </div>
+    <div class="result-card">
+      <div style="font-weight:700;font-size:16px;margin-bottom:12px">&#128203; Full Round History</div>
+      <div style="overflow-x:auto" id="finalHistoryTable"></div>
+    </div>
+    <button class="restart-btn" onclick="restartGame()">&#8635; Start New Game</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp">
+<div class="wrap">
+  <div class="top-bar">
+    <h1>&#127183; Singapore Mahjong</h1>
+    <div class="top-right">
+      <div class="round-badge" id="roundBadge">Round 1 — East Wind 東</div>
+      <button class="rules-btn" onclick="openRules()">&#128218; Rules</button>
+    </div>
+  </div>
+  <div class="winner-selector-row">
+    <label for="winnerDrop">&#127942; Winning Player:</label>
+    <select id="winnerDrop" onchange="switchWinner(this.value)"></select>
+  </div>
+  <div id="playerPanel"></div>
+  <button class="calc-btn" onclick="calculate()">&#9654;&#xFE0E; Calculate Results</button>
+  <div id="results" class="result-section"></div>
+</div>
+</div>
+
+<footer>Happy Mahjong &#127183; &mdash; <b>Mummyz</b></footer>
+
+<script>
+/* ================================================================ DATA ================================================================ */
+const WIND_IDS   = ["we","ws","ww","wn"];
+const WIND_CHARS = {we:"東",ws:"南",ww:"西",wn:"北"};
+const WIND_NAMES = {we:"East",ws:"South",ww:"West",wn:"North"};
+
+const SUITS=[
+  {id:"man",label:"Characters (Man — 萬子)",
+   syms:["一","二","三","四","五","六","七","八","九"],
+   names:["Man 1","Man 2","Man 3","Man 4","Man 5","Man 6","Man 7","Man 8","Man 9"],tcls:"t-man",hcls:"c-man"},
+  {id:"pin",label:"Circles (Pin — 筒子)",
+   syms:["①","②","③","④","⑤","⑥","⑦","⑧","⑨"],
+   names:["Circle 1","Circle 2","Circle 3","Circle 4","Circle 5","Circle 6","Circle 7","Circle 8","Circle 9"],tcls:"t-pin",hcls:"c-pin"},
+  {id:"sou",label:"Bamboo (Sou — 索子)",
+   syms:["1竹","2竹","3竹","4竹","5竹","6竹","7竹","8竹","9竹"],
+   names:["Bamboo 1","Bamboo 2","Bamboo 3","Bamboo 4","Bamboo 5","Bamboo 6","Bamboo 7","Bamboo 8","Bamboo 9"],tcls:"t-sou",hcls:"c-sou"},
+];
+const WINDS_TILES=[
+  {id:"we",sym:"東",name:"East Wind",tcls:"t-wind",hcls:"c-wind"},
+  {id:"ws",sym:"南",name:"South Wind",tcls:"t-wind",hcls:"c-wind"},
+  {id:"ww",sym:"西",name:"West Wind",tcls:"t-wind",hcls:"c-wind"},
+  {id:"wn",sym:"北",name:"North Wind",tcls:"t-wind",hcls:"c-wind"},
+];
+const DRAGONS=[
+  {id:"dr",sym:"中",name:"Red Dragon",  tcls:"t-red-dragon",  hcls:"c-red-dragon"},
+  {id:"dg",sym:"發",name:"Green Dragon",tcls:"t-green-dragon",hcls:"c-green-dragon"},
+  {id:"dw",sym:"白",name:"White Dragon",tcls:"t-white-dragon",hcls:"c-white-dragon"},
+];
+// Exactly 4 Flowers, 4 Seasons, 4 Animals — one of each
+const FLOWERS=[
+  {id:"fl1",sym:"春",name:"Flower 1",seat:"we"},
+  {id:"fl2",sym:"夏",name:"Flower 2",seat:"ws"},
+  {id:"fl3",sym:"秋",name:"Flower 3",seat:"ww"},
+  {id:"fl4",sym:"冬",name:"Flower 4",seat:"wn"},
+];
+const SEASONS=[
+  {id:"se1",sym:"梅",name:"Season 1",seat:"we"},
+  {id:"se2",sym:"蘭",name:"Season 2",seat:"ws"},
+  {id:"se3",sym:"菊",name:"Season 3",seat:"ww"},
+  {id:"se4",sym:"竹",name:"Season 4",seat:"wn"},
+];
+const ANIMALS=[
+  {id:"an1",sym:"🐱",name:"Cat",  group:"cm"},
+  {id:"an2",sym:"🐭",name:"Mouse",group:"cm"},
+  {id:"an3",sym:"🐦",name:"Rooster",group:"rw"},
+  {id:"an4",sym:"🪱",name:"Worm",  group:"rw"},
+];
+
+const EXTRAS=[
+  {id:"self_draw", name:"Self Draw (Zimo)",      fan:1, desc:"Win by drawing the tile yourself — each loser pays double (more profitable)"},
+  {id:"concealed", name:"Fully Concealed Hand",  fan:1, desc:"All melds are hidden (no declared sets); win by discard"},
+  {id:"rob_kang",  name:"Robbing the Kang",      fan:1, desc:"Win by taking a tile another player adds to complete their Kang"},
+  {id:"last_wall", name:"Last Tile in Wall",     fan:1, desc:"Win with the very last drawable tile in the wall"},
+  {id:"last_disc", name:"Last Discard Win",      fan:1, desc:"Win on the final discard of the game (wall is exhausted)"},
+  {id:"on_kang",   name:"Win on Kang (Replacement)", fan:1, desc:"Win with the replacement tile drawn after declaring a Kang"},
+  {id:"heaven",    name:"Heavenly Hand",         fan:13,desc:"East player wins on the initial 14-tile deal (limit hand — 13 fan override)"},
+  {id:"earth",     name:"Earthly Hand",          fan:13,desc:"Non-East wins on East's very first discard (limit hand — 13 fan override)"},
+];
+
+const BASE_PTS=[1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192];
+
+/* ================================================================ STATE ================================================================ */
+let gameNames=["Player 1","Player 2","Player 3","Player 4"];
+let seatWinds=["we","ws","ww","wn"];
+let pointValue=1000, fanCap=13;
+let roundNumber=1, roundWindIdx=0;
+let dealerCycleCount=0; // how many times East has rotated back (for end-game detection)
+let eastHoldCount=0;    // consecutive East wins in a row (dealer kept wind)
+let activeWinner=0;
+let winnerState={hand:[],flowers:[],seasons:[],animals:[],extras:[]};
+let scoreHistory=[];        // one entry per round: {round,net,cumulative,winnerIdx,handName,fan,dealerWon}
+let cumulativeNet=[0,0,0,0];
+let discardPlayerIdx=1;
+let currentRoundResult=null; // last calculated result for this round (for recalc)
+
+/* ================================================================ HELPERS ================================================================ */
+function tk(s,i){return s+"|"+i;}
+function countH(hand){const c={};hand.forEach(t=>{const k=tk(t.suit,t.idx);c[k]=(c[k]||0)+1;});return c;}
+function kangCount(hand){const c=countH(hand);return Object.values(c).filter(v=>v===4).length;}
+function autoLimit(hand){return 14+kangCount(hand);}
+
+/* ================================================================ SETUP ================================================================ */
+function startGame(){
+  const names=[0,1,2,3].map(i=>(document.getElementById("pname"+i).value||"").trim());
+  if(names.some(n=>!n)){document.getElementById("setupErr").style.display="block";return;}
+  document.getElementById("setupErr").style.display="none";
+  gameNames=names;
+  pointValue=parseInt(document.getElementById("pointValue").value)||1000;
+  fanCap=Math.min(13,Math.max(1,parseInt(document.getElementById("fanCap").value)||13));
+  roundNumber=1;roundWindIdx=0;dealerCycleCount=0;eastHoldCount=0;
+  seatWinds=["we","ws","ww","wn"];
+  activeWinner=0;
+  winnerState={hand:[],flowers:[],seasons:[],animals:[],extras:[]};
+  scoreHistory=[];cumulativeNet=[0,0,0,0];discardPlayerIdx=1;currentRoundResult=null;
+  document.getElementById("setupOverlay").style.display="none";
+  document.getElementById("mainApp").style.display="block";
+  document.getElementById("congratsPage").style.display="none";
+  updateRoundBadge();renderWinnerDrop();renderPanel();
+}
+function restartGame(){
+  document.getElementById("congratsPage").style.display="none";
+  document.getElementById("mainApp").style.display="none";
+  document.getElementById("setupOverlay").style.display="flex";
+}
+
+/* ================================================================ ROUND ================================================================ */
+function updateRoundBadge(){
+  const rw=WIND_IDS[roundWindIdx%4];
+  document.getElementById("roundBadge").textContent="Round "+roundNumber+" — "+WIND_NAMES[rw]+" Wind "+WIND_CHARS[rw];
+}
+function advanceRound(dealerWon){
+  if(!dealerWon){
+    // rotate anti-clockwise
+    seatWinds=seatWinds.map(w=>{const i=WIND_IDS.indexOf(w);return WIND_IDS[(i+3)%4];});
+    dealerCycleCount++;
+    // Update prevailing wind every 4 non-dealer wins
+    roundWindIdx=Math.floor(dealerCycleCount/4)%4;
+  }
+  roundNumber++;
+  activeWinner=0;
+  winnerState={hand:[],flowers:[],seasons:[],animals:[],extras:[]};
+  discardPlayerIdx=1;
+  currentRoundResult=null;
+  document.getElementById("results").innerHTML="";
+  updateRoundBadge();renderWinnerDrop();renderPanel();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function isGameComplete(){
+  // Game complete when all 4 players have been East dealer (dealerCycleCount >= 4)
+  return dealerCycleCount>=4;
+}
+
+/* ================================================================ DROPDOWNS ================================================================ */
+function renderWinnerDrop(){
+  document.getElementById("winnerDrop").innerHTML=
+    [0,1,2,3].map(i=>`<option value="${i}"${i===activeWinner?" selected":""}>${gameNames[i]} (${WIND_CHARS[seatWinds[i]]})</option>`).join("");
+}
+function switchWinner(v){
+  activeWinner=parseInt(v);
+  winnerState={hand:[],flowers:[],seasons:[],animals:[],extras:[]};
+  discardPlayerIdx=[0,1,2,3].find(i=>i!==activeWinner);
+  renderWinnerDrop();renderPanel();
+}
+
+/* ================================================================ HAND ANALYSIS ================================================================ */
+function tryForm(tiles){
+  const c={};tiles.forEach(t=>{const k=tk(t.suit,t.idx);c[k]=(c[k]||0)+1;});
+  function solve(counts,pairUsed){
+    const ks=Object.keys(counts).filter(k=>counts[k]>0).sort((a,b)=>{
+      const[sa,ia]=a.split("|"),[sb,ib]=b.split("|");
+      if(sa!==sb)return sa<sb?-1:1;
+      return (parseFloat(ia)||0)-(parseFloat(ib)||0);
+    });
+    if(!ks.length)return pairUsed?[]:null;
+    const k=ks[0],[suit,idxStr]=k.split("|"),idx=parseFloat(idxStr);
+    if(counts[k]>=4){const nc={...counts};nc[k]-=4;if(!nc[k])delete nc[k];const r=solve(nc,pairUsed);if(r)return [{type:"kang",key:k},...r];}
+    if(counts[k]>=3){const nc={...counts};nc[k]-=3;if(!nc[k])delete nc[k];const r=solve(nc,pairUsed);if(r)return [{type:"triplet",key:k},...r];}
+    if(!isNaN(idx)&&idx<=6&&(suit==="man"||suit==="pin"||suit==="sou")){
+      const k2=tk(suit,idx+1),k3=tk(suit,idx+2);
+      if((counts[k2]||0)>=1&&(counts[k3]||0)>=1){
+        const nc={...counts};nc[k]--;nc[k2]--;nc[k3]--;
+        if(!nc[k])delete nc[k];if(!nc[k2])delete nc[k2];if(!nc[k3])delete nc[k3];
+        const r=solve(nc,pairUsed);if(r)return [{type:"seq",keys:[k,k2,k3]},...r];
+      }
+    }
+    if(!pairUsed&&counts[k]>=2){const nc={...counts};nc[k]-=2;if(!nc[k])delete nc[k];const r=solve(nc,true);if(r)return [{type:"pair",key:k},...r];}
+    return null;
+  }
+  return solve({...c},false);
+}
+
+/* Analyse partial hand: return named completed sets */
+function analysePartial(hand){
+  const tiles=hand.map(t=>({suit:t.suit,idx:t.idx}));
+  const counts=countH(hand);
+  const completedSets=[];
+
+  // Work on a copy to consume tiles
+  const remaining={...counts};
+
+  // Helper: name a tile key
+  function keyName(k){
+    const[s,i]=k.split("|");
+    const suit=SUITS.find(x=>x.id===s);if(suit)return suit.names[parseInt(i)];
+    const w=WINDS_TILES.find(x=>x.id===i);if(w)return w.name;
+    const dr=DRAGONS.find(x=>x.id===i);if(dr)return dr.name;
+    return i;
+  }
+
+  // Greedily extract kangs
+  Object.keys(remaining).forEach(k=>{
+    while((remaining[k]||0)>=4){
+      completedSets.push({type:"Kang",label:"Kang — "+keyName(k)});
+      remaining[k]-=4;if(!remaining[k])delete remaining[k];
+    }
+  });
+  // Greedily extract triplets
+  Object.keys(remaining).forEach(k=>{
+    while((remaining[k]||0)>=3){
+      completedSets.push({type:"Pong",label:"Pong — "+keyName(k)});
+      remaining[k]-=3;if(!remaining[k])delete remaining[k];
+    }
+  });
+  // Greedily extract sequences
+  ["man","pin","sou"].forEach(s=>{
+    for(let i=0;i<=6;i++){
+      const k=tk(s,i),k2=tk(s,i+1),k3=tk(s,i+2);
+      while((remaining[k]||0)>=1&&(remaining[k2]||0)>=1&&(remaining[k3]||0)>=1){
+        completedSets.push({type:"Chow",label:"Chow — "+keyName(k)+", "+keyName(k2)+", "+keyName(k3)});
+        remaining[k]--;remaining[k2]--;remaining[k3]--;
+        if(!remaining[k])delete remaining[k];if(!remaining[k2])delete remaining[k2];if(!remaining[k3])delete remaining[k3];
+      }
+    }
+  });
+
+  // Check for pair (from what's left)
+  const pairKey=Object.keys(remaining).find(k=>(remaining[k]||0)>=2)||null;
+  const pairName=pairKey?keyName(pairKey):null;
+
+  return{completedSets,pairKey,pairName,totalSets:completedSets.length};
+}
+
+function detectHand(hand,sw,pw){
+  const n=hand.length;
+  if(!n)return{status:"empty"};
+  const limit=autoLimit(hand);
+
+  if(n<limit){
+    const missing=limit-n;
+    const partial=analysePartial(hand);
+    return{status:"incomplete",count:n,missing,limit,partial};
+  }
+  if(n>limit){
+    return{status:"toomany",count:n,limit};
+  }
+
+  // Full hand detection
+  const counts=countH(hand);
+  const tiles=hand.map(t=>({suit:t.suit,idx:t.idx}));
+  const suitT=tiles.filter(t=>t.suit!=="honor");
+  const honorT=tiles.filter(t=>t.suit==="honor");
+  const nSuits=[...new Set(suitT.map(t=>t.suit))];
+  const isPure=nSuits.length===1&&!honorT.length;
+  const isMixed=nSuits.length===1&&honorT.length>0;
+  const isAllHonor=tiles.every(t=>t.suit==="honor");
+  function dc(id){return counts[tk("honor",id)]||0;}
+  const drSets=["dr","dg","dw"].filter(d=>dc(d)>=3).length;
+  const drPairs=["dr","dg","dw"].filter(d=>dc(d)===2).length;
+  const wSets=WIND_IDS.filter(w=>dc(w)>=3).length;
+  const wPairs=WIND_IDS.filter(w=>dc(w)===2).length;
+
+  const orphans=["man|0","man|8","pin|0","pin|8","sou|0","sou|8","honor|we","honor|ws","honor|ww","honor|wn","honor|dr","honor|dg","honor|dw"];
+  const isThirteen=n===14&&orphans.every(k=>(counts[k]||0)>=1);
+  function isNine(){
+    if(!isPure||n!==14)return false;
+    const s=nSuits[0],need={0:3,1:1,2:1,3:1,4:1,5:1,6:1,7:1,8:3},have={};
+    suitT.forEach(t=>{have[t.idx]=(have[t.idx]||0)+1;});
+    return Object.keys(need).every(k=>(have[k]||0)>=need[k]);
+  }
+
+  const matches=[];
+  if(isThirteen) matches.push({id:"thirteen",label:"Thirteen Orphans",fan:13});
+  if(isNine())   matches.push({id:"ninegate", label:"Nine Gates",fan:13});
+  if(wSets===4)  matches.push({id:"big_wind", label:"Big Four Winds",fan:13});
+  if(isAllHonor) matches.push({id:"allhonor", label:"All Honors",fan:10});
+  if(wSets===3&&wPairs>=1) matches.push({id:"sml_wind",label:"Small Four Winds",fan:6});
+  if(drSets===3) matches.push({id:"big_drag",label:"Big Three Dragons",fan:8});
+  if(drSets===2&&drPairs>=1) matches.push({id:"sml_drag",label:"Small Three Dragons",fan:5});
+
+  const formed=tryForm(tiles);
+  if(formed||isThirteen||isNine()||wSets===4){
+    if(formed){
+      const hasTri=formed.some(f=>f.type==="triplet"||f.type==="kang");
+      const hasSeq=formed.some(f=>f.type==="seq");
+      if(isPure&&!matches.find(m=>m.id==="ninegate")) matches.push({id:"pure1",label:"Pure One Suit",fan:7});
+      else if(isMixed) matches.push({id:"mix1",label:"Mixed One Suit",fan:3});
+      if(hasTri&&!hasSeq&&!isAllHonor) matches.push({id:"alltri",label:"All Triplets",fan:3});
+      if(hasSeq&&!hasTri) matches.push({id:"seq",label:"All Sequences",fan:1});
+    }
+    const seen=new Set(),unique=[];
+    matches.forEach(m=>{if(!seen.has(m.id)){seen.add(m.id);unique.push(m);}});
+    if(!unique.length) unique.push({id:"chicken",label:"Chicken Hand",fan:0});
+    return{status:"valid",matches:unique,formed};
+  }
+
+  // Invalid
+  const pairs=Object.entries(counts).filter(([,v])=>v===2);
+  const singles=Object.entries(counts).filter(([,v])=>v===1);
+  const tips=[];
+  if(pairs.length>=2) tips.push("You have "+pairs.length+" pairs — a valid hand needs exactly 1 pair and 4 sets (sequences or triplets). Reduce to 1 pair.");
+  if(singles.length>=4) tips.push("Too many isolated single tiles ("+singles.length+"). Group them into sequences (3 consecutive same-suit) or triplets (3 identical).");
+  if(!tips.length) tips.push("Tiles cannot be arranged into 4 sets + 1 pair. Reorganise: build sequences or triplets.");
+  return{status:"invalid",suggestion:tips.join(" ")};
+}
+
+/* ================================================================ AUTO FAN ================================================================ */
+function autoFan(hand,flowers,seasons,animals,sw,pw){
+  let fan=0;const bd=[];
+  const counts=countH(hand);
+  function dc(id){return counts[tk("honor",id)]||0;}
+
+  ["dr","dg","dw"].forEach(d=>{if(dc(d)>=3){const dr=DRAGONS.find(x=>x.id===d);bd.push({name:dr.name+" Triplet/Kang",fan:1});fan++;}});
+  WIND_IDS.forEach(w=>{
+    if(dc(w)>=3){
+      let f=0,label=WIND_NAMES[w]+" Wind";
+      if(w===sw){f++;label+=" (Seat)";}
+      if(w===pw&&w!==sw){f++;label+=" (Prevailing)";}
+      if(w===sw&&w===pw){f=2;label+=" (Seat + Prevailing)";}
+      if(f>0){bd.push({name:label+" Triplet/Kang",fan:f});fan+=f;}
+    }
+  });
+
+  const tiles=hand.map(t=>({suit:t.suit,idx:t.idx}));
+  const noTermHonor=!tiles.some(t=>t.suit==="honor"||(typeof t.idx==="number"&&(t.idx===0||t.idx===8)));
+  if(noTermHonor){bd.push({name:"All Simples (no terminals or honors)",fan:1});fan++;}
+
+  // Flowers
+  const ownFlowers=flowers.filter(id=>{const f=FLOWERS.find(x=>x.id===id);return f&&f.seat===sw;});
+  const otherFlowers=flowers.filter(id=>{const f=FLOWERS.find(x=>x.id===id);return f&&f.seat!==sw;});
+  const allFourFlowers=flowers.length===4&&FLOWERS.every(f=>flowers.includes(f.id));
+  if(allFourFlowers){bd.push({name:"Complete All 4 Flowers",fan:3});fan+=3;}
+  else{
+    if(ownFlowers.length>0){bd.push({name:"Own Flower ("+ownFlowers.length+"×)",fan:ownFlowers.length});fan+=ownFlowers.length;}
+    if(otherFlowers.length>0){bd.push({name:"Other Flower ("+otherFlowers.length+"×)",fan:otherFlowers.length});fan+=otherFlowers.length;}
+  }
+
+  // Seasons
+  const ownSeasons=seasons.filter(id=>{const s=SEASONS.find(x=>x.id===id);return s&&s.seat===sw;});
+  const otherSeasons=seasons.filter(id=>{const s=SEASONS.find(x=>x.id===id);return s&&s.seat!==sw;});
+  const allFourSeasons=seasons.length===4&&SEASONS.every(s=>seasons.includes(s.id));
+  if(allFourSeasons){bd.push({name:"Complete All 4 Seasons",fan:3});fan+=3;}
+  else{
+    if(ownSeasons.length>0){bd.push({name:"Own Season ("+ownSeasons.length+"×)",fan:ownSeasons.length});fan+=ownSeasons.length;}
+    if(otherSeasons.length>0){bd.push({name:"Other Season ("+otherSeasons.length+"×)",fan:otherSeasons.length});fan+=otherSeasons.length;}
+  }
+
+  // Animals
+  const hasCat=animals.includes("an1"),hasMouse=animals.includes("an2");
+  const hasRooster=animals.includes("an3"),hasWorm=animals.includes("an4");
+  const allAnim=hasCat&&hasMouse&&hasRooster&&hasWorm;
+  const cmPair=hasCat&&hasMouse,rwPair=hasRooster&&hasWorm;
+  if(allAnim){bd.push({name:"All 4 Animals",fan:3});fan+=3;}
+  else{
+    if(cmPair){bd.push({name:"Cat + Mouse Pair",fan:1});fan++;}
+    if(rwPair){bd.push({name:"Rooster + Worm Pair",fan:1});fan++;}
+    [[hasCat,"an1","Cat"],[hasMouse,"an2","Mouse"],[hasRooster,"an3","Rooster"],[hasWorm,"an4","Worm"]].forEach(([has,id,n])=>{
+      const inPair=(id==="an1"||id==="an2")?cmPair:rwPair;
+      if(has&&!inPair&&!allAnim){bd.push({name:n+" (single animal)",fan:1});fan++;}
+    });
+  }
+
+  return{fan,bd};
+}
+
+/* ================================================================ SUGGESTIONS ================================================================ */
+function tileNameFromKey(k){
+  const[s,i]=k.split("|");
+  const suit=SUITS.find(x=>x.id===s);if(suit)return suit.names[parseInt(i)];
+  const w=WINDS_TILES.find(x=>x.id===i);if(w)return w.name;
+  const dr=DRAGONS.find(x=>x.id===i);if(dr)return dr.name;
+  return i;
+}
+
+function buildSuggestions(hand,sw,pw){
+  if(!hand.length)return[];
+  const counts=countH(hand);
+  const tiles=hand.map(t=>({suit:t.suit,idx:t.idx}));
+  const n=hand.length,limit=autoLimit(hand),missing=limit-n;
+  const sugs=[];
+  const partial=analysePartial(hand);
+
+  const hasChow=partial.completedSets.some(s=>s.type==="Chow");
+  const hasPong=partial.completedSets.some(s=>s.type==="Pong"||s.type==="Kang");
+  const nSuits=[...new Set(tiles.filter(t=>t.suit!=="honor").map(t=>t.suit))];
+  const honorOnly=tiles.every(t=>t.suit==="honor");
+  const pairKeys=Object.entries(counts).filter(([,v])=>v===2).map(([k])=>k);
+
+  // --- All Triplets path: only if NO chows already in hand ---
+  if(!hasChow){
+    const confirmedTri=partial.completedSets.filter(s=>s.type==="Pong"||s.type==="Kang").length;
+    if(confirmedTri>=1){
+      const setsLeft=4-confirmedTri;
+      const need=[];
+      if(setsLeft>0) need.push(`${setsLeft} more triplet${setsLeft>1?"s":""} (Pong/Kang)`);
+      if(!partial.pairKey) need.push("1 pair");
+      sugs.push({fan:3,label:"All Triplets (Pong/Kang only)",
+        need:need.join(" + "),
+        detail:`${confirmedTri} triplet/kang set(s). ${need.length?"Need: "+need.join(" + ")+".":""} No sequences allowed → All Triplets (3 fan).`});
+    }
+  }
+
+  // --- All Sequences path: only if NO pongs/kangs already in hand ---
+  if(!hasPong){
+    const tempC2={};
+    tiles.forEach(t=>{if(t.suit!=="honor"&&!isNaN(t.idx)){const k=tk(t.suit,t.idx);tempC2[k]=(tempC2[k]||0)+1;}});
+    let seqComplete=0;
+    ["man","pin","sou"].forEach(s=>{
+      for(let i=0;i<=6;i++){
+        const k=tk(s,i),k2=tk(s,i+1),k3=tk(s,i+2);
+        while((tempC2[k]||0)>=1&&(tempC2[k2]||0)>=1&&(tempC2[k3]||0)>=1){tempC2[k]--;tempC2[k2]--;tempC2[k3]--;seqComplete++;}
+      }
+    });
+    if(seqComplete>=1){
+      const setsLeft=4-seqComplete;
+      const need=[];
+      if(setsLeft>0)need.push(`${setsLeft} more sequence${setsLeft>1?"s":""} (Chow)`);
+      if(!partial.pairKey)need.push("1 pair");
+      sugs.push({fan:1,label:"All Sequences (Chow only)",
+        need:need.join(" + "),
+        detail:`${seqComplete} sequence(s). ${need.length?"Need: "+need.join(" + ")+".":""} No triplets allowed → All Sequences (1 fan).`});
+    }
+  }
+
+  // --- Pure One Suit: only if already in one suit with no honors ---
+  if(nSuits.length===1&&!honorOnly){
+    const honorCnt=tiles.filter(t=>t.suit==="honor").length;
+    if(!honorCnt){
+      sugs.push({fan:7,label:"Pure One Suit",
+        need:"Complete 4 sets + 1 pair using "+nSuits[0]+" tiles only",
+        detail:`All tiles in ${nSuits[0]} — keep it pure. No winds/dragons. → Pure One Suit (7 fan).`});
+    } else {
+      sugs.push({fan:3,label:"Mixed One Suit",
+        need:"Complete 4 sets + 1 pair ("+nSuits[0]+" + honor tiles only)",
+        detail:`${nSuits[0]} suit + ${honorCnt} honor(s). Don't add other suits → Mixed One Suit (3 fan).`});
+    }
+  }
+
+  // --- Dragon hints: only relevant if not already in conflicting single suit path ---
+  if(nSuits.length!==1||tiles.filter(t=>t.suit==="honor").length>0){
+    ["dr","dg","dw"].forEach(d=>{
+      const c=counts[tk("honor",d)]||0;
+      if(c>=1&&c<3){
+        const dr=DRAGONS.find(x=>x.id===d);
+        sugs.push({fan:1,label:dr.name+" Triplet",
+          need:`${3-c} more ${dr.name}`,
+          detail:`Have ${c}× ${dr.name}. Need ${3-c} more → +1 fan.`});
+      }
+    });
+  }
+
+  // --- Wind hints ---
+  const swc=counts[tk("honor",sw)]||0;
+  if(swc>=1&&swc<3){
+    sugs.push({fan:1,label:"Seat Wind ("+WIND_NAMES[sw]+") Triplet",
+      need:`${3-swc} more ${WIND_NAMES[sw]} Wind`,
+      detail:`Have ${swc}× ${WIND_NAMES[sw]} (your seat wind). Need ${3-swc} more → +1 fan.`});
+  }
+  const pwc=counts[tk("honor",pw)]||0;
+  if(pw!==sw&&pwc>=1&&pwc<3){
+    sugs.push({fan:1,label:"Prevailing Wind ("+WIND_NAMES[pw]+") Triplet",
+      need:`${3-pwc} more ${WIND_NAMES[pw]} Wind`,
+      detail:`Have ${pwc}× ${WIND_NAMES[pw]} (prevailing wind). Need ${3-pwc} more → +1 fan.`});
+  }
+
+  // --- Thirteen Orphans ---
+  const orphanKeys=["man|0","man|8","pin|0","pin|8","sou|0","sou|8","honor|we","honor|ws","honor|ww","honor|wn","honor|dr","honor|dg","honor|dw"];
+  const haveOrphans=orphanKeys.filter(k=>(counts[k]||0)>=1).length;
+  if(haveOrphans>=7){
+    const missingOrphans=orphanKeys.filter(k=>!(counts[k]||0)).map(k=>tileNameFromKey(k));
+    sugs.push({fan:13,label:"Thirteen Orphans",
+      need:missingOrphans.length?missingOrphans.join(", "):"One duplicate of any orphan tile",
+      detail:`Have ${haveOrphans}/13 unique terminal/honor tiles. ${missingOrphans.length?"Missing: "+missingOrphans.join(", "):"Add one duplicate of any held tile."} → 13 fan.`});
+  }
+
+  // --- Chicken Hand fallback (always show if less than 2 better options) ---
+  if(sugs.filter(s=>s.fan>0).length===0||missing>0){
+    sugs.push({fan:0,label:"Chicken Hand (any valid win)",
+      need:missing>0?`${missing} more tile(s) to reach ${limit}`:"Complete any 4 sets + 1 pair",
+      detail:`Any valid 4 sets + 1 pair = Chicken Hand (0 fan, 1 base point).${missing>0?" Still need "+missing+" more tile(s).":""}`});
+  }
+
+  sugs.sort((a,b)=>b.fan-a.fan);
+  return sugs.slice(0,6);
+}
+
+/* ================================================================ SET STATUS + FAN CHECKLIST ================================================================ */
+function renderSetStatus(hand, sw, pw, flowers, seasons, animals){
+  if(!hand.length)return"";
+  const n=hand.length;
+  const limit=autoLimit(hand);
+  const missing=limit-n;
+  const partial=analysePartial(hand);
+  const setsComplete=partial.totalSets;
+  const hasPair=!!partial.pairKey;
+  const counts=countH(hand);
+
+  // ---- Set progress with names ----
+  let html=`<div class="set-status-box">`;
+  for(let i=0;i<4;i++){
+    const set=partial.completedSets[i];
+    const done=!!set;
+    html+=`<div class="set-status-row">
+      <span class="${done?"set-check":"set-pending"}">${done?"✓":"○"}</span>
+      <span class="set-label ${done?"done":"pending"}">Set ${i+1}${done?" — "+set.label:""}</span>
+    </div>`;
+  }
+  // Pair row
+  html+=`<div class="set-status-row">
+    <span class="${hasPair?"set-check":"set-pending"}">${hasPair?"✓":"○"}</span>
+    <span class="set-label ${hasPair?"done":"pending"}">Pair${hasPair?" — Pair of "+partial.pairName:""}</span>
+  </div>`;
+
+  // Status summary line
+  html+=`<div style="margin-top:8px;padding-top:6px;border-top:1px solid #e5e7eb">`;
+  if(missing===0){
+    html+=`<span style="font-size:12px;color:#15803d;font-weight:700">✓ Hand complete — ready to calculate</span>`;
+  } else {
+    html+=`<span style="font-size:12px;color:#9ca3af;font-weight:700">Incomplete — ${n}/${limit} tiles</span>`;
+    html+=`<div style="font-size:12px;color:#9ca3af;margin-top:3px">`;
+    if(missing===1){
+      if(setsComplete>=4&&!hasPair) html+=`One more tile needed — waiting for a pair tile to complete`;
+      else if(setsComplete>=4&&hasPair) html+=`One more tile needed — waiting hand (draw or discard)`;
+      else html+=`One more tile needed — waiting hand`;
+    } else if(missing===2){
+      const setsLeft=4-setsComplete;
+      if(setsLeft>=1&&!hasPair) html+=`Two more tiles needed — need ${setsLeft} more set${setsLeft>1?"s":""} and a pair`;
+      else if(setsLeft>=1) html+=`Two more tiles needed — need ${setsLeft} more set${setsLeft>1?"s":""}`;
+      else html+=`Two more tiles needed — complete the pair`;
+    } else {
+      const setsLeft=Math.max(0,4-setsComplete);
+      html+=`${missing} more tiles needed — ${setsLeft>0?setsLeft+" set"+(setsLeft>1?"s":"")+" still incomplete":"complete the pair/sets"}`;
+    }
+    html+=`</div>`;
+  }
+  html+=`</div>`;
+
+  // ---- Fan checklist ----
+  // Detect what fan is already confirmed vs still possible
+  const fanItems=buildFanChecklist(hand, sw, pw, flowers, seasons, animals, partial, missing);
+  if(fanItems.length){
+    html+=`<div style="margin-top:10px;padding-top:8px;border-top:1px solid #e5e7eb">
+      <div style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">&#9733; Fan Progress Checklist</div>`;
+    fanItems.forEach(fi=>{
+      const icon=fi.status==="confirmed"?"✅":fi.status==="possible"?"🔲":"❌";
+      const col=fi.status==="confirmed"?"#15803d":fi.status==="possible"?"#1d4ed8":"#9ca3af";
+      html+=`<div style="display:flex;align-items:flex-start;gap:6px;padding:3px 0;font-size:12px;border-bottom:1px solid #f3f4f6">
+        <span style="font-size:13px;flex-shrink:0">${icon}</span>
+        <div>
+          <span style="font-weight:700;color:${col}">${fi.label}</span>
+          <span style="background:${fi.status==="confirmed"?"#dcfce7":fi.status==="possible"?"#dbeafe":"#f3f4f6"};color:${col};font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin:0 4px">+${fi.fan} fan</span>
+          <span style="color:#6b7280">${fi.note}</span>
+          ${fi.need?`<div style="color:#9a3412;font-size:11px;margin-top:1px">&#8594; Need: ${fi.need}</div>`:""}
+        </div>
+      </div>`;
+    });
+    if(missing===1){
+      html+=`<div style="margin-top:6px;padding:6px 8px;background:#fef9c3;border:1px solid #fde68a;border-radius:6px;font-size:12px;color:#854d0e;font-weight:600">
+        &#127775; 1 tile away — check the Fan Possibilities below for your best winning tile!
+      </div>`;
+    }
+    html+=`</div>`;
+  }
+
+  html+=`</div>`;
+  return html;
+}
+
+function buildFanChecklist(hand, sw, pw, flowers, seasons, animals, partial, missing){
+  const counts=countH(hand);
+  const tiles=hand.map(t=>({suit:t.suit,idx:t.idx}));
+  const items=[];
+  function dc(id){return counts[tk("honor",id)]||0;}
+
+  const suitT=tiles.filter(t=>t.suit!=="honor");
+  const honorT=tiles.filter(t=>t.suit==="honor");
+  const nSuits=[...new Set(suitT.map(t=>t.suit))];
+  const hasChow=partial.completedSets.some(s=>s.type==="Chow");
+  const hasPong=partial.completedSets.some(s=>s.type==="Pong"||s.type==="Kang");
+
+  // All Sequences: only possible if NO pongs/kangs detected
+  if(!hasPong){
+    const seqCount=partial.completedSets.filter(s=>s.type==="Chow").length;
+    if(seqCount>=4&&partial.pairKey){
+      items.push({label:"All Sequences",fan:1,status:"confirmed",note:"4 Chows + 1 pair",need:""});
+    } else if(!hasPong){
+      items.push({label:"All Sequences",fan:1,status:"possible",note:`${seqCount}/4 sequences done`,need:`${4-seqCount} more sequence(s) + pair — NO triplets`});
+    }
+  }
+
+  // All Triplets: only possible if NO sequences
+  if(!hasChow){
+    const triCount=partial.completedSets.filter(s=>s.type==="Pong"||s.type==="Kang").length;
+    if(triCount>=4&&partial.pairKey){
+      items.push({label:"All Triplets / Pongs",fan:3,status:"confirmed",note:"4 Pongs/Kangs + 1 pair",need:""});
+    } else if(!hasChow){
+      items.push({label:"All Triplets / Pongs",fan:3,status:"possible",note:`${triCount}/4 triplets done`,need:`${4-triCount} more triplet(s) + pair — NO sequences`});
+    }
+  }
+
+  // Pure One Suit
+  if(nSuits.length===1&&honorT.length===0){
+    if(missing===0){
+      items.push({label:"Pure One Suit",fan:7,status:"confirmed",note:"One suit, no honors",need:""});
+    } else {
+      items.push({label:"Pure One Suit",fan:7,status:"possible",note:"One suit so far, no honors",need:"Complete without adding honors/other suits"});
+    }
+  } else if(nSuits.length===1&&honorT.length>0){
+    items.push({label:"Mixed One Suit",fan:3,status:missing===0?"confirmed":"possible",note:`${nSuits[0]} + honor tiles`,need:missing>0?"Complete without adding another suit":""});
+  }
+
+  // Dragon triplets
+  ["dr","dg","dw"].forEach(d=>{
+    const c=dc(d); const dr=DRAGONS.find(x=>x.id===d);
+    if(c>=3) items.push({label:dr.name+" Triplet/Kang",fan:1,status:"confirmed",note:`3+ ${dr.name} tiles`,need:""});
+    else if(c===2) items.push({label:dr.name+" Triplet",fan:1,status:"possible",note:`2/${3} ${dr.name}`,need:`1 more ${dr.name}`});
+    else if(c===1) items.push({label:dr.name+" Triplet",fan:1,status:"possible",note:`1/3 ${dr.name}`,need:`2 more ${dr.name}`});
+  });
+
+  // Seat wind triplet
+  const swc=dc(sw);
+  if(swc>=3) items.push({label:"Seat Wind ("+WIND_NAMES[sw]+") Triplet",fan:1,status:"confirmed",note:"3+ seat wind tiles",need:""});
+  else if(swc>=1) items.push({label:"Seat Wind ("+WIND_NAMES[sw]+") Triplet",fan:1,status:"possible",note:`${swc}/3 ${WIND_NAMES[sw]} Wind`,need:`${3-swc} more ${WIND_NAMES[sw]} Wind`});
+
+  // Prevailing wind triplet
+  if(pw!==sw){
+    const pwc=dc(pw);
+    if(pwc>=3) items.push({label:"Prevailing Wind ("+WIND_NAMES[pw]+") Triplet",fan:1,status:"confirmed",note:"3+ prevailing wind tiles",need:""});
+    else if(pwc>=1) items.push({label:"Prevailing Wind ("+WIND_NAMES[pw]+") Triplet",fan:1,status:"possible",note:`${pwc}/3 ${WIND_NAMES[pw]} Wind`,need:`${3-pwc} more ${WIND_NAMES[pw]} Wind`});
+  }
+
+  // All Simples (no terminals or honors)
+  const noTermHonor=tiles.every(t=>t.suit!=="honor"&&typeof t.idx==="number"&&t.idx>0&&t.idx<8);
+  if(noTermHonor){
+    items.push({label:"All Simples",fan:1,status:missing===0?"confirmed":"possible",note:"No terminals (1/9) or honors",need:missing>0?"Avoid 1s, 9s, winds, dragons":""});
+  }
+
+  // Bonus flowers/seasons
+  const ownFlowers=(flowers||[]).filter(id=>{const f=FLOWERS.find(x=>x.id===id);return f&&f.seat===sw;});
+  const ownSeasons=(seasons||[]).filter(id=>{const s=SEASONS.find(x=>x.id===id);return s&&s.seat===sw;});
+  const allFlowers=(flowers||[]).length===4&&FLOWERS.every(f=>(flowers||[]).includes(f.id));
+  const allSeasons=(seasons||[]).length===4&&SEASONS.every(s=>(seasons||[]).includes(s.id));
+  if(allFlowers) items.push({label:"All 4 Flowers",fan:3,status:"confirmed",note:"Complete flower set",need:""});
+  else if(ownFlowers.length>0) items.push({label:"Own Flower",fan:ownFlowers.length,status:"confirmed",note:`${ownFlowers.length} own flower tile(s)`,need:""});
+  if(allSeasons) items.push({label:"All 4 Seasons",fan:3,status:"confirmed",note:"Complete season set",need:""});
+  else if(ownSeasons.length>0) items.push({label:"Own Season",fan:ownSeasons.length,status:"confirmed",note:`${ownSeasons.length} own season tile(s)`,need:""});
+
+  // Animals
+  const hasCat=(animals||[]).includes("an1"),hasMouse=(animals||[]).includes("an2");
+  const hasRooster=(animals||[]).includes("an3"),hasWorm=(animals||[]).includes("an4");
+  if(hasCat&&hasMouse&&hasRooster&&hasWorm) items.push({label:"All 4 Animals",fan:3,status:"confirmed",note:"Cat+Mouse+Rooster+Worm",need:""});
+  else{
+    if(hasCat&&hasMouse) items.push({label:"Cat + Mouse Pair",fan:1,status:"confirmed",note:"Pair complete",need:""});
+    else if(hasCat||hasMouse) items.push({label:"Cat + Mouse Pair",fan:1,status:"possible",note:`${hasCat?"Cat":"Mouse"} held`,need:hasCat?"1 Mouse":"1 Cat"});
+    if(hasRooster&&hasWorm) items.push({label:"Rooster + Worm Pair",fan:1,status:"confirmed",note:"Pair complete",need:""});
+    else if(hasRooster||hasWorm) items.push({label:"Rooster + Worm Pair",fan:1,status:"possible",note:`${hasRooster?"Rooster":"Worm"} held`,need:hasRooster?"1 Worm":"1 Rooster"});
+  }
+
+  // Sort: confirmed first, then possible
+  items.sort((a,b)=>{
+    const o={confirmed:0,possible:1,no:2};
+    if(o[a.status]!==o[b.status])return o[a.status]-o[b.status];
+    return b.fan-a.fan;
+  });
+  return items;
+}
+
+/* ================================================================ RENDER PANEL ================================================================ */
+function renderPanel(){
+  const i=activeWinner;
+  const s=winnerState;
+  const sw=seatWinds[i];
+  const pw=WIND_IDS[roundWindIdx%4];
+  const counts=countH(s.hand);
+  const flSet=new Set(s.flowers);
+  const seSet=new Set(s.seasons);
+  const anSet=new Set(s.animals);
+  const det=detectHand(s.hand,sw,pw);
+  const limit=autoLimit(s.hand);
+  const kangs=kangCount(s.hand);
+
+  let html=`<div class="player-card">
+  <div class="player-header">
+    <div class="wind-char">${WIND_CHARS[sw]}</div>
+    <div>
+      <div class="player-title">${gameNames[i]}</div>
+      <div style="font-size:12px;color:#888">${WIND_NAMES[sw]} Wind seat${kangs>0?" · "+kangs+" Kang(s) — hand limit: "+limit:""}</div>
+    </div>
+  </div>
+
+  <div class="section-label">Hand tiles (tap to add · tap tile in hand to remove)</div>
+  <div class="hand-display">`;
+
+  if(!s.hand.length){html+=`<span style="font-size:13px;color:#bbb;font-style:italic">No tiles selected</span>`;}
+  else{
+    s.hand.forEach((t,ti)=>{
+      html+=`<div class="hand-tile ${t.hcls}" onclick="removeTile(${ti})" title="Remove">
+        <span class="ht-sym">${t.sym}</span><span>${t.name}</span></div>`;
+    });
+    html+=`<span class="count-badge">${s.hand.length}/${limit}</span>`;
+    if(kangs>0) html+=`<span class="kang-badge">${kangs} Kang</span>`;
+  }
+  html+=`</div>`;
+
+  // Set status
+  if(s.hand.length>0) html+=renderSetStatus(s.hand, sw, pw, s.flowers, s.seasons, s.animals);
+
+  // Detection banner
+  if(det.status==="empty"){
+    html+=`<div class="det-box none" style="border-color:#e5e7eb;background:#fafaf9">
+      <div style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em">Detected Hand</div>
+      <div style="font-size:14px;color:#9ca3af;font-style:italic;font-weight:400;margin-top:4px">Select tiles to detect hand type</div></div>`;
+  } else if(det.status==="toomany"){
+    html+=`<div class="det-box invalid">
+      <div style="font-size:11px;font-weight:700;color:#9a3412;text-transform:uppercase">&#9888; Too Many Tiles</div>
+      <div style="font-size:13px;color:#9a3412;margin-top:4px">${det.count} tiles entered but limit is ${det.limit}. Remove ${det.count-det.limit} tile(s).</div></div>`;
+  } else if(det.status==="incomplete"){
+    // show in set status box above, no duplicate banner needed
+  } else if(det.status==="invalid"){
+    html+=`<div class="det-box invalid">
+      <div style="font-size:11px;font-weight:700;color:#9a3412;text-transform:uppercase">&#9888; Invalid Hand</div>
+      <div style="font-size:13px;font-weight:700;color:#9a3412;margin-top:4px">Cannot form 4 sets + 1 pair</div>
+      <div style="font-size:12px;color:#9a3412;margin-top:4px">${det.suggestion}</div></div>`;
+  } else if(det.matches.length===1){
+    html+=`<div class="det-box ok">
+      <div style="font-size:11px;font-weight:700;color:#166534;text-transform:uppercase">&#10003; Detected Hand</div>
+      <div style="font-size:15px;font-weight:700;color:#15803d;margin-top:4px">${det.matches[0].label}</div>
+      <div style="font-size:12px;color:#166534;margin-top:2px">${det.matches[0].fan} fan base</div></div>`;
+  } else {
+    const best=det.matches.reduce((a,b)=>b.fan>a.fan?b:a);
+    html+=`<div class="det-box multi">
+      <div style="font-size:11px;font-weight:700;color:#1d4ed8;text-transform:uppercase">&#9432; Multiple Possible Hands</div>
+      <div style="font-size:13px;font-weight:700;color:#1d4ed8;margin-top:4px">${det.matches.map(m=>m.label+" ("+m.fan+" fan)").join(" &bull; ")}</div>
+      <div style="font-size:12px;color:#1d4ed8;margin-top:2px">Using highest: ${best.label} (${best.fan} fan)</div></div>`;
+  }
+
+  // Suggestions
+  if(det.status==="incomplete"||det.status==="empty"||det.status==="invalid"){
+    const sugs=buildSuggestions(s.hand,sw,pw);
+    if(sugs.length){
+      html+=`<div class="sug-box"><h4>&#128270; Fan Possibilities &amp; What You Need</h4>`;
+      sugs.forEach(sg=>{
+        html+=`<div class="sug-line">
+          <span class="sug-fan">${sg.fan} fan</span><b>${sg.label}</b> — ${sg.detail}
+          ${sg.need?`<span class="sug-need">&#8594; You need: ${sg.need}</span>`:""}
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+  }
+
+  // Tile pickers
+  SUITS.forEach(suit=>{
+    html+=`<div class="cat-label">${suit.label}</div><div class="tile-grid">`;
+    suit.syms.forEach((sym,j)=>{
+      const k=tk(suit.id,j),cnt=counts[k]||0;
+      html+=`<div class="tile ${suit.tcls}${cnt>0?" sel":""}" onclick="addSuitTile('${suit.id}',${j},'${sym}','${suit.hcls}','${suit.names[j]}')">
+        <span class="tsym">${sym}</span><span class="tlbl">${cnt>0?cnt+"×":j+1}</span></div>`;
+    });
+    html+=`</div>`;
+  });
+
+  html+=`<div class="cat-label">Winds</div><div class="tile-grid">`;
+  WINDS_TILES.forEach(w=>{
+    const k=tk("honor",w.id),cnt=counts[k]||0;
+    html+=`<div class="tile t-wind${cnt>0?" sel":""}" style="width:54px" onclick="addHonorTile('${w.id}','${w.sym}','c-wind','${w.name}')">
+      <span class="tsym">${w.sym}</span><span class="tlbl">${cnt>0?cnt+"×":w.name.split(" ")[0]}</span></div>`;
+  });
+  html+=`</div>`;
+
+  html+=`<div class="cat-label">Dragons</div><div class="tile-grid">`;
+  DRAGONS.forEach(d=>{
+    const k=tk("honor",d.id),cnt=counts[k]||0;
+    html+=`<div class="tile ${d.tcls}${cnt>0?" sel":""}" style="width:82px" onclick="addHonorTile('${d.id}','${d.sym}','${d.hcls}','${d.name}')">
+      <span class="tsym">${d.sym}</span><span class="tlbl">${cnt>0?cnt+"×":d.name}</span></div>`;
+  });
+  html+=`</div>`;
+
+  // Flowers (4 tiles, 1 each)
+  html+=`<div class="cat-label">Bonus — Flowers (★ = matches your seat, black border)</div><div class="tile-grid">`;
+  FLOWERS.forEach(f=>{
+    const isOwn=f.seat===sw,sel=flSet.has(f.id);
+    html+=`<div class="tile t-flower${sel?" sel":""}${isOwn?" own-seat":""}" onclick="toggleFlower('${f.id}')">
+      <span class="tsym">${f.sym}</span><span class="tlbl">${f.name}${isOwn?" ★":""}</span></div>`;
+  });
+  html+=`</div>`;
+
+  // Seasons (4 tiles, 1 each)
+  html+=`<div class="cat-label">Bonus — Seasons (★ = matches your seat, black border)</div><div class="tile-grid">`;
+  SEASONS.forEach(se=>{
+    const isOwn=se.seat===sw,sel=seSet.has(se.id);
+    html+=`<div class="tile t-season${sel?" sel":""}${isOwn?" own-seat":""}" onclick="toggleSeason('${se.id}')">
+      <span class="tsym">${se.sym}</span><span class="tlbl">${se.name}${isOwn?" ★":""}</span></div>`;
+  });
+  html+=`</div>`;
+
+  // Animals (4 tiles, 1 each)
+  html+=`<div class="cat-label">Bonus — Animals (Cat+Mouse = +1 fan · Rooster+Worm = +1 fan)</div><div class="tile-grid">`;
+  ANIMALS.forEach(a=>{
+    const sel=anSet.has(a.id);
+    html+=`<div class="tile t-animal${sel?" sel":""}" onclick="toggleAnimal('${a.id}')">
+      <span class="tsym">${a.sym}</span><span class="tlbl">${a.name}</span></div>`;
+  });
+  html+=`</div>`;
+
+  // Bonus chips display
+  const bonusItems=[];
+  s.flowers.forEach(fid=>{
+    const f=FLOWERS.find(x=>x.id===fid);if(!f)return;
+    const isOwn=f.seat===sw;
+    bonusItems.push(`<span class="bonus-chip ${isOwn?"own":"other"}" onclick="toggleFlower('${fid}')">${f.sym} ${f.name}${isOwn?" (+1 own)":""}</span>`);
+  });
+  s.seasons.forEach(sid=>{
+    const se=SEASONS.find(x=>x.id===sid);if(!se)return;
+    const isOwn=se.seat===sw;
+    bonusItems.push(`<span class="bonus-chip ${isOwn?"own":"other"}" onclick="toggleSeason('${sid}')">${se.sym} ${se.name}${isOwn?" (+1 own)":""}</span>`);
+  });
+  const hasCat=s.animals.includes("an1"),hasMouse=s.animals.includes("an2");
+  const hasRooster=s.animals.includes("an3"),hasWorm=s.animals.includes("an4");
+  const cmPair=hasCat&&hasMouse,rwPair=hasRooster&&hasWorm;
+  s.animals.forEach(aid=>{
+    const a=ANIMALS.find(x=>x.id===aid);if(!a)return;
+    const inPair=(a.group==="cm"&&cmPair)||(a.group==="rw"&&rwPair);
+    bonusItems.push(`<span class="bonus-chip ${inPair?"animal-pair":"animal-single"}" onclick="toggleAnimal('${aid}')">${a.sym} ${a.name}${inPair?" (pair)":""}</span>`);
+  });
+  if(bonusItems.length){
+    html+=`<div class="section-label" style="margin-top:8px">Selected Bonus Tiles (tap to remove)</div>
+    <div class="bonus-display">${bonusItems.join("")}</div>`;
+  }
+
+  // Manual extras + discard row
+  html+=`<hr><div class="section-label">Extra Fan — Manual Conditions</div><div class="extra-grid">`;
+  EXTRAS.forEach(e=>{
+    html+=`<label class="extra-item">
+      <input type="checkbox" style="margin-top:2px;flex-shrink:0;width:15px;height:15px;accent-color:#2563eb" ${s.extras.includes(e.id)?"checked":""} onchange="toggleExtra('${e.id}',this.checked)">
+      <div><div><span class="et-name">${e.name}</span>&nbsp;<span class="et-fan">+${e.fan}</span></div>
+      <div class="et-desc">${e.desc}</div></div></label>`;
+  });
+  html+=`</div>`;
+
+  // Discard row — inside extra fan section
+  if(!s.extras.includes("self_draw")){
+    html+=`<div class="discard-row">
+      <label>&#9888; Who discarded the winning tile?</label>
+      <select id="discardDrop" onchange="discardPlayerIdx=parseInt(this.value)">
+        ${[0,1,2,3].filter(x=>x!==activeWinner).map(x=>`<option value="${x}"${x===discardPlayerIdx?" selected":""}>${gameNames[x]} (${WIND_CHARS[seatWinds[x]]})</option>`).join("")}
+      </select>
+    </div>`;
+  }
+
+  html+=`</div>`;
+  document.getElementById("playerPanel").innerHTML=html;
+}
+
+/* ================================================================ ACTIONS ================================================================ */
+function addSuitTile(suit,idx,sym,hcls,name){
+  if(winnerState.hand.filter(t=>t.suit===suit&&t.idx===idx).length>=4)return;
+  winnerState.hand.push({suit,idx,sym,hcls,name});renderPanel();
+}
+function addHonorTile(hid,sym,hcls,name){
+  if(winnerState.hand.filter(t=>t.suit==="honor"&&t.idx===hid).length>=4)return;
+  winnerState.hand.push({suit:"honor",idx:hid,sym,hcls,name});renderPanel();
+}
+function removeTile(ti){winnerState.hand.splice(ti,1);renderPanel();}
+function toggleFlower(fid){const a=winnerState.flowers,i=a.indexOf(fid);i>=0?a.splice(i,1):a.push(fid);renderPanel();}
+function toggleSeason(sid){const a=winnerState.seasons,i=a.indexOf(sid);i>=0?a.splice(i,1):a.push(sid);renderPanel();}
+function toggleAnimal(aid){const a=winnerState.animals,i=a.indexOf(aid);i>=0?a.splice(i,1):a.push(aid);renderPanel();}
+function toggleExtra(eid,val){
+  const a=winnerState.extras,i=a.indexOf(eid);
+  if(val&&i<0)a.push(eid);if(!val&&i>=0)a.splice(i,1);
+  renderPanel();
+}
+
+/* ================================================================ TRADITIONAL SINGAPORE PAYMENT ================================================================
+  Discard win:
+    Discarder pays winner: 2× base
+    Each other 2 non-winning players pays winner: 1× base
+    Winner receives total: 4× base
+
+  Self draw:
+    Each of 3 losers pays winner: 2× base
+    Winner receives total: 6× base
+*/
+function computeNet(wi,basePts,selfDraw,di){
+  const net=[0,0,0,0];
+  if(selfDraw){
+    net[wi]=basePts*6;
+    [0,1,2,3].forEach(i=>{if(i!==wi)net[i]=-basePts*2;});
+  } else {
+    net[wi]=basePts*4;
+    net[di]=-basePts*2;
+    [0,1,2,3].forEach(i=>{if(i!==wi&&i!==di)net[i]=-basePts;});
+  }
+  return net;
+}
+
+/* ================================================================ CALCULATE ================================================================ */
+function calculate(){
+  const resEl=document.getElementById("results");
+  const wi=activeWinner;
+  const sw=seatWinds[wi];
+  const pw=WIND_IDS[roundWindIdx%4];
+  const ws=winnerState;
+  const det=detectHand(ws.hand,sw,pw);
+
+  if(!det||det.status==="empty"){resEl.innerHTML=`<div class="err">&#9888; No tiles selected. Please add the winner's hand tiles.</div>`;return;}
+  if(det.status==="toomany"){resEl.innerHTML=`<div class="err">&#9888; Too many tiles (${ws.hand.length}/${det.limit}). Remove ${ws.hand.length-det.limit} tile(s).</div>`;return;}
+  if(det.status==="incomplete"){
+    const p=det.partial;
+    resEl.innerHTML=`<div class="err">&#9888; <strong>Incomplete hand</strong> — ${ws.hand.length}/${det.limit} tiles, ${det.missing} more needed.<br>
+    Sets completed: ${p.totalSets}/4. ${det.missing===1?"One more tile needed.":det.missing+" more tiles needed."}</div>`;return;
+  }
+  if(det.status==="invalid"){resEl.innerHTML=`<div class="err">&#9888; <strong>Invalid hand</strong> — cannot form 4 sets + 1 pair.<br>${det.suggestion}</div>`;return;}
+
+  const baseHand=det.matches.reduce((a,b)=>b.fan>a.fan?b:a);
+  let fan=baseHand.fan;
+  const bd=[{name:baseHand.label+" (base hand)",fan:baseHand.fan}];
+
+  const auto=autoFan(ws.hand,ws.flowers,ws.seasons,ws.animals,sw,pw);
+  fan+=auto.fan; auto.bd.forEach(x=>bd.push(x));
+
+  ws.extras.forEach(eid=>{
+    const e=EXTRAS.find(x=>x.id===eid);if(!e)return;
+    if(e.id==="heaven"||e.id==="earth"){fan=Math.max(fan,13);bd.push({name:e.name+" (limit hand)",fan:13});}
+    else{fan+=e.fan;bd.push({name:e.name,fan:e.fan});}
+  });
+
+  const cappedFan=Math.min(fan,fanCap);
+  const wasCapped=cappedFan<fan;
+  if(wasCapped) bd.push({name:`Fan Cap (house rule: max ${fanCap})`,fan:cappedFan-fan});
+  const finalFan=cappedFan;
+  const basePts=BASE_PTS[Math.max(0,Math.min(13,finalFan))];
+  const selfDraw=ws.extras.includes("self_draw");
+  const pv=pointValue;
+
+  const di=selfDraw?-1:parseInt((document.getElementById("discardDrop")||{value:discardPlayerIdx}).value);
+  const net=computeNet(wi,basePts,selfDraw,di);
+  const dealerWon=seatWinds[wi]==="we";
+
+  // Update score history — replace this round's entry if it exists
+  const existingIdx=scoreHistory.findIndex(h=>h.round===roundNumber);
+  const histEntry={round:roundNumber,net:[...net],winnerIdx:wi,handName:baseHand.label,fan:finalFan,dealerWon,selfDraw,di};
+
+  // Recalculate cumulative from scratch
+  if(existingIdx>=0){
+    scoreHistory[existingIdx]=histEntry;
+  } else {
+    scoreHistory.push(histEntry);
+  }
+  // Recompute cumulative
+  cumulativeNet=[0,0,0,0];
+  scoreHistory.forEach(h=>{[0,1,2,3].forEach(i=>{cumulativeNet[i]+=h.net[i];});});
+
+  currentRoundResult={wi,sw,net,fan:finalFan,basePts,bd,selfDraw,di,dealerWon,wasCapped,cappedFan,fan:finalFan};
+
+  let html=`<div style="font-size:16px;font-weight:700;margin-bottom:12px">&#127942; Round ${roundNumber} Results</div>`;
+
+  html+=`<div class="result-card">
+    <div class="result-header">
+      <span style="font-weight:700;font-size:15px">${gameNames[wi]} (${WIND_CHARS[sw]})</span>
+      <span class="winner-badge">&#127942; Winner</span>
+    </div>
+    <div class="section-label">Fan Breakdown</div>
+    ${bd.map(b=>`<div class="fan-row"><span class="fan-name">${b.name}</span><span class="fan-val" style="${b.fan<0?"color:#b91c1c":""}">${b.fan>=0?"+":""}${b.fan} fan</span></div>`).join("")}
+    <div class="fan-row" style="font-weight:700"><span>Total Fan</span><span>${finalFan} fan${wasCapped?" (capped from "+fan+"fan)":""}</span></div>
+    <div class="fan-row"><span class="fan-name">Base Points (2^${finalFan})</span><span class="fan-val">${basePts.toLocaleString()} pts</span></div>
+    <div class="points-line"><span class="pts-label">Winner receives</span>
+      <span class="pts-val">+${(selfDraw?basePts*6:basePts*4).toLocaleString()} pts = +${((selfDraw?basePts*6:basePts*4)*pv).toLocaleString()}</span>
+    </div>
+    <p class="note">${selfDraw
+      ?`Self Draw: each of 3 players pays <b>${basePts.toLocaleString()} pts × 2 = ${(basePts*2).toLocaleString()} pts</b> (${(basePts*2*pv).toLocaleString()})`
+      :`Discard win: <b>${gameNames[di]}</b> pays ${(basePts*2).toLocaleString()} pts (${(basePts*2*pv).toLocaleString()}); each other player pays ${basePts.toLocaleString()} pts (${(basePts*pv).toLocaleString()})`}
+    </p>
+    <p class="note" style="margin-top:4px">${dealerWon?"&#128204; Dealer (East) won — winds stay, same dealer next round.":"&#128204; Non-dealer won — winds rotate anti-clockwise next round."}</p>
+  </div>`;
+
+  // Round scores
+  html+=`<div class="result-card">
+    <div style="font-weight:700;margin-bottom:12px">Round ${roundNumber} Score <span style="font-size:12px;color:#888;font-weight:400">(1 pt = ${pv.toLocaleString()})</span></div>
+    <div class="summary-grid">${[0,1,2,3].map(i=>`<div class="sum-card">
+      <div class="sum-name" title="${gameNames[i]}">${gameNames[i]}</div>
+      <div class="sum-pts ${net[i]>0?"pos":net[i]<0?"neg":"zero"}">${net[i]>=0?"+":""}${net[i]}</div>
+      <div class="sum-money ${net[i]>0?"pos":net[i]<0?"neg":"zero"}">${net[i]>=0?"+":""}${(net[i]*pv).toLocaleString()}</div>
+    </div>`).join("")}</div>
+  </div>`;
+
+  // Final Payout (cumulative)
+  html+=`<div class="result-card">
+    <div style="font-weight:700;margin-bottom:12px">Final Payout (Rounds 1–${roundNumber})</div>
+    <div class="summary-grid">${[0,1,2,3].map(i=>`<div class="sum-card">
+      <div class="sum-name" title="${gameNames[i]}">${gameNames[i]}</div>
+      <div class="sum-pts ${cumulativeNet[i]>0?"pos":cumulativeNet[i]<0?"neg":"zero"}">${cumulativeNet[i]>=0?"+":""}${cumulativeNet[i]}</div>
+      <div class="sum-money ${cumulativeNet[i]>0?"pos":cumulativeNet[i]<0?"neg":"zero"}">${cumulativeNet[i]>=0?"+":""}${(cumulativeNet[i]*pv).toLocaleString()}</div>
+    </div>`).join("")}</div>
+  </div>`;
+
+  // History
+  if(scoreHistory.length>0){
+    html+=`<div class="result-card"><div style="font-weight:700;margin-bottom:8px">Round History</div>
+      <div style="overflow-x:auto"><table class="history-table">
+        <thead><tr><th>Round</th><th>Winner</th><th>Hand</th><th>Fan</th><th>Win Type</th>
+          ${gameNames.map(n=>`<th>${n}</th>`).join("")}</tr></thead>
+        <tbody>${scoreHistory.map(h=>`<tr>
+          <td>R${h.round}</td>
+          <td>${gameNames[h.winnerIdx]}</td>
+          <td>${h.handName}</td>
+          <td>${h.fan}</td>
+          <td>${h.selfDraw?"Self Draw":"Discard ("+gameNames[h.di]+")"}</td>
+          ${[0,1,2,3].map(i=>{const v=h.net[i];return`<td class="${v>0?"td-pos":v<0?"td-neg":"td-zero"}">${v>=0?"+":""}${v}</td>`;}).join("")}
+        </tr>`).join("")}</tbody>
+      </table></div></div>`;
+  }
+
+  // Fan reference
+  html+=`<div class="result-card"><div style="font-weight:700;margin-bottom:12px">Fan Reference Table${fanCap<13?` <span style="font-size:11px;color:#888;font-weight:400">(Cap: ${fanCap} fan — faded = inactive)</span>`:""}
+  </div><div class="fan-ref-grid">
+    ${BASE_PTS.map((pts,f)=>{
+      const isActive=f===finalFan,isCapped=f>fanCap;
+      return`<div class="fan-ref-cell${isActive?" active":""}${isCapped?" capped":""}">
+        <div class="fan-ref-num${isActive?" active":""}">${f} fan</div>
+        <div class="fan-ref-pts${isActive?" active":""}">${pts}</div>
+        <div style="font-size:10px;color:${isActive?"#1d4ed8":"#aaa"}">${(pts*pv).toLocaleString()}</div>
+      </div>`;}).join("")}
+  </div></div>`;
+
+  // Buttons
+  const gameComplete=isGameComplete();
+  if(gameComplete){
+    html+=`<button class="complete-game-btn" onclick="completeGame()">&#127942; Complete Game — Show Final Results</button>`;
+  } else {
+    html+=`<button class="new-round-btn" onclick="newRound(${dealerWon?1:0})">&#8635; Start Round ${roundNumber+1}${dealerWon?" (winds stay — dealer won)":" (winds rotate)"}</button>`;
+  }
+
+  resEl.innerHTML=html;
+  resEl.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function newRound(dealerWon){
+  const msg=dealerWon?"Dealer won — winds stay. Start Round "+(roundNumber+1)+"?":"Winds rotate anti-clockwise. Start Round "+(roundNumber+1)+"?";
+  if(!confirm(msg))return;
+  advanceRound(!!dealerWon);
+}
+
+function completeGame(){
+  if(!confirm("End the game and show Final Payout?"))return;
+  showCongratsPage();
+}
+
+function showCongratsPage(){
+  document.getElementById("mainApp").style.display="none";
+  document.getElementById("congratsPage").style.display="block";
+  document.getElementById("congratsSubtitle").textContent=
+    "Game complete after "+roundNumber+" round"+(roundNumber>1?"s":"")+
+    " — "+gameNames.join(", ")+" have all completed as dealer.";
+
+  // Final Payout table
+  let payHtml=`<div class="summary-grid">`;
+  [0,1,2,3].map(i=>`<div class="sum-card">
+    <div class="sum-name" title="${gameNames[i]}">${gameNames[i]}</div>
+    <div class="sum-pts ${cumulativeNet[i]>0?"pos":cumulativeNet[i]<0?"neg":"zero"}">${cumulativeNet[i]>=0?"+":""}${cumulativeNet[i]}</div>
+    <div class="sum-money ${cumulativeNet[i]>0?"pos":cumulativeNet[i]<0?"neg":"zero"}">${cumulativeNet[i]>=0?"+":""}${(cumulativeNet[i]*pointValue).toLocaleString()}</div>
+  </div>`).forEach(x=>payHtml+=x);
+  payHtml+=`</div>`;
+  document.getElementById("finalPayoutTable").innerHTML=payHtml;
+
+  // Round History
+  let histHtml=`<table class="history-table" style="width:100%">
+    <thead><tr><th>Round</th><th>Winner</th><th>Hand</th><th>Fan</th><th>Win Type</th>
+      ${gameNames.map(n=>`<th>${n}</th>`).join("")}</tr></thead>
+    <tbody>${scoreHistory.map(h=>`<tr>
+      <td>R${h.round}</td><td>${gameNames[h.winnerIdx]}</td><td>${h.handName}</td><td>${h.fan}</td>
+      <td>${h.selfDraw?"Self Draw":"Discard ("+gameNames[h.di]+")"}</td>
+      ${[0,1,2,3].map(i=>{const v=h.net[i];return`<td class="${v>0?"td-pos":v<0?"td-neg":"td-zero"}">${v>=0?"+":""}${v}</td>`;}).join("")}
+    </tr>`).join("")}</tbody></table>`;
+  document.getElementById("finalHistoryTable").innerHTML=histHtml;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function openRules(){document.getElementById("rulesModal").classList.add("open");}
+function closeRules(){document.getElementById("rulesModal").classList.remove("open");}
+document.getElementById("rulesModal").addEventListener("click",function(e){if(e.target===this)closeRules();});
+</script>
+</body>
+</html>
