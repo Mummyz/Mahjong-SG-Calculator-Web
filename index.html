@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Singapore Mahjong Scorer</title>
+<title>Singapore Mahjong Calculator</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh;display:flex;flex-direction:column}
@@ -50,11 +50,11 @@ body{font-family:Arial,sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:10
 /* MAIN */
 #mainApp{display:none;padding:16px}
 .wrap{max-width:820px;margin:0 auto;padding-bottom:24px}
-.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px}
-.top-bar h1{font-size:20px;font-weight:700}
-.top-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.round-badge{background:#1a1a1a;color:#fff;font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px}
-.rules-btn{background:#fff;color:#1a1a1a;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;border:1px solid #ccc;cursor:pointer}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:8px;flex-wrap:nowrap}
+.top-bar h1{font-size:20px;font-weight:700;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.round-badge{background:#1a1a1a;color:#fff;font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;white-space:nowrap}
+.rules-btn{background:#fff;color:#1a1a1a;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;border:1px solid #ccc;cursor:pointer;white-space:nowrap}
 .rules-btn:hover{background:#f3f4f6}
 
 /* RULES MODAL */
@@ -84,21 +84,90 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #ccc;background:#fff;
 .section-label{font-size:11px;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
 
 /* HAND DISPLAY */
-.hand-display{min-height:56px;display:flex;flex-wrap:wrap;gap:3px;padding:8px;background:#f9f8f5;border-radius:8px;margin-bottom:8px;align-items:center;border:1px solid #e8e6e0}
-.hand-tile{width:36px;height:50px;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:9px;border:1px solid #ddd;background:#fff;cursor:pointer;user-select:none}
-.hand-tile:hover{opacity:.6}
-.hand-tile .ht-sym{font-size:14px;line-height:1}
-.hand-tile.c-man{color:#374151;border-color:#d1d5db}
-.hand-tile.c-pin{color:#1d4ed8;border-color:#93c5fd}
-.hand-tile.c-sou{color:#15803d;border-color:#86efac}
-.hand-tile.c-wind{color:#1d4ed8;border-color:#93c5fd;font-weight:700}
-.hand-tile.c-red-dragon{color:#dc2626;border-color:#fca5a5}
-.hand-tile.c-green-dragon{color:#15803d;border-color:#86efac}
-.hand-tile.c-white-dragon{color:#374151;border-color:#9ca3af}
-.count-badge{font-size:12px;color:#666;padding:2px 8px;background:#eee;border-radius:6px;border:1px solid #ddd;align-self:center}
-.kang-badge{font-size:11px;color:#854d0e;padding:2px 8px;background:#fef3c7;border-radius:6px;border:1px solid #fcd34d;align-self:center;margin-left:2px}
+.hand-display{min-height:72px;display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:#2d5a27;border-radius:10px;margin-bottom:8px;align-items:center;border:2px solid #1a3a16}
+.hand-tile{width:46px;height:62px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border:1px solid #bbb;background:#fff;cursor:pointer;user-select:none;box-shadow:0 2px 4px rgba(0,0,0,.25);position:relative;transition:transform .1s}
+.hand-tile:hover{opacity:.75;transform:translateY(-3px)}
+.hand-tile:active{transform:translateY(0)}
+.hand-tile .ht-uni{font-size:36px;line-height:1;display:block}
+.hand-tile .ht-lbl{display:none}
+.hand-tile.c-man .ht-uni{color:#1a1a1a}
+.hand-tile.c-pin .ht-uni{color:#1a1a1a}
+.hand-tile.c-sou .ht-uni{color:#1a1a1a}
+.hand-tile.c-wind .ht-uni{color:#1d4ed8;font-size:30px;font-weight:700}
+.hand-tile.c-wind.own-wind .ht-uni{color:#1a1a1a}
+.hand-tile.c-red-dragon .ht-uni{color:#dc2626;font-size:30px;font-weight:700}
+.hand-tile.c-green-dragon .ht-uni{color:#15803d;font-size:30px;font-weight:700}
+.hand-tile.c-white-dragon .ht-uni{color:#374151;font-size:30px;font-weight:700}
+.hand-tile.c-wind{border-color:#93c5fd;background:#eff6ff}
+.hand-tile.c-red-dragon{border-color:#fca5a5;background:#fff5f5}
+.hand-tile.c-green-dragon{border-color:#86efac;background:#f0fdf4}
+.hand-tile.c-white-dragon{border-color:#9ca3af;background:#fafafa}
+.hand-tile.own-wind{border:2.5px solid #1a1a1a}
+.hand-tile .remove-hint{position:absolute;top:1px;right:2px;font-size:8px;color:#ccc}
+.count-badge{font-size:12px;color:#fff;padding:2px 8px;background:rgba(0,0,0,.4);border-radius:6px;align-self:center}
+.kang-badge{font-size:11px;color:#fff;padding:2px 8px;background:rgba(217,119,6,.7);border-radius:6px;align-self:center;margin-left:2px}
 
-/* SET STATUS */
+/* TILE PICKER */
+.cat-label{font-size:11px;color:#555;margin-top:14px;margin-bottom:6px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding-bottom:3px;border-bottom:1px solid #e8e6e0}
+.tile-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px}
+
+/* Each tile is a wrapper: card + label below */
+.tile-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;user-select:none}
+.tile-wrap:hover .tile-card{transform:translateY(-4px);box-shadow:0 6px 12px rgba(0,0,0,.2)}
+.tile-wrap:active .tile-card{transform:translateY(0)}
+.tile-wrap .tile-num{font-size:11px;color:#666;font-weight:600;line-height:1}
+.tile-wrap.sel .tile-num{color:#2563eb;font-weight:700}
+
+/* Base tile card — no label inside, just the big glyph */
+.tile-card{width:52px;height:68px;border-radius:6px;border:1.5px solid #c8c0b0;background:linear-gradient(160deg,#fff 60%,#f5f0e8);display:flex;align-items:center;justify-content:center;transition:transform .1s,box-shadow .1s;box-shadow:0 2px 4px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.8);position:relative}
+.tile-card .tsym{font-size:36px;line-height:1;display:block}
+
+/* Selected state per suit */
+.tile-wrap.t-man.sel .tile-card{border:2.5px solid #d97706;background:linear-gradient(160deg,#fef3c7 60%,#fde68a)}
+.tile-wrap.t-pin.sel .tile-card{border:2.5px solid #2563eb;background:linear-gradient(160deg,#dbeafe 60%,#bfdbfe)}
+.tile-wrap.t-sou.sel .tile-card{border:2.5px solid #16a34a;background:linear-gradient(160deg,#dcfce7 60%,#bbf7d0)}
+.tile-wrap.t-man.sel .tile-num{color:#92400e}
+.tile-wrap.t-sou.sel .tile-num{color:#15803d}
+
+/* Wind tiles — same style as flowers */
+.tile-wrap.t-wind .tile-card{background:linear-gradient(160deg,#eff6ff 60%,#dbeafe);border-color:#93c5fd;width:56px;height:68px}
+.tile-wrap.t-wind .tile-card .tsym{color:#1d4ed8;font-size:28px;font-weight:700}
+.tile-wrap.t-wind.sel .tile-card{background:linear-gradient(160deg,#dbeafe 60%,#bfdbfe);border:2.5px solid #2563eb}
+.tile-wrap.t-wind.own-wind .tile-card{border:2.5px solid #1a1a1a}
+.tile-wrap.t-wind.own-wind.sel .tile-card{border-color:#2563eb}
+
+/* Dragon tiles — each its own colour, same tile-card format */
+.tile-wrap.t-red-dragon .tile-card{background:linear-gradient(160deg,#fff5f5 60%,#fee2e2);border-color:#fca5a5;width:56px;height:68px}
+.tile-wrap.t-red-dragon .tile-card .tsym{color:#dc2626;font-size:28px;font-weight:700}
+.tile-wrap.t-red-dragon.sel .tile-card{background:linear-gradient(160deg,#fee2e2 60%,#fecaca);border:2.5px solid #dc2626}
+.tile-wrap.t-green-dragon .tile-card{background:linear-gradient(160deg,#f0fdf4 60%,#dcfce7);border-color:#86efac;width:56px;height:68px}
+.tile-wrap.t-green-dragon .tile-card .tsym{color:#15803d;font-size:28px;font-weight:700}
+.tile-wrap.t-green-dragon.sel .tile-card{background:linear-gradient(160deg,#dcfce7 60%,#bbf7d0);border:2.5px solid #15803d}
+.tile-wrap.t-white-dragon .tile-card{background:linear-gradient(160deg,#fafafa 60%,#f3f4f6);border-color:#9ca3af;width:56px;height:68px}
+.tile-wrap.t-white-dragon .tile-card .tsym{color:#374151;font-size:28px;font-weight:700}
+.tile-wrap.t-white-dragon.sel .tile-card{background:linear-gradient(160deg,#f3f4f6 60%,#e5e7eb);border:2.5px solid #374151}
+
+/* Flower tiles */
+.tile-wrap.t-flower .tile-card{background:linear-gradient(160deg,#fdf2f8 60%,#fce7f3);border-color:#f9a8d4;width:56px;height:68px}
+.tile-wrap.t-flower .tile-card .tsym{color:#be185d;font-size:28px}
+.tile-wrap.t-flower.sel .tile-card{background:linear-gradient(160deg,#fce7f3 60%,#fbcfe8);border:2.5px solid #db2777}
+.tile-wrap.t-flower.own-seat .tile-card{border:2.5px solid #1a1a1a}
+.tile-wrap.t-flower.own-seat.sel .tile-card{border-color:#db2777}
+
+/* Season tiles */
+.tile-wrap.t-season .tile-card{background:linear-gradient(160deg,#f5f3ff 60%,#ede9fe);border-color:#c4b5fd;width:56px;height:68px}
+.tile-wrap.t-season .tile-card .tsym{color:#7c3aed;font-size:28px}
+.tile-wrap.t-season.sel .tile-card{background:linear-gradient(160deg,#ede9fe 60%,#ddd6fe);border:2.5px solid #7c3aed}
+.tile-wrap.t-season.own-seat .tile-card{border:2.5px solid #1a1a1a}
+.tile-wrap.t-season.own-seat.sel .tile-card{border-color:#7c3aed}
+
+/* Animal tiles */
+.tile-wrap.t-animal .tile-card{background:linear-gradient(160deg,#fffbeb 60%,#fef3c7);border-color:#fcd34d;width:56px;height:68px}
+.tile-wrap.t-animal .tile-card .tsym{font-size:30px}
+.tile-wrap.t-animal.sel .tile-card{background:linear-gradient(160deg,#fef3c7 60%,#fde68a);border:2.5px solid #d97706}
+
+/* Keep old .tile class as no-op to avoid JS errors — actual styling via .tile-card now */
+.tile{display:contents}
 .set-status-box{border-radius:8px;padding:10px 14px;margin-bottom:6px;border:1px solid #e5e7eb;background:#fafaf9}
 .set-status-row{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:4px}
 .set-status-row:last-child{margin-bottom:0}
@@ -120,7 +189,8 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #ccc;background:#fff;
 /* TILES */
 .cat-label{font-size:11px;color:#777;margin-top:11px;margin-bottom:5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
 .tile-grid{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:2px}
-.tile{width:40px;height:52px;border-radius:4px;border:1px solid #ddd;background:#f9f8f5;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:2px;transition:background .08s;user-select:none}
+/* Keep old .tile class as no-op to avoid JS errors */
+.tile{display:contents}
 .tile:hover{border-color:#888;background:#fff}
 .tile.sel{border:2px solid #2563eb;background:#dbeafe}
 .tile .tsym{font-size:16px;line-height:1}
@@ -247,16 +317,17 @@ hr{border:none;border-top:1px solid #ece9e0;margin:14px 0}
   .player-title{font-size:15px}
 
   /* Hand tiles — smaller on mobile */
-  .hand-tile{width:30px;height:42px;font-size:8px}
-  .hand-tile .ht-sym{font-size:12px}
+  .hand-tile{width:36px;height:48px}
+  .hand-tile .ht-uni{font-size:26px}
 
-  /* Tile pickers — tighter grid */
-  .tile{width:34px;height:44px}
-  .tile .tsym{font-size:14px}
-  .tile .tlbl{font-size:8px}
-  .tile.t-flower,.tile.t-season,.tile.t-animal{width:46px;height:50px}
-  .tile.t-wind{width:42px!important}
-  .tile.t-red-dragon,.tile.t-green-dragon,.tile.t-white-dragon{width:66px!important}
+  /* Tile pickers — tighter grid using new tile-wrap */
+  .tile-card{width:40px!important;height:52px!important}
+  .tile-card .tsym{font-size:25px}
+  .tile-wrap.t-wind .tile-card .tsym,.tile-wrap.t-red-dragon .tile-card .tsym,.tile-wrap.t-green-dragon .tile-card .tsym,.tile-wrap.t-white-dragon .tile-card .tsym{font-size:23px}
+  .tile-wrap.t-flower .tile-card,.tile-wrap.t-season .tile-card,.tile-wrap.t-animal .tile-card{width:44px!important;height:52px!important}
+  .tile-wrap.t-flower .tile-card .tsym,.tile-wrap.t-season .tile-card .tsym,.tile-wrap.t-animal .tile-card .tsym{font-size:22px}
+  .tile-wrap .tile-num{font-size:10px}
+  .tile-grid{gap:4px}
 
   /* Set status */
   .set-status-box{padding:8px 10px}
@@ -310,6 +381,16 @@ hr{border:none;border-top:1px solid #ece9e0;margin:14px 0}
   .bonus-chip{font-size:10px;padding:3px 7px}
 }
 
+@media (max-width: 380px) {
+  .tile-card{width:34px!important;height:46px!important}
+  .tile-card .tsym{font-size:21px}
+  .tile-wrap.t-flower .tile-card,.tile-wrap.t-season .tile-card,.tile-wrap.t-animal .tile-card{width:38px!important;height:46px!important}
+  .hand-tile{width:30px;height:42px}
+  .hand-tile .ht-uni{font-size:20px}
+  .fan-ref-grid{grid-template-columns:repeat(5,1fr)}
+  .summary-grid{grid-template-columns:1fr 1fr}
+}
+
 footer{text-align:center;padding:16px;font-size:13px;color:#aaa;border-top:1px solid #e8e6e0;background:#fff;margin-top:auto}
 footer b{color:#888}
 </style>
@@ -323,7 +404,7 @@ footer b{color:#888}
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
         <div style="font-size:32px;font-weight:700;color:#dc2626;line-height:1">中</div>
         <div>
-          <div class="setup-title">Singapore Mahjong</div>
+          <div class="setup-title">Singapore Mahjong Calculator</div>
           <div style="font-size:11px;color:#888;margin-top:1px">by Mummyz</div>
         </div>
       </div>
@@ -373,81 +454,146 @@ footer b{color:#888}
 <div class="modal-overlay" id="rulesModal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeRules()">&#10005;</button>
-    <h2>&#127183; Singapore Mahjong — Official Rules</h2>
-    <div class="rs"><h3>Tiles</h3>
+    <h2>Singapore Mahjong — Official Rules</h2>
+    <p style="font-size:11px;color:#888;margin-bottom:14px">Based on official Singaporean Mahjong scoring rules (148 tiles). Source: singaporemahjong.com</p>
+
+    <div class="rs"><h3>Tile Set (148 tiles total)</h3>
       <ul>
-        <li><b>144 tiles total</b></li>
-        <li>3 Suits × 9 values × 4 copies = 108 (Characters/Man, Circles/Pin, Bamboo/Sou)</li>
-        <li>4 Wind tiles × 4 copies = 16 (East, South, West, North)</li>
-        <li>3 Dragon tiles × 4 copies = 12 (Red 中, Green 發, White 白)</li>
-        <li>4 Flower bonus tiles × 1 = 4 (Flower 1–4, one per seat)</li>
-        <li>4 Season bonus tiles × 1 = 4 (Season 1–4, one per seat)</li>
-        <li>4 Animal bonus tiles × 1 = 4 (Cat, Mouse, Rooster, Worm)</li>
+        <li><b>Suited tiles:</b> 3 suits × 9 values × 4 copies = 108 (Characters 萬, Circles 筒, Bamboo 索)</li>
+        <li><b>Wind tiles:</b> East 東, South 南, West 西, North 北 — 4 copies each = 16</li>
+        <li><b>Dragon tiles:</b> Red 中 (Chun), Green 發 (Fa), White 白 (Pai) — 4 copies each = 12</li>
+        <li><b>Flower tiles:</b> 4 tiles — Plum 梅, Orchid 蘭, Chrysanthemum 菊, Bamboo 竹 (one each)</li>
+        <li><b>Season tiles:</b> 4 tiles — Spring 春, Summer 夏, Autumn 秋, Winter 冬 (one each)</li>
+        <li><b>Animal tiles:</b> 4 tiles — Cat 🐱, Rat/Mouse 🐭, Rooster 🐦, Centipede/Worm 🪱 (one each)</li>
       </ul>
+      <p style="margin-top:6px;font-size:12px;color:#888">Dealer (East) and opposite player (West) each have 19 stacks. South and North have 18 stacks. Dead wall = 15 tiles.</p>
     </div>
+
     <div class="rs"><h3>Hand Structure</h3>
-      <p><b>Standard hand = 4 melds + 1 pair (14 tiles total)</b><br>
-      A meld is a <b>Sequence</b> (3 consecutive same-suit) or a <b>Triplet</b> (3 identical tiles).<br>
-      A <b>Kang</b> (4 identical tiles) counts as a meld but requires drawing 1 replacement tile, increasing hand size to 15 (or more for multiple Kangs).<br>
-      Bonus tiles (Flowers, Seasons, Animals) are drawn separately and are never part of the 14-tile count.</p>
-    </div>
-    <div class="rs"><h3>Dealer &amp; Wind Rotation</h3>
+      <p><b>Standard winning hand = 4 sets + 1 pair (14 tiles)</b></p>
       <ul>
-        <li>East (Player 1) is the dealer in Round 1. East Wind is the prevailing wind.</li>
-        <li><b>If East (dealer) wins</b> → winds do NOT rotate. Same dealer plays again.</li>
-        <li><b>If any other player wins</b> → all seat winds rotate anti-clockwise one step.</li>
-        <li>After every player has held East once (4 wind changes), the prevailing wind changes: East → South → West → North.</li>
-        <li>A full game = all 4 players complete their turn as dealer = one complete "round cycle".</li>
+        <li><b>Chow (吃)</b> — Sequence of 3 consecutive tiles, same suit only</li>
+        <li><b>Pong (碰)</b> — Triplet of 3 identical tiles</li>
+        <li><b>Kang (杠)</b> — 4 identical tiles; requires drawing 1 replacement tile (hand becomes 15, 16... tiles)</li>
+        <li>Bonus tiles (Flowers, Seasons, Animals) are drawn separately — never counted in the 14-tile hand</li>
+        <li><b>Minimum requirement:</b> 1 point to win (起胡 qǐ-hú)</li>
       </ul>
     </div>
-    <div class="rs"><h3>Traditional Singapore Scoring (Payment)</h3>
-      <p><b>Points formula: 2^(fan)</b>. Minimum 0 fan = 1 point (Chicken Hand).</p>
-      <p style="margin-top:8px"><b>Discard Win:</b><br>
-      — Discarder pays winner: <b>2× base points</b><br>
-      — Each of the other 2 non-winning, non-discarding players pays winner: <b>1× base points</b><br>
-      — Total received by winner: <b>4× base points</b></p>
-      <p style="margin-top:8px"><b>Self Draw (Zimo) — more profitable:</b><br>
-      — Each of the 3 losing players pays winner: <b>2× base points</b><br>
-      — Total received by winner: <b>6× base points</b></p>
+
+    <div class="rs"><h3>Scoring Formula</h3>
+      <p>Base value doubles with each point: <b>1pt = 1×, 2pt = 2×, 3pt = 4×, 4pt = 8×, 5pt(Limit) = 16×</b></p>
+      <p style="margin-top:6px">Players agree a base monetary value for 1 point before the game (e.g. S$1).</p>
+      <table class="fan-table" style="margin-top:8px">
+        <tr><th>Points</th><th>Discard Win — Loser each pays</th><th>Discard Win — Shooter pays</th><th>Winner gains</th></tr>
+        <tr><td>1</td><td>1×</td><td>2×</td><td>4×</td></tr>
+        <tr><td>2</td><td>2×</td><td>4×</td><td>8×</td></tr>
+        <tr><td>3</td><td>4×</td><td>8×</td><td>16×</td></tr>
+        <tr><td>4</td><td>8×</td><td>16×</td><td>32×</td></tr>
+        <tr><td>5 (Limit)</td><td>16×</td><td>32×</td><td>64×</td></tr>
+      </table>
+      <table class="fan-table" style="margin-top:8px">
+        <tr><th>Points</th><th>Self Draw — All 3 losers each pay</th><th>Winner gains</th></tr>
+        <tr><td>1</td><td>2×</td><td>6×</td></tr>
+        <tr><td>2</td><td>4×</td><td>12×</td></tr>
+        <tr><td>3</td><td>8×</td><td>24×</td></tr>
+        <tr><td>4</td><td>16×</td><td>48×</td></tr>
+        <tr><td>5 (Limit)</td><td>32×</td><td>96×</td></tr>
+      </table>
+      <p style="font-size:11px;color:#888;margin-top:6px">Special hands (limit hands) are always paid double, regardless of self-draw or discard.</p>
     </div>
-    <div class="rs"><h3>Fan Values</h3>
+
+    <div class="rs"><h3>Winning Hand Fan Values</h3>
       <table class="fan-table">
-        <tr><th>Fan</th><th>Hand / Condition</th></tr>
-        <tr><td>0</td><td>Chicken Hand — valid hand, no special pattern</td></tr>
-        <tr><td>1</td><td>All Sequences (4 sequences + 1 pair)</td></tr>
-        <tr><td>1</td><td>Self Draw (Zimo) — win by drawing from wall yourself</td></tr>
-        <tr><td>1</td><td>Own Seat Wind Triplet/Kang</td></tr>
-        <tr><td>1</td><td>Prevailing Wind Triplet/Kang</td></tr>
-        <tr><td>1</td><td>Each Dragon Triplet/Kang (Red, Green, or White)</td></tr>
-        <tr><td>1</td><td>Fully Concealed Hand</td></tr>
-        <tr><td>1</td><td>Last Tile in Wall / Robbing Kang / Win on Kang</td></tr>
-        <tr><td>1</td><td>All Simples (no terminals 1/9, no honor tiles)</td></tr>
-        <tr><td>1</td><td>Own Flower or Own Season tile (matching seat, per tile)</td></tr>
-        <tr><td>1</td><td>Non-own Flower or Season tile (per tile)</td></tr>
-        <tr><td>1</td><td>Animal pair: Cat+Mouse or Rooster+Worm</td></tr>
-        <tr><td>3</td><td>All Triplets (4 triplets/kangs + 1 pair)</td></tr>
-        <tr><td>3</td><td>Mixed One Suit (one suit + honors)</td></tr>
-        <tr><td>3</td><td>Complete set: all 4 Flowers (Flower 1+2+3+4)</td></tr>
-        <tr><td>3</td><td>Complete set: all 4 Seasons (Season 1+2+3+4)</td></tr>
-        <tr><td>3</td><td>All 4 Animals (Cat+Mouse+Rooster+Worm)</td></tr>
-        <tr><td>5</td><td>Small Three Dragons (2 dragon triplets + 1 dragon pair)</td></tr>
-        <tr><td>6</td><td>Small Four Winds (3 wind triplets + 1 wind pair)</td></tr>
-        <tr><td>7</td><td>Pure One Suit (one suit only, no honors)</td></tr>
-        <tr><td>8</td><td>Big Three Dragons (3 dragon triplets/kangs)</td></tr>
-        <tr><td>10</td><td>All Honors (only winds and dragons)</td></tr>
-        <tr><td>13</td><td>Big Four Winds, Thirteen Orphans, Nine Gates, Four Kangs, Heavenly/Earthly Hand</td></tr>
+        <tr><th>Fan</th><th>Hand Name</th><th>Description</th></tr>
+        <tr><td>0</td><td>Chicken Hand 鸡胡</td><td>Valid 4 sets + 1 pair, no special pattern, no value bonus tiles. Minimum 1pt required — Chicken Hand is only valid if you have 1pt from bonus tiles etc.</td></tr>
+        <tr><td>1</td><td>Lesser Sequence Hand 小平胡</td><td>All sequences + pair from suited tiles, but player drew flowers/animals. Counts only 1pt regardless of other bonuses.</td></tr>
+        <tr><td>2</td><td>Triplets Hand 碰碰胡</td><td>4 triplets/kangs + 1 pair. Mix of exposed and hidden Pongs allowed.</td></tr>
+        <tr><td>2</td><td>Half Flush 混一色</td><td>All tiles from one single suit PLUS any winds/dragons. Also called Mixed One Suit.</td></tr>
+        <tr><td>4</td><td>Full Flush 清一色</td><td>All tiles from ONE single suit only — no winds or dragons.</td></tr>
+        <tr><td>4</td><td>Sequence Hand 平胡</td><td>4 sequences + 1 pair. No flowers/animals drawn. Must be waiting for 2+ tiles to win (no single wait). Pair can be from any suit or non-seat/non-prevailing wind.</td></tr>
+        <tr><td>4</td><td>Mixed Terminals 混么九</td><td>All triplets of only 1s, 9s, winds, and dragons. Must fulfil Triplets Hand criteria (2+2=4pts).</td></tr>
+        <tr><td>3</td><td>Three Lesser Scholars 小三元</td><td>Pong/Kang of 2 dragons + pair of 3rd dragon.</td></tr>
+        <tr><td>3–4</td><td>Four Lesser Blessings 小四喜</td><td>3 wind Pong/Kangs + 1 wind pair. Score 2pts for hand + bonus for seat/prevailing winds.</td></tr>
+        <tr><td>4</td><td>Pure Green Suit 绿一色</td><td>Only Bamboo 2,3,4,6,8 + Green Dragon. Scores 4pts (treated as Full Flush equivalent).</td></tr>
+        <tr><td>Limit</td><td>Hidden Treasure 四暗刻</td><td>All 4 triplets hidden (no exposed Pong), won by Self-Draw only. Extremely rare.</td></tr>
+        <tr><td>Limit</td><td>Full Flush Sequence 清一色平胡</td><td>All sequences, one suit only, no flowers/animals. Awarded 10pts or limit.</td></tr>
+        <tr><td>Limit</td><td>Full Flush Triplets 清一色碰碰胡</td><td>All triplets, one suit only. 2+2+4=8pts or limit.</td></tr>
+        <tr><td>Limit</td><td>Pure Terminals 清么九</td><td>All triplets of only 1s and 9s from any suited tile set.</td></tr>
+        <tr><td>Limit</td><td>All Honours 字一色</td><td>All tiles from winds and/or dragons only.</td></tr>
+        <tr><td>Limit</td><td>Nine Gates 九连宝灯</td><td>Pure one suit: 1,1,1,2,3,4,5,6,7,8,9,9,9 + any 1 duplicate of same suit.</td></tr>
+        <tr><td>Limit</td><td>Three Great Scholars 大三元</td><td>Pong/Kang of all 3 dragons. Limit (or 5pts under common Singapore variant).</td></tr>
+        <tr><td>Limit</td><td>Four Great Blessings 大四喜</td><td>Pong/Kang of all 4 winds. Scores the limit (or 10pts under common SG variant).</td></tr>
+        <tr><td>Limit</td><td>Thirteen Wonders 十三幺</td><td>One each of 1m,9m,1p,9p,1s,9s,East,South,West,North,中,發,白 + any duplicate. All players pay DOUBLE the limit.</td></tr>
+        <tr><td>Limit</td><td>Eighteen Arhats 十八罗汉</td><td>Four Kangs declared. 18 tiles in play. Scores the limit.</td></tr>
+        <tr><td>Limit</td><td>Heavenly Hand 天胡</td><td>East dealer wins on initial 14-tile deal (no draws).</td></tr>
+        <tr><td>Limit</td><td>Earthly Hand 地胡</td><td>Non-dealer wins on East's very first discard, OR wins by drawing the very first tile.</td></tr>
+        <tr><td>Limit</td><td>Humanly Hand 人胡</td><td>Non-dealer wins by discard in first round before anyone's first draw, no exposed melds.</td></tr>
       </table>
     </div>
-    <div class="rs"><h3>Flowers, Seasons &amp; Animals</h3>
+
+    <div class="rs"><h3>Extra Fan Conditions (+1 each)</h3>
+      <table class="fan-table">
+        <tr><th>Condition</th><th>Details</th></tr>
+        <tr><td>Self Draw 自摸</td><td>Win by drawing the tile yourself from the wall</td></tr>
+        <tr><td>Dragon Triplet/Kang</td><td>+1 per dragon (Red/Green/White). Each scores separately.</td></tr>
+        <tr><td>Seat Wind Triplet/Kang</td><td>+1 for triplet of your own seat wind</td></tr>
+        <tr><td>Prevailing Wind Triplet/Kang</td><td>+1 for triplet of the round's prevailing wind. If seat wind = prevailing wind, the ONE triplet scores +2.</td></tr>
+        <tr><td>Own Flower 正花</td><td>+1 per flower/season tile matching your seat (East=Flower1/Season1, etc.)</td></tr>
+        <tr><td>Other Flower 偏花</td><td>+0 in standard rules (non-own flowers score nothing toward hand)</td></tr>
+        <tr><td>Complete Flower Set</td><td>All 4 Flowers (any colour) = +2pts total. All 4 Seasons = +2pts total.</td></tr>
+        <tr><td>All 4 Animals</td><td>+5pts total (1 per animal + 1 extra). Each animal = +1pt individually.</td></tr>
+        <tr><td>Robbing the Kang 抢杠</td><td>Win by taking a tile another player adds to an exposed triplet (Kang)</td></tr>
+        <tr><td>Last Tile in Wall 海底捞月</td><td>Win with the last drawable tile (16th from end of wall)</td></tr>
+        <tr><td>Win on Kang Replacement 杠上</td><td>Win with the replacement tile drawn after declaring a Kang</td></tr>
+        <tr><td>Win on Flower Replacement 花上</td><td>Win with the replacement tile drawn after drawing a bonus tile</td></tr>
+        <tr><td>Fully Concealed Hand 门清</td><td>No exposed Chow/Pong melds, must Self-Draw to win. +1pt.</td></tr>
+        <tr><td>All Simples</td><td>No terminal tiles (1 or 9) and no honor tiles in hand. +1pt.</td></tr>
+      </table>
+    </div>
+
+    <div class="rs"><h3>Flower, Season &amp; Animal Bonus Rules</h3>
       <ul>
-        <li>There are exactly <b>4 Flower tiles</b> (Flower 1–4), <b>4 Season tiles</b> (Season 1–4), and <b>4 Animal tiles</b> (Cat, Mouse, Rooster, Worm) — one of each.</li>
-        <li>Bonus tiles are drawn when a player draws one — they place it aside and draw a replacement from the wall.</li>
-        <li>Flower 1 &amp; Season 1 belong to the East seat player (+1 fan each if held by matching seat).</li>
-        <li>All 4 Flowers collected = +3 fan; All 4 Seasons collected = +3 fan (separate bonuses).</li>
-        <li>Animals: Cat pairs with Mouse (+1 fan per pair); Rooster pairs with Worm (+1 fan per pair); All 4 Animals = +3 fan.</li>
-        <li>Non-own Flower/Season (wrong seat) = +1 fan each.</li>
+        <li><b>Own Flower/Season</b> (正花): East holds Flower 1 or Season 1, South holds Flower 2 or Season 2, etc. = +1pt each.</li>
+        <li><b>Other Flower/Season</b> (偏花): Non-matching seat flower tiles score 0 points toward the hand in standard rules.</li>
+        <li><b>Complete Flower Set</b> (一台花): All 4 Flowers of same colour = +2pts (1 for own + 1 for complete). Instant payout to all players when collected.</li>
+        <li><b>All Flowers &amp; Seasons</b> (八仙过海): Collect all 8 bonus tiles by Self-Draw = automatic win at limit. Do NOT reveal hidden hand.</li>
+        <li><b>Animal Instant Payments</b> (咬到 yǎo-dào): Cat+Mouse pair OR Rooster+Worm pair = immediate one-time payment from all players. All 4 animals = double payment (cumulative). This is separate from the end-game score.</li>
+        <li><b>Animal points:</b> Each animal = +1pt. All 4 animals = +5pts total (4+1 bonus).</li>
       </ul>
     </div>
+
+    <div class="rs"><h3>Dealer &amp; Wind Rotation</h3>
+      <ul>
+        <li>East (Player 1) is the dealer. East is the prevailing wind in Round 1.</li>
+        <li><b>Dealer wins</b> → winds stay. Same dealer plays again.</li>
+        <li><b>Any other player wins</b> → all seat winds rotate anti-clockwise one step.</li>
+        <li>After all 4 players have held East, prevailing wind changes: East → South → West → North.</li>
+        <li>Flower 1 &amp; Season 1 = East seat. Flower 2 &amp; Season 2 = South. Flower 3 &amp; Season 3 = West. Flower 4 &amp; Season 4 = North.</li>
+      </ul>
+    </div>
+
+    <div class="rs"><h3>High-Risk Discard Scenarios (Pao 包 — Shooter Pays All)</h3>
+      <p style="font-size:12px;color:#374151">In these situations the discarder pays the FULL payout (including what the other two losers would normally pay):</p>
+      <ul>
+        <li><b>Dragon Pao 包三元:</b> Player A has 2 dragon Pong/Kangs exposed. Player B discards the 3rd dragon type → Player B pays all if A wins.</li>
+        <li><b>Wind Pao 包四喜:</b> Player A has 3 wind Pong/Kangs exposed. Player B discards the 4th wind type → Player B pays all if A wins.</li>
+        <li><b>Limit Pao 包满贯:</b> Player A already has (Limit−1) points exposed. Player B discards a tile that brings A to the limit → Player B pays all if A wins.</li>
+        <li><b>Full Flush Pao 包清一色:</b> Player A has 3–4 sets of same suit exposed. Player B discards a same-suit tile → Player B pays all if A wins.</li>
+        <li><b>Kang Pao 包杠:</b> With ≤7 tiles in wall, Player B discards a fresh tile (never discarded before), Player A Kangs it → Player B pays all Kang instant payment.</li>
+        <li><b>Fresh Tile Pao 包生:</b> With ≤5 tiles in wall, Player B discards a fresh tile and Player A wins with it → Player B pays all winnings.</li>
+      </ul>
+    </div>
+
+    <div class="rs"><h3>Penalties</h3>
+      <ul>
+        <li><b>Wrong Win Claim 诈胡:</b> Player claims a win incorrectly. Must pay 5pts (or limit) to all 3 players — discarder gets double.</li>
+        <li><b>Short Hand 小相公:</b> Fewer than 13 tiles in hand. Player forfeits right to win for current round (but can still Kang).</li>
+        <li><b>Long Hand 大相公:</b> More than 13 tiles in hand (or drew wrong tile). Player forfeits right to win AND right to Kang for current round.</li>
+        <li><b>Sacred Discard 回头牌:</b> If you discard a tile, you cannot claim the same tile from others' discards for win/Pong in the same go-around.</li>
+        <li><b>Missed Discard 过水牌:</b> If you miss claiming a tile, you cannot claim the same tile from other players' discards for win/Pong in the same go-around.</li>
+      </ul>
+    </div>
+
     <button onclick="closeRules()" style="margin-top:12px;padding:8px 20px;border-radius:8px;border:1px solid #ccc;background:#f3f4f6;cursor:pointer;font-size:14px">Close</button>
   </div>
 </div>
@@ -457,18 +603,18 @@ footer b{color:#888}
   <div class="congrats-wrap">
     <div class="congrats-header">
       <div style="font-size:48px;margin-bottom:12px">&#127881;</div>
-      <h1>Game Complete!</h1>
+      <h1 id="congratsTitle">Game Complete!</h1>
       <p id="congratsSubtitle">Full cycle completed — all players have been dealer.</p>
     </div>
     <div class="result-card">
-      <div style="font-weight:700;font-size:16px;margin-bottom:12px">&#127942; Final Payout</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:12px" id="finalPayoutLabel">&#127942; Final Payout</div>
       <div id="finalPayoutTable"></div>
     </div>
     <div class="result-card">
-      <div style="font-weight:700;font-size:16px;margin-bottom:12px">&#128203; Full Round History</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:12px" id="fullHistoryLabel">&#128203; Full Round History</div>
       <div style="overflow-x:auto" id="finalHistoryTable"></div>
     </div>
-    <button class="restart-btn" onclick="restartGame()">&#8635; Start New Game</button>
+    <button class="restart-btn" id="restartBtn" onclick="restartGame()">&#8635; Start New Game</button>
   </div>
 </div>
 
@@ -476,7 +622,7 @@ footer b{color:#888}
 <div id="mainApp">
 <div class="wrap">
   <div class="top-bar">
-    <h1>&#127183; Singapore Mahjong</h1>
+    <h1>Singapore Mahjong Calculator</h1>
     <div class="top-right">
       <div class="round-badge" id="roundBadge">Round 1 — East Wind 東</div>
       <button class="rules-btn" onclick="openRules()">&#128218; Rules</button>
@@ -492,7 +638,272 @@ footer b{color:#888}
 </div>
 </div>
 
-<footer>Happy Mahjong &#127183; &mdash; <b>Mummyz</b></footer>
+<footer>
+  <span id="footer-text">Happy Mahjong &mdash; <b>Mummyz</b></span>
+</footer>
+
+<script>
+/* ================================================================ TRANSLATIONS ================================================================ */
+const T={
+  en:{
+    title:"Singapore Mahjong Calculator",
+    setupSub:"Set up your game to begin",
+    playerNames:"Player Names",
+    p1label:"Player 1 — East 東 (Dealer)",p2label:"Player 2 — South 南",p3label:"Player 3 — West 西",p4label:"Player 4 — North 北",
+    rulesLabel:"Singapore Standard Rules",
+    rulesBullets:[
+      "Player 1 = East 東 (Dealer, Round 1 prevailing wind)",
+      "Player 2 = South 南 &nbsp;|&nbsp; Player 3 = West 西 &nbsp;|&nbsp; Player 4 = North 北",
+      "Dealer wins → winds stay, same dealer keeps East",
+      "Any other player wins → winds rotate anti-clockwise",
+      "Flower 1 &amp; Season 1 = East · Flower 2 &amp; Season 2 = South · Flower 3 &amp; Season 3 = West · Flower 4 &amp; Season 4 = North",
+      "Round ends when all 4 players have completed a turn as Dealer (East)"
+    ],
+    scoring:"Scoring",pointLabel:"1 Point =",pointPer:"per point",
+    fanCapLabel:"Fan Cap:",fanCapNote:"max fan (house rule; official = 13)",
+    errMsg:"Please enter a name for every player.",
+    startBtn:"Start Game",
+    winningPlayer:"Winning Player:",
+    whoDiscard:"Who discarded the winning tile?",
+    handLabel:"Hand tiles (tap to add · tap tile in hand to remove)",
+    handEmpty:"No tiles selected",
+    sectionExtra:"Extra Fan — Manual Conditions",
+    calcBtn:"Calculate Results",
+    roundBadgeWind:["East Wind","South Wind","West Wind","North Wind"],
+    rulesBtn:"Rules",
+    gameComplete:"Game Complete!",
+    finalPayout:"Final Payout",
+    fullHistory:"Full Round History",
+    startNewGame:"Start New Game",
+    congratsSub:"Full cycle completed — all players have been dealer.",
+    footerText:"Happy Mahjong &mdash; <b>Mummyz</b>",
+    winds:{we:"East",ws:"South",ww:"West",wn:"North"},
+    windSeat:"Wind seat",
+    kang:"Kang",
+    set:"Set",
+    pair:"Pair",
+    pairOf:"Pair of",
+    handComplete:"Hand complete — ready to calculate",
+    incomplete:"Incomplete",
+    tilesNeeded:"more tile(s) needed",
+    invalid:"Invalid Hand",
+    cannotForm:"Cannot form 4 sets + 1 pair",
+    detectedHand:"Detected Hand",
+    multiplePossible:"Multiple Possible Hands",
+    usingHighest:"Using highest:",
+    fanBase:"fan base",
+    fanPossibilities:"Fan Possibilities & What You Need",
+    youNeed:"You need:",
+    fanProgress:"Fan Progress Checklist",
+    calcResults:"Round Results",
+    winner:"Winner",
+    fanBreakdown:"Fan Breakdown",
+    totalFan:"Total Fan",
+    basePoints:"Base Points",
+    winnerReceives:"Winner receives",
+    selfDrawNote:"Self Draw: each of 3 players pays",
+    discardNote:"Discard win:",
+    pays:"pays",
+    eachOther:"each other player pays",
+    dealerWon:"Dealer (East) won — winds stay, same dealer next round.",
+    nonDealerWon:"Non-dealer won — winds rotate anti-clockwise next round.",
+    roundScore:"Round Score",
+    finalPayoutRounds:"Final Payout (Rounds 1–",
+    roundHistory:"Round History",
+    fanRef:"Fan Reference Table",
+    capNote:"Cap:",
+    fanInactive:"faded = inactive",
+    startRound:"Start Round",
+    windsStay:"(winds stay — dealer won)",
+    windsRotate:"(winds rotate)",
+    completeGame:"Complete Game — Show Final Results",
+    newRoundConfirmDealer:"Dealer won — winds stay. Start Round",
+    newRoundConfirmOther:"Winds rotate anti-clockwise. Start Round",
+    completeConfirm:"End the game and show Final Payout?",
+    windsTurn:["East Wind 東","South Wind 南","West Wind 西","North Wind 北"],
+    bonusFlowers:"Bonus — Flowers (black border ★ = your seat)",
+    bonusSeasons:"Bonus — Seasons (black border ★ = your seat)",
+    bonusAnimals:"Bonus — Animals (Cat+Mouse = +1 fan · Rooster+Worm = +1 fan)",
+    selectedBonus:"Selected Bonus Tiles (tap to remove)",
+    roundLabel:"Round",
+    handLabel2:"Hand",
+    fanLabel:"Fan",
+    winType:"Win Type",
+    selfDraw:"Self Draw",
+    discard:"Discard",
+    capped:"capped from",
+    limitHand:"limit hand",
+    dealer:"Dealer",
+    nonDealer:"Non-dealer",
+    noTiles:"No tiles selected"
+  },
+  id:{
+    title:"Kalkulator Mahjong Singapura",
+    setupSub:"Atur permainan Anda untuk memulai",
+    playerNames:"Nama Pemain",
+    p1label:"Pemain 1 — Timur 東 (Bandar)",p2label:"Pemain 2 — Selatan 南",p3label:"Pemain 3 — Barat 西",p4label:"Pemain 4 — Utara 北",
+    rulesLabel:"Aturan Standar Singapura",
+    rulesBullets:[
+      "Pemain 1 = Timur 東 (Bandar, angin putaran 1)",
+      "Pemain 2 = Selatan 南 &nbsp;|&nbsp; Pemain 3 = Barat 西 &nbsp;|&nbsp; Pemain 4 = Utara 北",
+      "Bandar menang → angin tetap, bandar yang sama memegang Timur",
+      "Pemain lain menang → angin berputar berlawanan arah jarum jam",
+      "Bunga 1 &amp; Musim 1 = Timur · Bunga 2 &amp; Musim 2 = Selatan · Bunga 3 &amp; Musim 3 = Barat · Bunga 4 &amp; Musim 4 = Utara",
+      "Ronde berakhir setelah semua 4 pemain selesai menjadi Bandar (Timur)"
+    ],
+    scoring:"Penilaian",pointLabel:"1 Poin =",pointPer:"per poin",
+    fanCapLabel:"Batas Fan:",fanCapNote:"batas fan (aturan rumah; resmi = 13)",
+    errMsg:"Mohon masukkan nama untuk setiap pemain.",
+    startBtn:"Mulai Permainan",
+    winningPlayer:"Pemain Menang:",
+    whoDiscard:"Siapa yang membuang kartu pemenang?",
+    handLabel:"Kartu tangan (ketuk untuk tambah · ketuk di tangan untuk hapus)",
+    handEmpty:"Belum ada kartu dipilih",
+    sectionExtra:"Fan Tambahan — Kondisi Manual",
+    calcBtn:"Hitung Hasil",
+    roundBadgeWind:["Angin Timur","Angin Selatan","Angin Barat","Angin Utara"],
+    rulesBtn:"Aturan",
+    gameComplete:"Permainan Selesai!",
+    finalPayout:"Pembayaran Akhir",
+    fullHistory:"Riwayat Lengkap Ronde",
+    startNewGame:"Mulai Permainan Baru",
+    congratsSub:"Siklus penuh selesai — semua pemain telah menjadi bandar.",
+    footerText:"Selamat Bermain Mahjong &mdash; <b>Mummyz</b>",
+    winds:{we:"Timur",ws:"Selatan",ww:"Barat",wn:"Utara"},
+    windSeat:"posisi angin",
+    kang:"Kang",
+    set:"Set",
+    pair:"Pasangan",
+    pairOf:"Pasangan",
+    handComplete:"Tangan lengkap — siap dihitung",
+    incomplete:"Tidak lengkap",
+    tilesNeeded:"kartu lagi dibutuhkan",
+    invalid:"Tangan Tidak Valid",
+    cannotForm:"Tidak bisa membentuk 4 set + 1 pasangan",
+    detectedHand:"Tangan Terdeteksi",
+    multiplePossible:"Beberapa Kemungkinan Tangan",
+    usingHighest:"Menggunakan tertinggi:",
+    fanBase:"fan dasar",
+    fanPossibilities:"Kemungkinan Fan & Yang Dibutuhkan",
+    youNeed:"Anda butuh:",
+    fanProgress:"Daftar Progres Fan",
+    calcResults:"Hasil Ronde",
+    winner:"Pemenang",
+    fanBreakdown:"Rincian Fan",
+    totalFan:"Total Fan",
+    basePoints:"Poin Dasar",
+    winnerReceives:"Pemenang menerima",
+    selfDrawNote:"Ambil Sendiri: masing-masing 3 pemain membayar",
+    discardNote:"Menang buang:",
+    pays:"membayar",
+    eachOther:"setiap pemain lain membayar",
+    dealerWon:"Bandar (Timur) menang — angin tetap, bandar yang sama ronde berikutnya.",
+    nonDealerWon:"Non-bandar menang — angin berputar berlawanan arah jarum jam.",
+    roundScore:"Skor Ronde",
+    finalPayoutRounds:"Pembayaran Akhir (Ronde 1–",
+    roundHistory:"Riwayat Ronde",
+    fanRef:"Tabel Referensi Fan",
+    capNote:"Batas:",
+    fanInactive:"pudar = tidak aktif",
+    startRound:"Mulai Ronde",
+    windsStay:"(angin tetap — bandar menang)",
+    windsRotate:"(angin berputar)",
+    completeGame:"Selesaikan Permainan — Tampilkan Hasil Akhir",
+    newRoundConfirmDealer:"Bandar menang — angin tetap. Mulai Ronde",
+    newRoundConfirmOther:"Angin berputar berlawanan arah jarum jam. Mulai Ronde",
+    completeConfirm:"Akhiri permainan dan tampilkan Pembayaran Akhir?",
+    windsTurn:["Angin Timur 東","Angin Selatan 南","Angin Barat 西","Angin Utara 北"],
+    bonusFlowers:"Bonus — Bunga (border hitam ★ = posisi Anda)",
+    bonusSeasons:"Bonus — Musim (border hitam ★ = posisi Anda)",
+    bonusAnimals:"Bonus — Hewan (Kucing+Tikus = +1 fan · Ayam+Cacing = +1 fan)",
+    selectedBonus:"Kartu Bonus Dipilih (ketuk untuk hapus)",
+    roundLabel:"Ronde",
+    handLabel2:"Tangan",
+    fanLabel:"Fan",
+    winType:"Jenis Menang",
+    selfDraw:"Ambil Sendiri",
+    discard:"Buang",
+    capped:"dibatasi dari",
+    limitHand:"tangan batas",
+    dealer:"Bandar",
+    nonDealer:"Non-bandar",
+    noTiles:"Belum ada kartu dipilih"
+  }
+};
+
+let currentLang='en';
+
+function t(key){return T[currentLang][key]||T['en'][key]||key;}
+
+function setLang(lang){
+  currentLang=lang;
+  // Update footer buttons
+  document.getElementById('btn-en').style.background=lang==='en'?'#1a1a1a':'#fff';
+  document.getElementById('btn-en').style.color=lang==='en'?'#fff':'#888';
+  document.getElementById('btn-en').style.borderColor=lang==='en'?'#1a1a1a':'#ddd';
+  document.getElementById('btn-id').style.background=lang==='id'?'#1a1a1a':'#fff';
+  document.getElementById('btn-id').style.color=lang==='id'?'#fff':'#888';
+  document.getElementById('btn-id').style.borderColor=lang==='id'?'#1a1a1a':'#ddd';
+  document.getElementById('footer-text').innerHTML=t('footerText');
+
+  // Update all translateable static elements
+  applyTranslations();
+
+  // Re-render dynamic panel if game is running
+  if(document.getElementById('mainApp').style.display!=='none'){
+    updateRoundBadge();
+    renderWinnerDrop();
+    renderPanel();
+  }
+}
+
+function applyTranslations(){
+  // Page title
+  document.title=t('title');
+
+  // Setup overlay
+  const so=document.getElementById('setupOverlay');
+  if(so){
+    const titles=so.querySelectorAll('.setup-title');
+    if(titles[0]) titles[0].textContent=t('title');
+    const subs=so.querySelectorAll('.setup-sub');
+    if(subs[0]) subs[0].textContent=t('setupSub');
+    // player name labels
+    const labels=so.querySelectorAll('.name-field label');
+    const lkeys=['p1label','p2label','p3label','p4label'];
+    labels.forEach((el,i)=>{if(lkeys[i])el.textContent=t(lkeys[i]);});
+    // section labels
+    const sls=so.querySelectorAll('.setup-sl');
+    if(sls[0]) sls[0].innerHTML='&#128100; '+t('playerNames');
+    if(sls[1]) sls[1].innerHTML='&#127795; '+t('rulesLabel');
+    if(sls[2]) sls[2].innerHTML='&#128176; '+t('scoring');
+    // rules bullets
+    const lis=so.querySelectorAll('.wind-info-box li');
+    const bullets=t('rulesBullets');
+    lis.forEach((li,i)=>{if(bullets[i])li.innerHTML=bullets[i];});
+    // point labels
+    const rows=so.querySelectorAll('.setup-row label');
+    if(rows[0]) rows[0].textContent=t('pointLabel');
+    if(rows[1]) rows[1].textContent=t('fanCapLabel');
+    const spans=so.querySelectorAll('.setup-row span');
+    if(spans[0]) spans[0].textContent=t('pointPer');
+    if(spans[1]) spans[1].textContent=t('fanCapNote');
+    // start button
+    const btn=so.querySelector('.start-btn');
+    if(btn) btn.textContent=t('startBtn');
+  }
+
+  // Main app static labels
+  const wpl=document.querySelector('.winner-selector-row label');
+  if(wpl) wpl.innerHTML='&#127942; '+t('winningPlayer');
+  const calcBtn=document.querySelector('.calc-btn');
+  if(calcBtn) calcBtn.innerHTML='&#9654;&#xFE0E; '+t('calcBtn');
+
+  // Rules modal title
+  const rm=document.querySelector('#rulesModal h2');
+  if(rm) rm.textContent='Singapore Mahjong — '+t('rulesBtn')+' (Official)';
+}
+</script>
 
 <script>
 /* ================================================================ DATA ================================================================ */
@@ -502,13 +913,13 @@ const WIND_NAMES = {we:"East",ws:"South",ww:"West",wn:"North"};
 
 const SUITS=[
   {id:"man",label:"Characters (Man — 萬子)",
-   syms:["一","二","三","四","五","六","七","八","九"],
-   names:["Man 1","Man 2","Man 3","Man 4","Man 5","Man 6","Man 7","Man 8","Man 9"],tcls:"t-man",hcls:"c-man"},
+   syms:["🀇","🀈","🀉","🀊","🀋","🀌","🀍","🀎","🀏"],
+   names:["Character 1","Character 2","Character 3","Character 4","Character 5","Character 6","Character 7","Character 8","Character 9"],tcls:"t-man",hcls:"c-man"},
   {id:"pin",label:"Circles (Pin — 筒子)",
-   syms:["①","②","③","④","⑤","⑥","⑦","⑧","⑨"],
+   syms:["🀙","🀚","🀛","🀜","🀝","🀞","🀟","🀠","🀡"],
    names:["Circle 1","Circle 2","Circle 3","Circle 4","Circle 5","Circle 6","Circle 7","Circle 8","Circle 9"],tcls:"t-pin",hcls:"c-pin"},
   {id:"sou",label:"Bamboo (Sou — 索子)",
-   syms:["1竹","2竹","3竹","4竹","5竹","6竹","7竹","8竹","9竹"],
+   syms:["🀐","🀑","🀒","🀓","🀔","🀕","🀖","🀗","🀘"],
    names:["Bamboo 1","Bamboo 2","Bamboo 3","Bamboo 4","Bamboo 5","Bamboo 6","Bamboo 7","Bamboo 8","Bamboo 9"],tcls:"t-sou",hcls:"c-sou"},
 ];
 const WINDS_TILES=[
@@ -602,7 +1013,9 @@ function restartGame(){
 /* ================================================================ ROUND ================================================================ */
 function updateRoundBadge(){
   const rw=WIND_IDS[roundWindIdx%4];
-  document.getElementById("roundBadge").textContent="Round "+roundNumber+" — "+WIND_NAMES[rw]+" Wind "+WIND_CHARS[rw];
+  const windNames=t('windsTurn');
+  const windIdx=WIND_IDS.indexOf(rw);
+  document.getElementById("roundBadge").textContent=t('roundLabel')+" "+roundNumber+" — "+windNames[windIdx];
 }
 function advanceRound(dealerWon){
   if(!dealerWon){
@@ -791,21 +1204,27 @@ function detectHand(hand,sw,pw){
 }
 
 /* ================================================================ AUTO FAN ================================================================ */
-function autoFan(hand,flowers,seasons,animals,sw,pw){
+function autoFan(hand,flowers,seasons,animals,sw,pw,baseHandId){
   let fan=0;const bd=[];
   const counts=countH(hand);
   function dc(id){return counts[tk("honor",id)]||0;}
 
-  ["dr","dg","dw"].forEach(d=>{if(dc(d)>=3){const dr=DRAGONS.find(x=>x.id===d);bd.push({name:dr.name+" Triplet/Kang",fan:1});fan++;}});
-  WIND_IDS.forEach(w=>{
-    if(dc(w)>=3){
-      let f=0,label=WIND_NAMES[w]+" Wind";
-      if(w===sw){f++;label+=" (Seat)";}
-      if(w===pw&&w!==sw){f++;label+=" (Prevailing)";}
-      if(w===sw&&w===pw){f=2;label+=" (Seat + Prevailing)";}
-      if(f>0){bd.push({name:label+" Triplet/Kang",fan:f});fan+=f;}
-    }
-  });
+  // Do NOT add dragon/wind triplet bonuses if base hand is All Honors or Big Three Dragons
+  // (those are already priced in as limit hands; adding per-triplet would double-count)
+  const skipTripletBonus=(baseHandId==="allhonor"||baseHandId==="big_wind"||baseHandId==="thirteen"||baseHandId==="ninegate");
+
+  if(!skipTripletBonus){
+    ["dr","dg","dw"].forEach(d=>{if(dc(d)>=3){const dr=DRAGONS.find(x=>x.id===d);bd.push({name:dr.name+" Triplet/Kang",fan:1});fan++;}});
+    WIND_IDS.forEach(w=>{
+      if(dc(w)>=3){
+        let f=0,label=WIND_NAMES[w]+" Wind";
+        if(w===sw){f++;label+=" (Seat)";}
+        if(w===pw&&w!==sw){f++;label+=" (Prevailing)";}
+        if(w===sw&&w===pw){f=2;label+=" (Seat + Prevailing)";}
+        if(f>0){bd.push({name:label+" Triplet/Kang",fan:f});fan+=f;}
+      }
+    });
+  }
 
   const tiles=hand.map(t=>({suit:t.suit,idx:t.idx}));
   const noTermHonor=!tiles.some(t=>t.suit==="honor"||(typeof t.idx==="number"&&(t.idx===0||t.idx===8)));
@@ -1063,62 +1482,98 @@ function buildFanChecklist(hand, sw, pw, flowers, seasons, animals, partial, mis
   const nSuits=[...new Set(suitT.map(t=>t.suit))];
   const hasChow=partial.completedSets.some(s=>s.type==="Chow");
   const hasPong=partial.completedSets.some(s=>s.type==="Pong"||s.type==="Kang");
+  const isAllHonorSoFar=tiles.length>0&&tiles.every(t=>t.suit==="honor");
+
+  // All Honors (10 fan) — show first if all tiles are honors
+  if(isAllHonorSoFar){
+    if(missing===0){
+      items.push({label:"All Honors (字一色)",fan:10,status:"confirmed",note:"All winds & dragons — includes all triplet bonuses",need:""});
+    } else {
+      items.push({label:"All Honors (字一色)",fan:10,status:"possible",note:"All honor tiles so far",need:`${missing} more wind/dragon tiles only`});
+    }
+  }
+
+  // Big/Small dragon combos
+  const drSets=["dr","dg","dw"].filter(d=>dc(d)>=3).length;
+  const drPairs=["dr","dg","dw"].filter(d=>dc(d)===2).length;
+  if(drSets===3&&!isAllHonorSoFar) items.push({label:"Big Three Dragons (大三元)",fan:8,status:"confirmed",note:"Pong/Kang of all 3 dragons",need:""});
+  else if(drSets===2&&drPairs>=1&&!isAllHonorSoFar) items.push({label:"Small Three Dragons (小三元)",fan:5,status:"confirmed",note:"2 dragon triplets + 1 dragon pair",need:""});
+  else if(drSets===2&&drPairs===0&&!isAllHonorSoFar) items.push({label:"Big Three Dragons",fan:8,status:"possible",note:"2/3 dragon triplets",need:"1 more dragon triplet OR pair of 3rd dragon for Small Three Dragons"});
+
+  // Wind combos
+  const wSets=WIND_IDS.filter(w=>dc(w)>=3).length;
+  const wPairs=WIND_IDS.filter(w=>dc(w)===2).length;
+  if(wSets===4&&!isAllHonorSoFar) items.push({label:"Big Four Winds (大四喜)",fan:13,status:"confirmed",note:"Pong/Kang of all 4 winds",need:""});
+  else if(wSets===3&&wPairs>=1&&!isAllHonorSoFar) items.push({label:"Small Four Winds (小四喜)",fan:6,status:"confirmed",note:"3 wind triplets + 1 wind pair",need:""});
 
   // All Sequences: only possible if NO pongs/kangs detected
-  if(!hasPong){
+  if(!hasPong&&!isAllHonorSoFar){
     const seqCount=partial.completedSets.filter(s=>s.type==="Chow").length;
     if(seqCount>=4&&partial.pairKey){
       items.push({label:"All Sequences",fan:1,status:"confirmed",note:"4 Chows + 1 pair",need:""});
-    } else if(!hasPong){
+    } else {
       items.push({label:"All Sequences",fan:1,status:"possible",note:`${seqCount}/4 sequences done`,need:`${4-seqCount} more sequence(s) + pair — NO triplets`});
     }
   }
 
   // All Triplets: only possible if NO sequences
-  if(!hasChow){
+  if(!hasChow&&!isAllHonorSoFar){
     const triCount=partial.completedSets.filter(s=>s.type==="Pong"||s.type==="Kang").length;
     if(triCount>=4&&partial.pairKey){
       items.push({label:"All Triplets / Pongs",fan:3,status:"confirmed",note:"4 Pongs/Kangs + 1 pair",need:""});
-    } else if(!hasChow){
+    } else {
       items.push({label:"All Triplets / Pongs",fan:3,status:"possible",note:`${triCount}/4 triplets done`,need:`${4-triCount} more triplet(s) + pair — NO sequences`});
     }
   }
 
   // Pure One Suit
-  if(nSuits.length===1&&honorT.length===0){
+  if(nSuits.length===1&&honorT.length===0&&!isAllHonorSoFar){
     if(missing===0){
       items.push({label:"Pure One Suit",fan:7,status:"confirmed",note:"One suit, no honors",need:""});
     } else {
       items.push({label:"Pure One Suit",fan:7,status:"possible",note:"One suit so far, no honors",need:"Complete without adding honors/other suits"});
     }
-  } else if(nSuits.length===1&&honorT.length>0){
-    items.push({label:"Mixed One Suit",fan:3,status:missing===0?"confirmed":"possible",note:`${nSuits[0]} + honor tiles`,need:missing>0?"Complete without adding another suit":""});
+  } else if(nSuits.length===1&&honorT.length>0&&!isAllHonorSoFar){
+    items.push({label:"Mixed One Suit (Half Flush)",fan:3,status:missing===0?"confirmed":"possible",note:`${nSuits[0]} suit + honor tiles`,need:missing>0?"Complete without adding another suit":""});
   }
 
-  // Dragon triplets
-  ["dr","dg","dw"].forEach(d=>{
-    const c=dc(d); const dr=DRAGONS.find(x=>x.id===d);
-    if(c>=3) items.push({label:dr.name+" Triplet/Kang",fan:1,status:"confirmed",note:`3+ ${dr.name} tiles`,need:""});
-    else if(c===2) items.push({label:dr.name+" Triplet",fan:1,status:"possible",note:`2/${3} ${dr.name}`,need:`1 more ${dr.name}`});
-    else if(c===1) items.push({label:dr.name+" Triplet",fan:1,status:"possible",note:`1/3 ${dr.name}`,need:`2 more ${dr.name}`});
-  });
+  // Dragon triplets (individual) — only when not already shown as part of Big/Small Three Dragons
+  if(!isAllHonorSoFar&&drSets<2){
+    ["dr","dg","dw"].forEach(d=>{
+      const c=dc(d); const dr=DRAGONS.find(x=>x.id===d);
+      if(c>=3) items.push({label:dr.name+" Triplet/Kang",fan:1,status:"confirmed",note:`3+ ${dr.name} tiles`,need:""});
+      else if(c>=1) items.push({label:dr.name+" Triplet",fan:1,status:"possible",note:`${c}/3 ${dr.name}`,need:`${3-c} more ${dr.name}`});
+    });
+  } else if(!isAllHonorSoFar&&drSets>=2){
+    // already shown as big/small three dragons above, just show individual confirmed ones
+    ["dr","dg","dw"].forEach(d=>{
+      const c=dc(d); const dr=DRAGONS.find(x=>x.id===d);
+      if(c>=3) items.push({label:dr.name+" Triplet/Kang",fan:1,status:"confirmed",note:`+1 fan`,need:""});
+    });
+  }
 
   // Seat wind triplet
-  const swc=dc(sw);
-  if(swc>=3) items.push({label:"Seat Wind ("+WIND_NAMES[sw]+") Triplet",fan:1,status:"confirmed",note:"3+ seat wind tiles",need:""});
-  else if(swc>=1) items.push({label:"Seat Wind ("+WIND_NAMES[sw]+") Triplet",fan:1,status:"possible",note:`${swc}/3 ${WIND_NAMES[sw]} Wind`,need:`${3-swc} more ${WIND_NAMES[sw]} Wind`});
+  if(!isAllHonorSoFar){
+    const swc=dc(sw);
+    const isSwPw=sw===pw;
+    const swFan=isSwPw?2:1;
+    if(swc>=3) items.push({label:"Seat Wind ("+WIND_NAMES[sw]+") Triplet"+(isSwPw?" + Prevailing":""),fan:swFan,status:"confirmed",note:"3+ seat wind tiles"+(isSwPw?" (counts for both seat & prevailing +2)":""),need:""});
+    else if(swc>=1) items.push({label:"Seat Wind ("+WIND_NAMES[sw]+") Triplet",fan:swFan,status:"possible",note:`${swc}/3 ${WIND_NAMES[sw]} Wind`,need:`${3-swc} more ${WIND_NAMES[sw]} Wind`});
+  }
 
-  // Prevailing wind triplet
-  if(pw!==sw){
+  // Prevailing wind triplet (when different from seat)
+  if(!isAllHonorSoFar&&pw!==sw){
     const pwc=dc(pw);
     if(pwc>=3) items.push({label:"Prevailing Wind ("+WIND_NAMES[pw]+") Triplet",fan:1,status:"confirmed",note:"3+ prevailing wind tiles",need:""});
     else if(pwc>=1) items.push({label:"Prevailing Wind ("+WIND_NAMES[pw]+") Triplet",fan:1,status:"possible",note:`${pwc}/3 ${WIND_NAMES[pw]} Wind`,need:`${3-pwc} more ${WIND_NAMES[pw]} Wind`});
   }
 
   // All Simples (no terminals or honors)
-  const noTermHonor=tiles.every(t=>t.suit!=="honor"&&typeof t.idx==="number"&&t.idx>0&&t.idx<8);
-  if(noTermHonor){
-    items.push({label:"All Simples",fan:1,status:missing===0?"confirmed":"possible",note:"No terminals (1/9) or honors",need:missing>0?"Avoid 1s, 9s, winds, dragons":""});
+  if(!isAllHonorSoFar){
+    const noTermHonor=tiles.every(t=>t.suit!=="honor"&&typeof t.idx==="number"&&t.idx>0&&t.idx<8);
+    if(noTermHonor){
+      items.push({label:"All Simples",fan:1,status:missing===0?"confirmed":"possible",note:"No terminals (1/9) or honors",need:missing>0?"Avoid 1s, 9s, winds, dragons":""});
+    }
   }
 
   // Bonus flowers/seasons
@@ -1164,24 +1619,26 @@ function renderPanel(){
   const det=detectHand(s.hand,sw,pw);
   const limit=autoLimit(s.hand);
   const kangs=kangCount(s.hand);
+  const windLabel=t('winds')[sw]||WIND_NAMES[sw];
 
   let html=`<div class="player-card">
   <div class="player-header">
     <div class="wind-char">${WIND_CHARS[sw]}</div>
     <div>
       <div class="player-title">${gameNames[i]}</div>
-      <div style="font-size:12px;color:#888">${WIND_NAMES[sw]} Wind seat${kangs>0?" · "+kangs+" Kang(s) — hand limit: "+limit:""}</div>
+      <div style="font-size:12px;color:#888">${windLabel} ${t('windSeat')}${kangs>0?" · "+kangs+" "+t('kang')+"(s) — hand limit: "+limit:""}</div>
     </div>
   </div>
-
-  <div class="section-label">Hand tiles (tap to add · tap tile in hand to remove)</div>
+  <div class="section-label">${t('handLabel')}</div>
   <div class="hand-display">`;
 
-  if(!s.hand.length){html+=`<span style="font-size:13px;color:#bbb;font-style:italic">No tiles selected</span>`;}
+  if(!s.hand.length){html+=`<span style="font-size:13px;color:#9dc899;font-style:italic">${t('noTiles')}</span>`;}
   else{
     s.hand.forEach((t,ti)=>{
-      html+=`<div class="hand-tile ${t.hcls}" onclick="removeTile(${ti})" title="Remove">
-        <span class="ht-sym">${t.sym}</span><span>${t.name}</span></div>`;
+      const isOwnWind=(t.suit==="honor"&&WIND_IDS.includes(t.idx)&&t.idx===sw);
+      html+=`<div class="hand-tile ${t.hcls}${isOwnWind?" own-wind":""}" onclick="removeTile(${ti})" title="Tap to remove">
+        <span class="remove-hint">✕</span>
+        <span class="ht-uni">${t.sym}</span></div>`;
     });
     html+=`<span class="count-badge">${s.hand.length}/${limit}</span>`;
     if(kangs>0) html+=`<span class="kang-badge">${kangs} Kang</span>`;
@@ -1240,8 +1697,11 @@ function renderPanel(){
     html+=`<div class="cat-label">${suit.label}</div><div class="tile-grid">`;
     suit.syms.forEach((sym,j)=>{
       const k=tk(suit.id,j),cnt=counts[k]||0;
-      html+=`<div class="tile ${suit.tcls}${cnt>0?" sel":""}" onclick="addSuitTile('${suit.id}',${j},'${sym}','${suit.hcls}','${suit.names[j]}')">
-        <span class="tsym">${sym}</span><span class="tlbl">${cnt>0?cnt+"×":j+1}</span></div>`;
+      html+=`<div class="tile-wrap ${suit.tcls}${cnt>0?" sel":""}" onclick="addSuitTile('${suit.id}',${j},'${sym}','${suit.hcls}','${suit.names[j]}')">
+        <div class="tile-card">${cnt>0?`<span style="position:absolute;top:2px;right:3px;font-size:9px;font-weight:700;color:#2563eb">${cnt}×</span>`:""}
+          <span class="tsym">${sym}</span></div>
+        <span class="tile-num">${j+1}</span>
+      </div>`;
     });
     html+=`</div>`;
   });
@@ -1249,43 +1709,53 @@ function renderPanel(){
   html+=`<div class="cat-label">Winds</div><div class="tile-grid">`;
   WINDS_TILES.forEach(w=>{
     const k=tk("honor",w.id),cnt=counts[k]||0;
-    html+=`<div class="tile t-wind${cnt>0?" sel":""}" style="width:54px" onclick="addHonorTile('${w.id}','${w.sym}','c-wind','${w.name}')">
-      <span class="tsym">${w.sym}</span><span class="tlbl">${cnt>0?cnt+"×":w.name.split(" ")[0]}</span></div>`;
+    const isOwnWind=w.id===sw;
+    html+=`<div class="tile-wrap t-wind${cnt>0?" sel":""}${isOwnWind?" own-wind":""}" onclick="addHonorTile('${w.id}','${w.sym}','c-wind','${w.name}')">
+      <div class="tile-card">${cnt>0?`<span style="position:absolute;top:2px;right:3px;font-size:9px;font-weight:700;color:#2563eb">${cnt}×</span>`:""}
+        <span class="tsym">${w.sym}</span></div>
+      <span class="tile-num">${w.name.replace(" Wind","")}</span>
+    </div>`;
   });
   html+=`</div>`;
 
   html+=`<div class="cat-label">Dragons</div><div class="tile-grid">`;
   DRAGONS.forEach(d=>{
     const k=tk("honor",d.id),cnt=counts[k]||0;
-    html+=`<div class="tile ${d.tcls}${cnt>0?" sel":""}" style="width:82px" onclick="addHonorTile('${d.id}','${d.sym}','${d.hcls}','${d.name}')">
-      <span class="tsym">${d.sym}</span><span class="tlbl">${cnt>0?cnt+"×":d.name}</span></div>`;
+    html+=`<div class="tile-wrap ${d.tcls}${cnt>0?" sel":""}" onclick="addHonorTile('${d.id}','${d.sym}','${d.hcls}','${d.name}')">
+      <div class="tile-card">${cnt>0?`<span style="position:absolute;top:2px;right:3px;font-size:9px;font-weight:700">${cnt}×</span>`:""}
+        <span class="tsym">${d.sym}</span></div>
+      <span class="tile-num">${d.name}</span>
+    </div>`;
   });
   html+=`</div>`;
 
-  // Flowers (4 tiles, 1 each)
-  html+=`<div class="cat-label">Bonus — Flowers (★ = matches your seat, black border)</div><div class="tile-grid">`;
+  html+=`<div class="cat-label">${t('bonusFlowers')}</div><div class="tile-grid">`;
   FLOWERS.forEach(f=>{
     const isOwn=f.seat===sw,sel=flSet.has(f.id);
-    html+=`<div class="tile t-flower${sel?" sel":""}${isOwn?" own-seat":""}" onclick="toggleFlower('${f.id}')">
-      <span class="tsym">${f.sym}</span><span class="tlbl">${f.name}${isOwn?" ★":""}</span></div>`;
+    html+=`<div class="tile-wrap t-flower${sel?" sel":""}${isOwn?" own-seat":""}" onclick="toggleFlower('${f.id}')">
+      <div class="tile-card"><span class="tsym">${f.sym}</span></div>
+      <span class="tile-num">${f.name}${isOwn?" ★":""}</span>
+    </div>`;
   });
   html+=`</div>`;
 
-  // Seasons (4 tiles, 1 each)
-  html+=`<div class="cat-label">Bonus — Seasons (★ = matches your seat, black border)</div><div class="tile-grid">`;
+  html+=`<div class="cat-label">${t('bonusSeasons')}</div><div class="tile-grid">`;
   SEASONS.forEach(se=>{
     const isOwn=se.seat===sw,sel=seSet.has(se.id);
-    html+=`<div class="tile t-season${sel?" sel":""}${isOwn?" own-seat":""}" onclick="toggleSeason('${se.id}')">
-      <span class="tsym">${se.sym}</span><span class="tlbl">${se.name}${isOwn?" ★":""}</span></div>`;
+    html+=`<div class="tile-wrap t-season${sel?" sel":""}${isOwn?" own-seat":""}" onclick="toggleSeason('${se.id}')">
+      <div class="tile-card"><span class="tsym">${se.sym}</span></div>
+      <span class="tile-num">${se.name}${isOwn?" ★":""}</span>
+    </div>`;
   });
   html+=`</div>`;
 
-  // Animals (4 tiles, 1 each)
-  html+=`<div class="cat-label">Bonus — Animals (Cat+Mouse = +1 fan · Rooster+Worm = +1 fan)</div><div class="tile-grid">`;
+  html+=`<div class="cat-label">${t('bonusAnimals')}</div><div class="tile-grid">`;
   ANIMALS.forEach(a=>{
     const sel=anSet.has(a.id);
-    html+=`<div class="tile t-animal${sel?" sel":""}" onclick="toggleAnimal('${a.id}')">
-      <span class="tsym">${a.sym}</span><span class="tlbl">${a.name}</span></div>`;
+    html+=`<div class="tile-wrap t-animal${sel?" sel":""}" onclick="toggleAnimal('${a.id}')">
+      <div class="tile-card"><span class="tsym">${a.sym}</span></div>
+      <span class="tile-num">${a.name}</span>
+    </div>`;
   });
   html+=`</div>`;
 
@@ -1310,12 +1780,12 @@ function renderPanel(){
     bonusItems.push(`<span class="bonus-chip ${inPair?"animal-pair":"animal-single"}" onclick="toggleAnimal('${aid}')">${a.sym} ${a.name}${inPair?" (pair)":""}</span>`);
   });
   if(bonusItems.length){
-    html+=`<div class="section-label" style="margin-top:8px">Selected Bonus Tiles (tap to remove)</div>
+    html+=`<div class="section-label" style="margin-top:8px">${t('selectedBonus')}</div>
     <div class="bonus-display">${bonusItems.join("")}</div>`;
   }
 
   // Manual extras + discard row
-  html+=`<hr><div class="section-label">Extra Fan — Manual Conditions</div><div class="extra-grid">`;
+  html+=`<hr><div class="section-label">${t('sectionExtra')}</div><div class="extra-grid">`;
   EXTRAS.forEach(e=>{
     html+=`<label class="extra-item">
       <input type="checkbox" style="margin-top:2px;flex-shrink:0;width:15px;height:15px;accent-color:#2563eb" ${s.extras.includes(e.id)?"checked":""} onchange="toggleExtra('${e.id}',this.checked)">
@@ -1327,7 +1797,7 @@ function renderPanel(){
   // Discard row — inside extra fan section
   if(!s.extras.includes("self_draw")){
     html+=`<div class="discard-row">
-      <label>&#9888; Who discarded the winning tile?</label>
+      <label>&#9888; ${t('whoDiscard')}</label>
       <select id="discardDrop" onchange="discardPlayerIdx=parseInt(this.value)">
         ${[0,1,2,3].filter(x=>x!==activeWinner).map(x=>`<option value="${x}"${x===discardPlayerIdx?" selected":""}>${gameNames[x]} (${WIND_CHARS[seatWinds[x]]})</option>`).join("")}
       </select>
@@ -1402,7 +1872,7 @@ function calculate(){
   let fan=baseHand.fan;
   const bd=[{name:baseHand.label+" (base hand)",fan:baseHand.fan}];
 
-  const auto=autoFan(ws.hand,ws.flowers,ws.seasons,ws.animals,sw,pw);
+  const auto=autoFan(ws.hand,ws.flowers,ws.seasons,ws.animals,sw,pw,baseHand.id);
   fan+=auto.fan; auto.bd.forEach(x=>bd.push(x));
 
   ws.extras.forEach(eid=>{
@@ -1439,30 +1909,29 @@ function calculate(){
 
   currentRoundResult={wi,sw,net,fan:finalFan,basePts,bd,selfDraw,di,dealerWon,wasCapped,cappedFan,fan:finalFan};
 
-  let html=`<div style="font-size:16px;font-weight:700;margin-bottom:12px">&#127942; Round ${roundNumber} Results</div>`;
+  let html=`<div style="font-size:16px;font-weight:700;margin-bottom:12px">&#127942; ${t('roundLabel')} ${roundNumber} ${t('calcResults')}</div>`;
 
   html+=`<div class="result-card">
     <div class="result-header">
       <span style="font-weight:700;font-size:15px">${gameNames[wi]} (${WIND_CHARS[sw]})</span>
-      <span class="winner-badge">&#127942; Winner</span>
+      <span class="winner-badge">&#127942; ${t('winner')}</span>
     </div>
-    <div class="section-label">Fan Breakdown</div>
+    <div class="section-label">${t('fanBreakdown')}</div>
     ${bd.map(b=>`<div class="fan-row"><span class="fan-name">${b.name}</span><span class="fan-val" style="${b.fan<0?"color:#b91c1c":""}">${b.fan>=0?"+":""}${b.fan} fan</span></div>`).join("")}
-    <div class="fan-row" style="font-weight:700"><span>Total Fan</span><span>${finalFan} fan${wasCapped?" (capped from "+fan+"fan)":""}</span></div>
-    <div class="fan-row"><span class="fan-name">Base Points (2^${finalFan})</span><span class="fan-val">${basePts.toLocaleString()} pts</span></div>
-    <div class="points-line"><span class="pts-label">Winner receives</span>
+    <div class="fan-row" style="font-weight:700"><span>${t('totalFan')}</span><span>${finalFan} fan${wasCapped?" ("+t('capped')+" "+fan+" fan)":""}</span></div>
+    <div class="fan-row"><span class="fan-name">${t('basePoints')} (2^${finalFan})</span><span class="fan-val">${basePts.toLocaleString()} pts</span></div>
+    <div class="points-line"><span class="pts-label">${t('winnerReceives')}</span>
       <span class="pts-val">+${(selfDraw?basePts*6:basePts*4).toLocaleString()} pts = +${((selfDraw?basePts*6:basePts*4)*pv).toLocaleString()}</span>
     </div>
     <p class="note">${selfDraw
-      ?`Self Draw: each of 3 players pays <b>${basePts.toLocaleString()} pts × 2 = ${(basePts*2).toLocaleString()} pts</b> (${(basePts*2*pv).toLocaleString()})`
-      :`Discard win: <b>${gameNames[di]}</b> pays ${(basePts*2).toLocaleString()} pts (${(basePts*2*pv).toLocaleString()}); each other player pays ${basePts.toLocaleString()} pts (${(basePts*pv).toLocaleString()})`}
+      ?`${t('selfDrawNote')} <b>${basePts.toLocaleString()} pts × 2 = ${(basePts*2).toLocaleString()} pts</b> (${(basePts*2*pv).toLocaleString()})`
+      :`${t('discardNote')} <b>${gameNames[di]}</b> ${t('pays')} ${(basePts*2).toLocaleString()} pts (${(basePts*2*pv).toLocaleString()}); ${t('eachOther')} ${basePts.toLocaleString()} pts (${(basePts*pv).toLocaleString()})`}
     </p>
-    <p class="note" style="margin-top:4px">${dealerWon?"&#128204; Dealer (East) won — winds stay, same dealer next round.":"&#128204; Non-dealer won — winds rotate anti-clockwise next round."}</p>
+    <p class="note" style="margin-top:4px">&#128204; ${dealerWon?t('dealerWon'):t('nonDealerWon')}</p>
   </div>`;
 
-  // Round scores
   html+=`<div class="result-card">
-    <div style="font-weight:700;margin-bottom:12px">Round ${roundNumber} Score <span style="font-size:12px;color:#888;font-weight:400">(1 pt = ${pv.toLocaleString()})</span></div>
+    <div style="font-weight:700;margin-bottom:12px">${t('roundLabel')} ${roundNumber} ${t('roundScore')} <span style="font-size:12px;color:#888;font-weight:400">(1 pt = ${pv.toLocaleString()})</span></div>
     <div class="summary-grid">${[0,1,2,3].map(i=>`<div class="sum-card">
       <div class="sum-name" title="${gameNames[i]}">${gameNames[i]}</div>
       <div class="sum-pts ${net[i]>0?"pos":net[i]<0?"neg":"zero"}">${net[i]>=0?"+":""}${net[i]}</div>
@@ -1470,9 +1939,8 @@ function calculate(){
     </div>`).join("")}</div>
   </div>`;
 
-  // Final Payout (cumulative)
   html+=`<div class="result-card">
-    <div style="font-weight:700;margin-bottom:12px">Final Payout (Rounds 1–${roundNumber})</div>
+    <div style="font-weight:700;margin-bottom:12px">${t('finalPayoutRounds')}${roundNumber})</div>
     <div class="summary-grid">${[0,1,2,3].map(i=>`<div class="sum-card">
       <div class="sum-name" title="${gameNames[i]}">${gameNames[i]}</div>
       <div class="sum-pts ${cumulativeNet[i]>0?"pos":cumulativeNet[i]<0?"neg":"zero"}">${cumulativeNet[i]>=0?"+":""}${cumulativeNet[i]}</div>
@@ -1480,25 +1948,23 @@ function calculate(){
     </div>`).join("")}</div>
   </div>`;
 
-  // History
   if(scoreHistory.length>0){
-    html+=`<div class="result-card"><div style="font-weight:700;margin-bottom:8px">Round History</div>
+    html+=`<div class="result-card"><div style="font-weight:700;margin-bottom:8px">${t('roundHistory')}</div>
       <div style="overflow-x:auto"><table class="history-table">
-        <thead><tr><th>Round</th><th>Winner</th><th>Hand</th><th>Fan</th><th>Win Type</th>
+        <thead><tr><th>${t('roundLabel')}</th><th>${t('winner')}</th><th>${t('handLabel2')}</th><th>${t('fanLabel')}</th><th>${t('winType')}</th>
           ${gameNames.map(n=>`<th>${n}</th>`).join("")}</tr></thead>
         <tbody>${scoreHistory.map(h=>`<tr>
           <td>R${h.round}</td>
           <td>${gameNames[h.winnerIdx]}</td>
           <td>${h.handName}</td>
           <td>${h.fan}</td>
-          <td>${h.selfDraw?"Self Draw":"Discard ("+gameNames[h.di]+")"}</td>
+          <td>${h.selfDraw?t('selfDraw'):t('discard')+" ("+gameNames[h.di]+")"}</td>
           ${[0,1,2,3].map(i=>{const v=h.net[i];return`<td class="${v>0?"td-pos":v<0?"td-neg":"td-zero"}">${v>=0?"+":""}${v}</td>`;}).join("")}
         </tr>`).join("")}</tbody>
       </table></div></div>`;
   }
 
-  // Fan reference
-  html+=`<div class="result-card"><div style="font-weight:700;margin-bottom:12px">Fan Reference Table${fanCap<13?` <span style="font-size:11px;color:#888;font-weight:400">(Cap: ${fanCap} fan — faded = inactive)</span>`:""}
+  html+=`<div class="result-card"><div style="font-weight:700;margin-bottom:12px">${t('fanRef')}${fanCap<13?` <span style="font-size:11px;color:#888;font-weight:400">(${t('capNote')} ${fanCap} fan — ${t('fanInactive')})</span>`:""}
   </div><div class="fan-ref-grid">
     ${BASE_PTS.map((pts,f)=>{
       const isActive=f===finalFan,isCapped=f>fanCap;
@@ -1509,12 +1975,11 @@ function calculate(){
       </div>`;}).join("")}
   </div></div>`;
 
-  // Buttons
   const gameComplete=isGameComplete();
   if(gameComplete){
-    html+=`<button class="complete-game-btn" onclick="completeGame()">&#127942; Complete Game — Show Final Results</button>`;
+    html+=`<button class="complete-game-btn" onclick="completeGame()">&#127942; ${t('completeGame')}</button>`;
   } else {
-    html+=`<button class="new-round-btn" onclick="newRound(${dealerWon?1:0})">&#8635; Start Round ${roundNumber+1}${dealerWon?" (winds stay — dealer won)":" (winds rotate)"}</button>`;
+    html+=`<button class="new-round-btn" onclick="newRound(${dealerWon?1:0})">&#8635; ${t('startRound')} ${roundNumber+1}${dealerWon?" "+t('windsStay'):" "+t('windsRotate')}</button>`;
   }
 
   resEl.innerHTML=html;
@@ -1522,24 +1987,27 @@ function calculate(){
 }
 
 function newRound(dealerWon){
-  const msg=dealerWon?"Dealer won — winds stay. Start Round "+(roundNumber+1)+"?":"Winds rotate anti-clockwise. Start Round "+(roundNumber+1)+"?";
+  const msg=dealerWon?t('newRoundConfirmDealer')+" "+(roundNumber+1)+"?":t('newRoundConfirmOther')+" "+(roundNumber+1)+"?";
   if(!confirm(msg))return;
   advanceRound(!!dealerWon);
 }
 
 function completeGame(){
-  if(!confirm("End the game and show Final Payout?"))return;
+  if(!confirm(t('completeConfirm')))return;
   showCongratsPage();
 }
 
 function showCongratsPage(){
   document.getElementById("mainApp").style.display="none";
   document.getElementById("congratsPage").style.display="block";
+  document.getElementById("congratsTitle").textContent=t('gameComplete');
   document.getElementById("congratsSubtitle").textContent=
-    "Game complete after "+roundNumber+" round"+(roundNumber>1?"s":"")+
-    " — "+gameNames.join(", ")+" have all completed as dealer.";
+    t('congratsSub').replace("all players have been dealer.","")+
+    " — "+gameNames.join(", ");
+  document.getElementById("finalPayoutLabel").innerHTML="&#127942; "+t('finalPayout');
+  document.getElementById("fullHistoryLabel").innerHTML="&#128203; "+t('fullHistory');
+  document.getElementById("restartBtn").innerHTML="&#8635; "+t('startNewGame');
 
-  // Final Payout table
   let payHtml=`<div class="summary-grid">`;
   [0,1,2,3].map(i=>`<div class="sum-card">
     <div class="sum-name" title="${gameNames[i]}">${gameNames[i]}</div>
@@ -1549,13 +2017,12 @@ function showCongratsPage(){
   payHtml+=`</div>`;
   document.getElementById("finalPayoutTable").innerHTML=payHtml;
 
-  // Round History
   let histHtml=`<table class="history-table" style="width:100%">
-    <thead><tr><th>Round</th><th>Winner</th><th>Hand</th><th>Fan</th><th>Win Type</th>
+    <thead><tr><th>${t('roundLabel')}</th><th>${t('winner')}</th><th>${t('handLabel2')}</th><th>${t('fanLabel')}</th><th>${t('winType')}</th>
       ${gameNames.map(n=>`<th>${n}</th>`).join("")}</tr></thead>
     <tbody>${scoreHistory.map(h=>`<tr>
       <td>R${h.round}</td><td>${gameNames[h.winnerIdx]}</td><td>${h.handName}</td><td>${h.fan}</td>
-      <td>${h.selfDraw?"Self Draw":"Discard ("+gameNames[h.di]+")"}</td>
+      <td>${h.selfDraw?t('selfDraw'):t('discard')+" ("+gameNames[h.di]+")"}</td>
       ${[0,1,2,3].map(i=>{const v=h.net[i];return`<td class="${v>0?"td-pos":v<0?"td-neg":"td-zero"}">${v>=0?"+":""}${v}</td>`;}).join("")}
     </tr>`).join("")}</tbody></table>`;
   document.getElementById("finalHistoryTable").innerHTML=histHtml;
@@ -1565,6 +2032,9 @@ function showCongratsPage(){
 function openRules(){document.getElementById("rulesModal").classList.add("open");}
 function closeRules(){document.getElementById("rulesModal").classList.remove("open");}
 document.getElementById("rulesModal").addEventListener("click",function(e){if(e.target===this)closeRules();});
+
+// Init translations on load
+applyTranslations();
 </script>
 </body>
 </html>
