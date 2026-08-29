@@ -1,0 +1,24 @@
+{
+  "name": "mahjongyuk",
+  "private": true,
+  "version": "2.0.0-alpha.0",
+  "type": "module",
+  "description": "Mahjongyuk — mobile mahjong calculator for Singapore and Hong Kong Old Style. mahjongyuk.com",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "preact": "^10.27.2"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.2",
+    "@types/node": "^22.18.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5",
+    "vitest": "^3.2.4"
+  }
+}
