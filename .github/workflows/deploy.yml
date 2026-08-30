@@ -35,19 +35,33 @@ jobs:
       - name: Build
         run: npm run build
 
-      # The CNAME file is sacred, and /v1/ must serve the legacy calculator
-      # unchanged, forever. Fail the deploy rather than ship a build that
-      # breaks either one.
+      # Three things must hold on every deploy:
+      #   1. the CNAME file is sacred - without it the domain breaks
+      #   2. /v1/ serves the legacy calculator byte-for-byte, forever
+      #   3. the root actually ships a working v2 bundle
+      # The root itself is no longer pinned - since Run 2 it legitimately
+      # changes. /v1/ is what stays frozen.
       - name: Verify deploy artifact
         run: |
           set -e
           test -f dist/CNAME || { echo "::error::dist/CNAME is missing"; exit 1; }
           [ "$(tr -d '[:space:]' < dist/CNAME)" = "mahjongyuk.com" ] \
             || { echo "::error::dist/CNAME is not mahjongyuk.com"; exit 1; }
-          test -f dist/index.html || { echo "::error::dist/index.html is missing"; exit 1; }
+
           cmp public/v1/index.html dist/v1/index.html \
             || { echo "::error::/v1/ no longer matches the legacy calculator"; exit 1; }
-          echo "CNAME ok, /v1/ byte-identical to the legacy calculator"
+
+          test -f dist/index.html || { echo "::error::dist/index.html is missing"; exit 1; }
+          BUNDLE=$(grep -o 'src="/assets/[^"]*\.js"' dist/index.html | head -1 | sed 's|src="||;s|"||')
+          [ -n "$BUNDLE" ] \
+            || { echo "::error::the root page references no JS bundle - v2 did not build"; exit 1; }
+          test -f "dist${BUNDLE}" \
+            || { echo "::error::the root page references ${BUNDLE}, which is not in the build"; exit 1; }
+
+          test -f dist/app/index.html \
+            || { echo "::error::the /app/ engine harness is missing"; exit 1; }
+
+          echo "CNAME ok; /v1/ byte-identical; root ships ${BUNDLE}; /app/ present"
 
       - uses: actions/configure-pages@v6
 

@@ -1,6 +1,5 @@
 import { render } from 'preact'
-import { DevHarness } from './ui/DevHarness'
-import './ui/harness.css'
+import { App } from './ui/App'
 
 const mount = document.getElementById('app')
-if (mount) render(<DevHarness />, mount)
+if (mount) render(<App />, mount)

@@ -26,4 +26,16 @@ describe('scaffold', () => {
   it('preserves the v1 calculator byte-for-byte', () => {
     expect(sha256(read('public/v1/index.html'))).toBe(V1_SHA256)
   })
+
+  // Run 2 took the root. The v1 copy is no longer there and must not come back,
+  // or the shim would be silently resurrected and the app would stop shipping.
+  it('serves the v2 app from the root', () => {
+    const root = read('index.html').toString()
+    expect(root).toContain('/src/main.tsx')
+    expect(sha256(read('index.html'))).not.toBe(V1_SHA256)
+  })
+
+  it('keeps the engine harness at /app/', () => {
+    expect(read('app/index.html').toString()).toContain('/src/harness-main.tsx')
+  })
 })

@@ -108,36 +108,36 @@ export function DevHarness() {
 
   return (
     <div class="wrap">
-      <h1>{t('app.devHarness')}</h1>
-      <p class="sub">{t('app.devNote')}</p>
+      <h1>{t('harness.title')}</h1>
+      <p class="sub">{t('harness.note')}</p>
 
       <section>
-        <h2>{t('example.label')}</h2>
+        <h2>{t('harness.examples')}</h2>
         <div class="chips">
           {EXAMPLES.map((e) => (
             <button class="act" key={e.key} onClick={() => loadExample(e)}>
-              {t('example.load')} {e.key}
+              {t('harness.load')} {e.key}
             </button>
           ))}
         </div>
       </section>
 
       <section>
-        <h2>{t('variant.label')}</h2>
+        <h2>{t('harness.variant')}</h2>
         <div>
-          {t('variant.singapore')}{' '}
-          <span class="pill">{t('variant.tileCount', { count: singapore.tileSet.total })}</span>
+          {t('variant.singapore.name')}{' '}
+          <span class="pill">{t('variant.tiles', { count: singapore.tileSet.total })}</span>
         </div>
       </section>
 
       <section>
-        <h2>{t('hand.label')}</h2>
+        <h2>{t('harness.concealed')}</h2>
         <textarea
           value={concealed}
-          placeholder={t('hand.placeholder')}
+          placeholder={t('harness.placeholder')}
           onInput={(e) => setConcealed((e.target as HTMLTextAreaElement).value)}
         />
-        <p class="muted">{t('hand.count', { count: handTiles.length })}</p>
+        <p class="muted">{t('harness.inHand', { count: handTiles.length })}</p>
         {SUITS.map((s) => (
           <div class="tiles" key={s}>
             {SUIT_TILES.filter((x) => x.endsWith(s)).map((tile) => (
@@ -155,43 +155,43 @@ export function DevHarness() {
         <div class="chips">
           <button class="act" onClick={() =>
             setConcealed((c) => c.trim().split(/\s+/).slice(0, -1).join(' '))}>
-            {t('hand.backspace')}
+            {t('harness.undoTile')}
           </button>
-          <button class="act" onClick={() => setConcealed('')}>{t('hand.clear')}</button>
+          <button class="act" onClick={() => setConcealed('')}>{t('harness.clear')}</button>
         </div>
       </section>
 
       <section>
-        <h2>{t('melds.label')}</h2>
-        {melds.length === 0 && <p class="muted">{t('melds.none')}</p>}
+        <h2>{t('harness.melds')}</h2>
+        {melds.length === 0 && <p class="muted">{t('harness.none')}</p>}
         {melds.map((m, i) => (
           <div class="meld" key={i}>
             <select value={m.t} onChange={(e) => setMelds((ms) => ms.map((x, j) =>
               j === i ? { ...x, t: (e.target as HTMLSelectElement).value as MeldInput['t'] } : x))}>
-              <option value="chow">{t('melds.kind.chow')}</option>
-              <option value="pong">{t('melds.kind.pong')}</option>
-              <option value="kong">{t('melds.kind.kong')}</option>
+              <option value="chow">{t('harness.chow')}</option>
+              <option value="pong">{t('harness.pong')}</option>
+              <option value="kong">{t('harness.kong')}</option>
             </select>
-            <input type="text" value={m.tiles} placeholder={t('melds.tilesPlaceholder')}
+            <input type="text" value={m.tiles} placeholder={t('harness.tilesPlaceholder')}
               onInput={(e) => setMelds((ms) => ms.map((x, j) =>
                 j === i ? { ...x, tiles: (e.target as HTMLInputElement).value } : x))} />
             <button class="chip" aria-pressed={m.open}
               onClick={() => setMelds((ms) => ms.map((x, j) =>
-                j === i ? { ...x, open: !x.open } : x))}>{t('melds.open')}</button>
+                j === i ? { ...x, open: !x.open } : x))}>{t('harness.exposed')}</button>
             <button class="act" onClick={() => setMelds((ms) => ms.filter((_, j) => j !== i))}>
-              {t('melds.remove')}
+              {t('harness.remove')}
             </button>
           </div>
         ))}
         <button class="act" onClick={() =>
           setMelds((ms) => [...ms, { t: 'pong', tiles: '', open: true }])}>
-          {t('melds.add')}
+          {t('harness.addMeld')}
         </button>
       </section>
 
       <section>
-        <h2>{t('bonus.label')}</h2>
-        {([['bonus.flowers', FLOWERS], ['bonus.seasons', SEASONS], ['bonus.animals', ANIMALS]] as const)
+        <h2>{t('harness.bonus')}</h2>
+        {([['harness.flowers', FLOWERS], ['harness.seasons', SEASONS], ['harness.animals', ANIMALS]] as const)
           .map(([labelKey, group]) => (
             <div key={labelKey} style="margin-bottom:10px">
               <label>{t(labelKey)}</label>
@@ -206,28 +206,28 @@ export function DevHarness() {
       </section>
 
       <section>
-        <h2>{t('ctx.winMethod')}</h2>
+        <h2>{t('harness.winMethod')}</h2>
         <div class="row">
           <div>
-            <label>{t('ctx.seat')}</label>
+            <label>{t('harness.seat')}</label>
             {windSelect(seat, setSeat)}
           </div>
           <div>
-            <label>{t('ctx.prevailing')}</label>
+            <label>{t('harness.prevailing')}</label>
             {windSelect(prevailing, setPrevailing)}
           </div>
         </div>
         <div style="margin-top:10px" class="chips">
           <button class="chip" aria-pressed={win === 'discard'} onClick={() => setWin('discard')}>
-            {t('ctx.discard')}
+            {t('harness.discard')}
           </button>
           <button class="chip" aria-pressed={win === 'selfDraw'} onClick={() => setWin('selfDraw')}>
-            {t('ctx.selfDraw')}
+            {t('harness.selfDraw')}
           </button>
         </div>
         <div class="row" style="margin-top:10px">
           <div>
-            <label>{t('ctx.winningTile')}</label>
+            <label>{t('harness.winningTile')}</label>
             <select value={winningTile}
               onChange={(e) => setWinningTile((e.target as HTMLSelectElement).value)}>
               <option value="">—</option>
@@ -238,7 +238,7 @@ export function DevHarness() {
           </div>
           {win === 'discard' && (
             <div>
-              <label>{t('ctx.discarder')}</label>
+              <label>{t('harness.discarder')}</label>
               <select value={discarder}
                 onChange={(e) => setDiscarder((e.target as HTMLSelectElement).value as Wind)}>
                 {others.map((w) => <option value={w} key={w}>{t(`wind.${w}`)}</option>)}
@@ -247,7 +247,7 @@ export function DevHarness() {
           )}
         </div>
         <div style="margin-top:12px">
-          <label>{t('ctx.flags')}</label>
+          <label>{t('harness.flags')}</label>
           <div class="chips">
             {FLAGS.map((f) => (
               <button class="chip" key={f} aria-pressed={flags.includes(f)}
@@ -261,41 +261,41 @@ export function DevHarness() {
       </section>
 
       <section>
-        <h2>{t('rules.label')}</h2>
+        <h2>{t('harness.rules')}</h2>
         <div class="row">
           <div>
-            <label>{t('rules.limit')}</label>
+            <label>{t('harness.limit')}</label>
             <input type="text" inputMode="numeric" value={String(limit)}
               onInput={(e) => setLimit(Number((e.target as HTMLInputElement).value) || 1)} />
           </div>
           <div>
-            <label>{t('rules.minTai')}</label>
+            <label>{t('harness.minTai')}</label>
             <input type="text" inputMode="numeric" value={String(minTai)}
               onInput={(e) => setMinTai(Number((e.target as HTMLInputElement).value) || 0)} />
           </div>
         </div>
         <div class="chips" style="margin-top:10px">
           <button class="chip" aria-pressed={doubleSpecial}
-            onClick={() => setDoubleSpecial((d) => !d)}>{t('rules.doubleSpecial')}</button>
+            onClick={() => setDoubleSpecial((d) => !d)}>{t('harness.doubleSpecial')}</button>
         </div>
       </section>
 
       <section class="result">
-        <h2>{t('result.title')}</h2>
+        <h2>{t('harness.result')}</h2>
         {!result.valid ? (
           <>
-            <p class="bad">{t('result.notAWin')}</p>
+            <p class="bad">{t('harness.notAWin')}</p>
             <p class="muted">{t(`reject.${result.reason}`)}</p>
           </>
         ) : (
           <>
-            <div class="total">{t('result.tai', { n: result.totalTai })}</div>
+            <div class="total">{t('result.fan', { n: result.totalTai })}</div>
             {result.limitApplied && (
-              <p class="muted">{t('result.rawTai', { n: result.rawTai })}</p>
+              <p class="muted">{t('harness.rawFan', { n: result.rawTai })}</p>
             )}
-            <p class="muted">{t('result.base')}: {result.base}</p>
+            <p class="muted">{t('harness.base')}: {result.base}</p>
 
-            <h2 style="margin-top:16px">{t('result.breakdown')}</h2>
+            <h2 style="margin-top:16px">{t('harness.breakdown')}</h2>
             <table>
               <tbody>
                 {result.fan.map((f, i) => (
@@ -309,7 +309,7 @@ export function DevHarness() {
 
             {pay && (
               <>
-                <h2 style="margin-top:16px">{t('result.payments')}</h2>
+                <h2 style="margin-top:16px">{t('harness.payments')}</h2>
                 <table>
                   <tbody>
                     {others.map((w) => {
@@ -319,13 +319,13 @@ export function DevHarness() {
                         : (win === 'discard' && pao ? 0 : pay.fromEachOther)
                       return (
                         <tr key={w}>
-                          <td>{t(`wind.${w}`)} {t('result.pays')}</td>
+                          <td>{t(`wind.${w}`)} {t('harness.pays')}</td>
                           <td>{amount}</td>
                         </tr>
                       )
                     })}
                     <tr>
-                      <td><strong>{t('result.youReceive')}</strong></td>
+                      <td><strong>{t('harness.youReceive')}</strong></td>
                       <td>{pay.winnerTotal}</td>
                     </tr>
                   </tbody>
@@ -337,13 +337,13 @@ export function DevHarness() {
 
         {instant.length > 0 && (
           <>
-            <h2 style="margin-top:16px">{t('result.instant')}</h2>
+            <h2 style="margin-top:16px">{t('harness.instant')}</h2>
             <table>
               <tbody>
                 {instant.map((p) => (
                   <tr key={p.key}>
                     <td>{p.key}</td>
-                    <td>{t('result.instantEach', { n: p.fromEachPlayer })}</td>
+                    <td>{t('harness.instantEach', { n: p.fromEachPlayer })}</td>
                   </tr>
                 ))}
               </tbody>

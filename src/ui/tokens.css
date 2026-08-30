@@ -1,0 +1,98 @@
+/**
+ * Kopitiam Mosaic — design tokens.
+ *
+ * The app is made of three materials and nothing else: glazed tile, mortar,
+ * and chit paper. Structure comes from the grout gap between cells, so there
+ * are no cards, no borders and no shadows anywhere.
+ *
+ * Theming has three states: an explicit choice stamps data-theme on <html>,
+ * and the default "system" setting stamps nothing — so every colour is defined
+ * on bare :root first, and only redefined in the dark blocks.
+ */
+
+:root {
+  /* SURFACES — the room, the mortar, the paper */
+  --mj-ground:    #E7EAE4;
+  --mj-grout:     #9AA096;
+  --mj-slip:      #F2F4EE;
+  --mj-rule:      #7C837C;
+
+  /* THE TILE */
+  --mj-tile:      #FAFBF7;
+  --mj-tile-edge: #D2D7CE;
+  --mj-tilecap:   #3F4844;   /* caption ink, measured on the tile's darker end */
+  --mj-back:      #2A6047;   /* face-down; the same hex in both themes */
+  --mj-on-back:   #EEF5F0;
+
+  /* INK */
+  --mj-ink:       #16201C;
+  --mj-on-ink:    #FAFBF7;
+  --mj-muted:     #4A534E;
+  --mj-disabled:  #666E68;   /* inactive, but still legible: 4.63:1 on slip */
+
+  /* THE TWO WORKING COLOURS — fixed meaning, never decorative.
+     Jade is money arriving and the selected state. Ang is money leaving. */
+  --mj-jade-ink:  #0A6350;
+  --mj-jade:      #0E6B57;
+  --mj-on-jade:   #FFFFFF;
+  --mj-ang-ink:   #A81E1A;
+  --mj-ang:       #B3161C;
+  --mj-on-ang:    #FFFFFF;
+
+  /* GEOMETRY */
+  --mj-r: 2px;          /* the only radius in the app */
+  --mj-gutter: 3px;     /* the grout gap */
+  --mj-pad: 10px;
+  --mj-col: 420px;      /* the column caps here; desktop just centres it */
+  --mj-press: 70ms linear;
+
+  /* TYPE */
+  --f-sign: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --f-num:  "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  --f-cjk:  "Noto Sans TC", "PingFang TC", "Hiragino Sans", "Heiti TC",
+            "Microsoft JhengHei", "Noto Sans CJK TC", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --mj-ground:    #0E1311;
+    --mj-grout:     #050807;
+    --mj-slip:      #171F1C;
+    --mj-rule:      #6E7A74;
+    --mj-tile:      #222C28;
+    --mj-tile-edge: #19221E;
+  --mj-tilecap:   #C6CFC9;
+    --mj-tilecap:   #C6CFC9;
+    --mj-ink:       #E6E4D8;
+    --mj-on-ink:    #0E1311;
+    --mj-muted:     #A9B2AC;
+    --mj-disabled:  #8A948E;
+    --mj-jade-ink:  #59D6AC;
+    --mj-jade:      #59D6AC;
+    --mj-on-jade:   #06120E;
+    --mj-ang-ink:   #FF8A7C;
+    --mj-ang:       #FF8A7C;
+    --mj-on-ang:    #240604;
+  }
+}
+
+:root[data-theme="dark"] {
+  --mj-ground:    #0E1311;
+  --mj-grout:     #050807;
+  --mj-slip:      #171F1C;
+  --mj-rule:      #6E7A74;
+  --mj-tile:      #222C28;
+  --mj-tile-edge: #19221E;
+  --mj-tilecap:   #C6CFC9;
+  --mj-ink:       #E6E4D8;
+  --mj-on-ink:    #0E1311;
+  --mj-muted:     #A9B2AC;
+  --mj-disabled:  #8A948E;
+  --mj-jade-ink:  #59D6AC;
+  --mj-jade:      #59D6AC;
+  --mj-on-jade:   #06120E;
+  --mj-ang-ink:   #FF8A7C;
+  --mj-ang:       #FF8A7C;
+  --mj-on-ang:    #240604;
+}

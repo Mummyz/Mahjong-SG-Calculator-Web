@@ -219,9 +219,10 @@ if the hand was won on a self-picked (自摸) tile or not."
 is read as the doubled (self-draw) per-player rate, which is what makes the
 sentence's "all players pay" true on a discard.
 
-*Flagged as interpretive.* The phrase admits a reading where the amount is
-doubled again (`4 × base` each). Chosen reading keeps the arithmetic consistent
-with `TT`'s own payout tables. Revisit with a further source.
+**RATIFIED BY THE OWNER, 2026-08-30**, on the advice of their mahjong-expert
+advisor: keep this reading. 十三幺 is paid at the doubled rate by all three
+players however it was won. This is no longer interpretive — the owner's ruling
+is the citation, and changing it requires the owner, not a document.
 
 ## R13 — "Special hands paid double" is NOT a general rule
 

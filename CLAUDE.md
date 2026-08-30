@@ -66,6 +66,19 @@ This applies to: labels, buttons, errors, empty states, tooltips, aria-labels,
 number/tile descriptions, and anything else a human reads. Brand names
 ("Mahjongyuk") are not translatable strings.
 
+### PRODUCT GLOSSARY (binding on all user-facing text)
+
+| Concept | User-facing term | Never say |
+|---|---|---|
+| The scoring unit a hand is worth | **Fan** | "Tai", "points", "doubles" |
+
+**"Fan" is the user-facing scoring unit everywhere, in every variant** — the
+Singapore 台 and the Hong Kong 番 are both presented to the player as *Fan*.
+Owner's decision, 2026-08-30. Internal code names (`totalTai`, `rawTai`,
+`minTai`) may stay as they are; the boundary is the `t()` layer. When the
+Indonesian locale lands, the Language Critic's glossary decides whether *Fan*
+is borrowed or translated — but it stays one word across both variants.
+
 Locale files live in `src/i18n/`. `en.json` is the key source of truth; `id.json`
 lands in Run 5.
 
@@ -135,8 +148,12 @@ citation, never by a failing test.**
 - Tile tap targets **≥ 44px**
 - Every tile **clearly readable at 360px width**
 - Responsive up to **tablet, 768px**
-- **Must read the `frontend-design` skill before every UI unit.** Every time,
-  not once.
+- **Must read the design skill before every UI unit.** Every time, not once.
+  The skill to load is **`artifact-design`** — design guidance and fundamentals.
+  *(Run 2 note: this rule originally named `frontend-design`, which is not
+  installed on this account. `artifact-design` is the nearest real equivalent
+  and is what Run 2 used. If the owner installs a dedicated frontend design
+  skill later, change this line to name it.)*
 
 ### LANGUAGE CRITIC (blocking on the Indonesian locale)
 
