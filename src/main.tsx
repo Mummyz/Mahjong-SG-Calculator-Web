@@ -1,14 +1,6 @@
 import { render } from 'preact'
-
-/**
- * v2 entry point. Run 2 replaces this with the real mobile UI.
- *
- * CONSTITUTION: from the first UI commit, every user-visible string goes
- * through t(). No hardcoded UI text, ever. See CLAUDE.md.
- */
-function App() {
-  return null
-}
+import { DevHarness } from './ui/DevHarness'
+import './ui/harness.css'
 
 const mount = document.getElementById('app')
-if (mount) render(<App />, mount)
+if (mount) render(<DevHarness />, mount)

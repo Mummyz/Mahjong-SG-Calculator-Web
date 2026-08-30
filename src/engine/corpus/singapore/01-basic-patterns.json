@@ -1,0 +1,1322 @@
+{
+  "description": "Chicken Hand and the minimum-point rule, Lesser Sequence, Sequence Hand and its wait restrictions, Triplets Hand.",
+  "entries": [
+    {
+      "id": "sg-chicken-001",
+      "title": "Chicken Hand, no bonus - rejected by the 1-tai minimum",
+      "cite": "TT SS-Chicken Hand: 'with the introduction of Minimum Point Requirement of one point in Singapore, this Hand has become invalid in most playing circles.' (RULING R14)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-chicken-002",
+      "title": "Chicken Hand lifted to 1 tai by the seat flower",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-chicken-003",
+      "title": "Chicken Hand self-drawn with an exposed meld - still 0 tai, rejected",
+      "cite": "RULING R1: self-draw alone scores no tai; it only changes the payment structure. 4 sources to 1 against v1.",
+      "hand": {
+        "concealed": "123m 789s 222m 55p",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "456p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "note": "Guards RULING R1: if self-draw scored a tai this hand would wrongly be a 1-tai win.",
+      "opts": {}
+    },
+    {
+      "id": "sg-chicken-004",
+      "title": "Chicken Hand fully concealed and self-drawn - 1 tai from Men Qing",
+      "cite": "TT SS-Fully Concealed Hand: 'you do not eat or pong and draw all the tiles yourself, you must also self draw your winning tile. This adds one point.' (RULING R1)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      }
+    },
+    {
+      "id": "sg-chicken-005",
+      "title": "Plain hand carried by a single dragon triplet",
+      "cite": "TT SS-Triplet of any Dragon Tile: 'Having a triplet of any Dragon Tile scores 1 point.'",
+      "hand": {
+        "concealed": "123m 456p 789s CCC 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-chicken-006",
+      "title": "1-tai hand rejected when the table minimum is raised to 2",
+      "cite": "TT SS-Chicken Hand: 'with the introduction of Minimum Point Requirement of one point in Singapore, this Hand has become invalid in most playing circles.' (RULING R14)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 1,
+        "reason": "belowMinimum"
+      },
+      "opts": {
+        "minTai": 2
+      }
+    },
+    {
+      "id": "sg-lesser-001",
+      "title": "Lesser Sequence with the seat flower",
+      "cite": "TT SS-Sequence Hand: 'he can only claim a Lesser Sequence Hand, which awards only 1 point, on top of any points awarded to him by the flower and/or animal tiles.' (RULING R2)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lesserSequence",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "lesserSequence",
+            1
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-lesser-002",
+      "title": "Lesser Sequence with a non-seat flower - flower scores nothing",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": [
+          "F3"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lesserSequence"
+        ],
+        "fan": [
+          [
+            "lesserSequence",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      },
+      "note": "Pian Hua scores 0 but still demotes Ping Hu to Lesser Sequence."
+    },
+    {
+      "id": "sg-lesser-003",
+      "title": "Lesser Sequence demoted by an animal tile",
+      "cite": "TT SS-Animal Tiles: 'Each animal tile obtained scores 1 point.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": [
+          "cat"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lesserSequence",
+          "animal"
+        ],
+        "fan": [
+          [
+            "lesserSequence",
+            1
+          ],
+          [
+            "animal",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-lesser-004",
+      "title": "Lesser Sequence on a closed wait - no wait restriction applies",
+      "cite": "TT SS-Sequence Hand: 'he can only claim a Lesser Sequence Hand, which awards only 1 point, on top of any points awarded to him by the flower and/or animal tiles.' (RULING R2)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lesserSequence",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "lesserSequence",
+            1
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      },
+      "note": "RULING R5: the two-sided-wait rule binds Ping Hu only, never Lesser Sequence."
+    },
+    {
+      "id": "sg-lesser-005",
+      "title": "Lesser Sequence, concealed self-draw, with an animal",
+      "cite": "TT SS-Fully Concealed Hand: 'you do not eat or pong and draw all the tiles yourself, you must also self draw your winning tile. This adds one point.' (RULING R1)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": [
+          "rat"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lesserSequence",
+          "animal",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "lesserSequence",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 8,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "sg-lesser-006",
+      "title": "Lesser Sequence on a pair wait with the seat season",
+      "cite": "TT SS-Sequence Hand: 'he can only claim a Lesser Sequence Hand, which awards only 1 point, on top of any points awarded to him by the flower and/or animal tiles.' (RULING R2)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": [
+          "S1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lesserSequence",
+          "seatSeason"
+        ],
+        "fan": [
+          [
+            "lesserSequence",
+            1
+          ],
+          [
+            "seatSeason",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-pinghu-001",
+      "title": "Sequence Hand, two-sided wait, won on discard",
+      "cite": "TT SS-Sequence Hand: 'A Sequence Hand (Ping Hu) scores 4 points. In addition, the winning player has to be waiting for at least 2 different tiles in order to win.'",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sequenceHand"
+        ],
+        "fan": [
+          [
+            "sequenceHand",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-pinghu-002",
+      "title": "Sequence Hand, closed wait allowed on self-draw, fully concealed",
+      "cite": "TT SS-Sequence Hand: 'A Sequence Hand (Ping Hu) scores 4 points. In addition, the winning player has to be waiting for at least 2 different tiles in order to win.'",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sequenceHand",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "sequenceHand",
+            4
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-pinghu-003",
+      "title": "Closed wait on a discard forfeits Ping Hu entirely - rejected",
+      "cite": "TT SS-Sequence Hand: 'the four point awarded to the Sequence Hand does not count.' (RULING R5)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3p"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "note": "Does NOT fall back to Lesser Sequence. RULING R5.",
+      "opts": {}
+    },
+    {
+      "id": "sg-pinghu-004",
+      "title": "Edge wait on a discard forfeits Ping Hu - rejected",
+      "cite": "TT SS-Sequence Hand: 'the four point awarded to the Sequence Hand does not count.' (RULING R5)",
+      "hand": {
+        "concealed": "123m 456m 789m 123p 55s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3p"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-pinghu-005",
+      "title": "Pair wait on a discard forfeits Ping Hu - rejected",
+      "cite": "TT SS-Sequence Hand: 'the four point awarded to the Sequence Hand does not count.' (RULING R5)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5s"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-pinghu-006",
+      "title": "All four sequences melded, waiting one tile - forfeited even on self-draw",
+      "cite": "TT SS-Sequence Hand: 'a player cannot claim a Sequence Hand even if he Self-Pick the last required tile... when a player melded all 4 sequences required by discards from other player, and is left with a single tile.'",
+      "hand": {
+        "concealed": "55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          },
+          {
+            "t": "chow",
+            "tiles": "456m",
+            "open": true
+          },
+          {
+            "t": "chow",
+            "tiles": "789m",
+            "open": true
+          },
+          {
+            "t": "chow",
+            "tiles": "234p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5s"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-pinghu-007",
+      "title": "Sequence Hand with a non-value wind pair",
+      "cite": "TT SS-Sequence Hand: the pair 'can be from the Character tiles, Dots tiles or the Bamboo tiles, or any Winds which is neither the Prevailing Wind nor the Seat Wind of the winning player.'",
+      "hand": {
+        "concealed": "123m 456m 789m 234p NN",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sequenceHand"
+        ],
+        "fan": [
+          [
+            "sequenceHand",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-pinghu-008",
+      "title": "Seat wind pair disqualifies Sequence Hand - rejected",
+      "cite": "TT SS-Sequence Hand: the pair 'can be from the Character tiles, Dots tiles or the Bamboo tiles, or any Winds which is neither the Prevailing Wind nor the Seat Wind of the winning player.'",
+      "hand": {
+        "concealed": "123m 456m 789m 234p EE",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-pinghu-009",
+      "title": "Dragon pair disqualifies Sequence Hand - rejected",
+      "cite": "TT SS-Sequence Hand: the pair 'can be from the Character tiles, Dots tiles or the Bamboo tiles, or any Winds which is neither the Prevailing Wind nor the Seat Wind of the winning player.'",
+      "hand": {
+        "concealed": "123m 456m 789m 234p CC",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-pinghu-010",
+      "title": "Prevailing wind pair disqualifies Sequence Hand - rejected",
+      "cite": "TT SS-Sequence Hand: the pair 'can be from the Character tiles, Dots tiles or the Bamboo tiles, or any Winds which is neither the Prevailing Wind nor the Seat Wind of the winning player.'",
+      "hand": {
+        "concealed": "123m 456m 789m 234p SS",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-pinghu-011",
+      "title": "Sequence Hand with melded chows, two-sided wait",
+      "cite": "TT SS-Sequence Hand: 'A Sequence Hand (Ping Hu) scores 4 points. In addition, the winning player has to be waiting for at least 2 different tiles in order to win.'",
+      "hand": {
+        "concealed": "234p 55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          },
+          {
+            "t": "chow",
+            "tiles": "456m",
+            "open": true
+          },
+          {
+            "t": "chow",
+            "tiles": "789m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sequenceHand"
+        ],
+        "fan": [
+          [
+            "sequenceHand",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-pinghu-012",
+      "title": "Sequence Hand self-drawn with melds - no Men Qing",
+      "cite": "TT SS-Fully Concealed Hand: 'you do not eat or pong and draw all the tiles yourself, you must also self draw your winning tile. This adds one point.' (RULING R1)",
+      "hand": {
+        "concealed": "234p 55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          },
+          {
+            "t": "chow",
+            "tiles": "456m",
+            "open": true
+          },
+          {
+            "t": "chow",
+            "tiles": "789m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sequenceHand"
+        ],
+        "fan": [
+          [
+            "sequenceHand",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 16,
+          "winnerTotal": 48
+        }
+      }
+    },
+    {
+      "id": "sg-pinghu-013",
+      "title": "Sequence Hand with a two-sided wait completing the pair",
+      "cite": "TT SS-Sequence Hand: 'A Sequence Hand (Ping Hu) scores 4 points. In addition, the winning player has to be waiting for at least 2 different tiles in order to win.'",
+      "hand": {
+        "concealed": "123m 456m 789m 67899p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sequenceHand"
+        ],
+        "fan": [
+          [
+            "sequenceHand",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      },
+      "note": "TT gives exactly this shape: '6, 7, 8 & 9 of the Dots tiles, waiting for 6 & 9 of the Dots tiles to win by forming a pair.'"
+    },
+    {
+      "id": "sg-pong-001",
+      "title": "Triplets Hand, no value tiles",
+      "cite": "TT SS-Triplets Hand: 'A Triplets Hand scores 2 points... any 4 triplets and any pair of tiles (eyes).'",
+      "hand": {
+        "concealed": "222m 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-pong-002",
+      "title": "Triplets Hand with one dragon triplet",
+      "cite": "TT SS-Triplet of any Dragon Tile: 'Having a triplet of any Dragon Tile scores 1 point.'",
+      "hand": {
+        "concealed": "222m 555p CCC 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "sg-pong-003",
+      "title": "Triplets Hand with a seat wind triplet (seat != prevailing)",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind... you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "222m 555p EEE 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "seatWind"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "seatWind",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "sg-pong-004",
+      "title": "Triplets Hand where seat wind equals prevailing wind - the one triplet scores 2",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind... you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "222m 555p EEE 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-pong-005",
+      "title": "Triplets Hand with an exposed pong, self-drawn - not Hidden Treasure",
+      "cite": "TT SS-Triplets Hand: 'A Triplets Hand scores 2 points... any 4 triplets and any pair of tiles (eyes).'",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "555p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      },
+      "note": "The exposed pong blocks Si An Ke; see sg-hidden-*."
+    },
+    {
+      "id": "sg-pong-006",
+      "title": "Triplets Hand containing one exposed kong - 15 tiles",
+      "cite": "TT SS-Triplets Hand: 'A Triplets Hand scores 2 points... any 4 triplets and any pair of tiles (eyes).'",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-pong-007",
+      "title": "Triplets Hand with a dragon triplet and seat == prevailing wind",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind... you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "CCC 555p EEE 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "dragonTriplet",
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-pong-008",
+      "title": "Triplets Hand with separate seat and prevailing wind triplets",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind... you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "EEE SSS 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "8s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "seatWind",
+          "prevailingWind"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      },
+      "note": "TT: 'a triplet of East and a triplet of South by the player will score 2 points (1 point for each triplet)'."
+    },
+    {
+      "id": "sg-pong-009",
+      "title": "Triplets Hand won by discard at 2 tai - payout check",
+      "cite": "TT SS-Triplets Hand: 'A Triplets Hand scores 2 points... any 4 triplets and any pair of tiles (eyes).'",
+      "hand": {
+        "concealed": "222m 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-pong-010",
+      "title": "Triplets Hand self-drawn with an open kong",
+      "cite": "TT SS-Triplets Hand: 'A Triplets Hand scores 2 points... any 4 triplets and any pair of tiles (eyes).'",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    }
+  ]
+}

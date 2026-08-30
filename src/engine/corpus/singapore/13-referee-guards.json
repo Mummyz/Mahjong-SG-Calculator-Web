@@ -1,0 +1,298 @@
+{
+  "description": "Claims the referee must refuse: unverifiable Ping Hu waits, circumstance hands claimed from the wrong seat, impossible kong sequences, pao on a self-draw.",
+  "entries": [
+    {
+      "id": "sg-guard-001",
+      "title": "Ping Hu shape with no winning tile declared - not awarded, rejected",
+      "cite": "RULING R5 / engine contract: Ping Hu requires a wait of at least two tiles, so the winning tile must be known. An unverifiable claim fails rather than scoring 4 tai.",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "note": "The same hand with a two-sided wait declared scores 4 (sg-pinghu-001).",
+      "opts": {}
+    },
+    {
+      "id": "sg-guard-002",
+      "title": "Ping Hu shape with no winning tile, but a flower - Lesser Sequence still stands",
+      "cite": "RULING R5 / engine contract: Ping Hu requires a wait of at least two tiles, so the winning tile must be known. An unverifiable claim fails rather than scoring 4 tai.",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lesserSequence",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "lesserSequence",
+            1
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      },
+      "note": "Lesser Sequence carries no wait restriction, so it does not need the winning tile."
+    },
+    {
+      "id": "sg-guard-003",
+      "title": "Heavenly Hand claimed from a non-dealer seat - not awarded, rejected",
+      "cite": "TT SS-Heavenly Hand: 'the first player, as the dealer, wins the round on the first turn.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      },
+      "note": "Only Men Qing remains; the Heavenly award needs the dealer's seat."
+    },
+    {
+      "id": "sg-guard-004",
+      "title": "Earthly Hand claimed by the dealer - not awarded",
+      "cite": "TT SS-Earthly Hand: 'a non-dealer wins from the dealer's first discard.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m",
+        "flags": [
+          "earthly"
+        ]
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-guard-005",
+      "title": "Humanly Hand claimed by the dealer - not awarded",
+      "cite": "TT SS-Humanly Hand: 'a non-dealer wins by discard within the first go around.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m",
+        "flags": [
+          "humanly"
+        ]
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-guard-006",
+      "title": "Kong on Kong flagged with only one kong - not awarded",
+      "cite": "TT SS-Winning on Replacement Tile For Kong: Kong on Kong requires two consecutive kong replacements, so it cannot occur with fewer than two kongs.",
+      "hand": {
+        "concealed": "456m 789m 234m 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "9m",
+        "flags": [
+          "kongOnKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            4
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "Falls back to the ordinary reading of the hand."
+    },
+    {
+      "id": "sg-guard-007",
+      "title": "Kong on Kong flagged with no kongs at all - not awarded",
+      "cite": "TT SS-Winning on Replacement Tile For Kong: Kong on Kong requires two consecutive kong replacements, so it cannot occur with fewer than two kongs.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "kongOnKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      }
+    },
+    {
+      "id": "sg-guard-008",
+      "title": "Pao flagged on a self-draw is ignored - ordinary self-draw payments",
+      "cite": "TT SS-Paying for all players: pao describes 'the player making such a discard'. A self-draw has no discarder, so the condition cannot arise. (RULING R11)",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "555p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m",
+        "pao": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    }
+  ]
+}

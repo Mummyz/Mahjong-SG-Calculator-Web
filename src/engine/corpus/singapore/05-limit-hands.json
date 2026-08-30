@@ -1,0 +1,1221 @@
+{
+  "description": "Nine Gates, Hidden Treasure, Thirteen Wonders, Eighteen Arhats, Heavenly/Earthly/Humanly, Eight Flowers, Kong on Kong.",
+  "entries": [
+    {
+      "id": "sg-ninegates-001",
+      "title": "Nine Gates in characters, won on a discard",
+      "cite": "TT SS-Nine Gates: 'any player, by virtue of having these 13 tiles, can simply win the game with any discarded tile from that same suit... which awards the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "1112345678999m 5m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "nineGates"
+        ],
+        "fan": [
+          [
+            "nineGates",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-ninegates-002",
+      "title": "Nine Gates in dots, self-drawn",
+      "cite": "TT SS-Nine Gates: 'any player, by virtue of having these 13 tiles, can simply win the game with any discarded tile from that same suit... which awards the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "1112345678999p 1p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "nineGates",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "nineGates",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-ninegates-003",
+      "title": "Nine Gates in bamboo at a raised limit of 10",
+      "cite": "TT SS-Nine Gates: 'any player, by virtue of having these 13 tiles, can simply win the game with any discarded tile from that same suit... which awards the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "1112345678999s 9s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "nineGates"
+        ],
+        "fan": [
+          [
+            "nineGates",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": 1024,
+          "fromEachOther": 512,
+          "winnerTotal": 2048
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-ninegates-004",
+      "title": "A pure suit hand that is not the Nine Gates shape - plain Full Flush",
+      "cite": "TT SS-Nine Gates: 'any player, by virtue of having these 13 tiles, can simply win the game with any discarded tile from that same suit... which awards the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "345m 345m 678m 999m 22m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      },
+      "note": "A Full Flush that is genuinely not the Nine Gates shape (no 1m at all)."
+    },
+    {
+      "id": "sg-hidden-001",
+      "title": "Hidden Treasure - four concealed triplets, self-drawn",
+      "cite": "TT SS-Hidden Treasure: 'the winning party fulfills this combination with a Self-Pick, and has no exposed Pong tiles or Exposed Kong... generally awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "222m 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "hiddenTreasure",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "hiddenTreasure",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "Raw 6, capped to 5."
+    },
+    {
+      "id": "sg-hidden-002",
+      "title": "Hidden Treasure with a concealed kong is still Hidden Treasure",
+      "cite": "TT SS-Hidden Treasure Note 1: 'the winning party can only perform Concealed Kong... He cannot perform an Exposed Kong on any discarded tile. If he does, the winning hand can only be considered as a Triplets Hand.'",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "hiddenTreasure",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "hiddenTreasure",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-hidden-003",
+      "title": "An exposed kong drops Hidden Treasure to a Triplets Hand",
+      "cite": "TT SS-Hidden Treasure Note 1: 'the winning party can only perform Concealed Kong... He cannot perform an Exposed Kong on any discarded tile. If he does, the winning hand can only be considered as a Triplets Hand.'",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    },
+    {
+      "id": "sg-hidden-004",
+      "title": "Won by discard, so no Hidden Treasure - Triplets Hand only",
+      "cite": "TT SS-Hidden Treasure Note 2: 'the winning party must complete the game with a Self-Pick.'",
+      "hand": {
+        "concealed": "222m 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      },
+      "note": "Four concealed triplets but not self-drawn; TT requires Self-Pick."
+    },
+    {
+      "id": "sg-hidden-005",
+      "title": "Hidden Treasure at a lowered limit of 3",
+      "cite": "TT SS-Hidden Treasure: 'the winning party fulfills this combination with a Self-Pick, and has no exposed Pong tiles or Exposed Kong... generally awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "222m 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "hiddenTreasure",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "hiddenTreasure",
+            3
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 3,
+        "limitApplied": true,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 8,
+          "winnerTotal": 24
+        }
+      },
+      "opts": {
+        "limit": 3
+      }
+    },
+    {
+      "id": "sg-thirteen-001",
+      "title": "Thirteen Wonders won on a discard - paid as a self-draw",
+      "cite": "TT SS-Thirteen Wonders: 'all players pay double that of the limit, regardless if the hand was won on a self-picked tile or not.' (RULING R12)",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFP C",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenWonders"
+        ],
+        "fan": [
+          [
+            "thirteenWonders",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "RULING R12: all three players pay 2x base even though this was a discard win."
+    },
+    {
+      "id": "sg-thirteen-002",
+      "title": "Thirteen Wonders self-drawn - same payment as the discard case",
+      "cite": "TT SS-Thirteen Wonders: 'all players pay double that of the limit, regardless if the hand was won on a self-picked tile or not.' (RULING R12)",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFP C",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenWonders",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "thirteenWonders",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "RULING R8c: a limit-hand award absorbs the components drawn from the SAME tiles and nothing else. Fully Concealed is a property of how the tile arrived, not of the tiles, so it survives every limit hand."
+    },
+    {
+      "id": "sg-thirteen-003",
+      "title": "Thirteen Wonders duplicating a suit terminal",
+      "cite": "TT SS-Thirteen Wonders: 'The Thirteen Wonders Hand score thirteen points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFP 1m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenWonders"
+        ],
+        "fan": [
+          [
+            "thirteenWonders",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-thirteen-004",
+      "title": "Thirteen Wonders at a raised limit of 10",
+      "cite": "TT SS-Thirteen Wonders: 'The Thirteen Wonders Hand score thirteen points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFP C",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenWonders"
+        ],
+        "fan": [
+          [
+            "thirteenWonders",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": 1024,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-thirteen-005",
+      "title": "Thirteen Wonders at a raised limit of 20 caps at its own 13",
+      "cite": "TT SS-Thirteen Wonders: 'The Thirteen Wonders Hand score thirteen points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFP C",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenWonders"
+        ],
+        "fan": [
+          [
+            "thirteenWonders",
+            13
+          ]
+        ],
+        "rawTai": 13,
+        "totalTai": 13,
+        "limitApplied": false,
+        "base": 4096,
+        "pay": {
+          "fromDiscarder": 8192,
+          "fromEachOther": 8192,
+          "winnerTotal": 24576
+        }
+      },
+      "opts": {
+        "limit": 20
+      }
+    },
+    {
+      "id": "sg-thirteen-006",
+      "title": "Missing one of the thirteen types - not a winning hand",
+      "cite": "TT SS-Thirteen Wonders: 'The Thirteen Wonders Hand score thirteen points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "19m 19p 1s ESWNCFP CC",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "noValidDecomposition"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-arhats-001",
+      "title": "Eighteen Arhats - four kongs, 18 tiles",
+      "cite": "TT SS-Eighteen Arhats: 'the player manages to Kong four times. It results in the player having 18 tiles excluding flower and animal tiles... It also scores maximum points.' (RULING R7)",
+      "hand": {
+        "concealed": "99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "2222p",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "3333s",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "EEEE",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eighteenArhats"
+        ],
+        "fan": [
+          [
+            "eighteenArhats",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-arhats-002",
+      "title": "Eighteen Arhats self-drawn",
+      "cite": "TT SS-Eighteen Arhats: 'the player manages to Kong four times. It results in the player having 18 tiles excluding flower and animal tiles... It also scores maximum points.' (RULING R7)",
+      "hand": {
+        "concealed": "99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "2222p",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "3333s",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "EEEE",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "9m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eighteenArhats",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "eighteenArhats",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-arhats-003",
+      "title": "Three kongs is not Eighteen Arhats - Triplets Hand",
+      "cite": "TT SS-Eighteen Arhats: 'the player manages to Kong four times. It results in the player having 18 tiles excluding flower and animal tiles... It also scores maximum points.' (RULING R7)",
+      "hand": {
+        "concealed": "444m 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "2222p",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "3333s",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-heavenly-001",
+      "title": "Heavenly Hand - dealer wins on the initial deal",
+      "cite": "TT SS-Heavenly Hand: 'the first player, as the dealer, wins the round on the first turn... this criterion is often awarded the limit.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "heavenly",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "heavenly",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "RULING R8c: a limit-hand award absorbs the components drawn from the SAME tiles and nothing else. Fully Concealed is a property of how the tile arrived, not of the tiles, so it survives every limit hand."
+    },
+    {
+      "id": "sg-heavenly-002",
+      "title": "Heavenly Hand at a raised limit of 10",
+      "cite": "TT SS-Heavenly Hand: 'the first player, as the dealer, wins the round on the first turn... this criterion is often awarded the limit.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "heavenly",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "heavenly",
+            10
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "opts": {
+        "limit": 10
+      },
+      "note": "RULING R8c: a limit-hand award absorbs the components drawn from the SAME tiles and nothing else. Fully Concealed is a property of how the tile arrived, not of the tiles, so it survives every limit hand."
+    },
+    {
+      "id": "sg-earthly-001",
+      "title": "Earthly Hand - non-dealer wins on the dealer's first discard",
+      "cite": "TT SS-Earthly Hand: 'a non-dealer wins from the dealer's first discard. Scenario 2 whereby a non-dealer wins upon drawing the first card in the game.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m",
+        "flags": [
+          "earthly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "earthly"
+        ],
+        "fan": [
+          [
+            "earthly",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-humanly-001",
+      "title": "Humanly Hand - non-dealer wins in the first go-around",
+      "cite": "TT SS-Humanly Hand: 'a non-dealer wins by discard within the first go around of the game before his/her first draw & no exposed meld formed by anyone.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "W",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m",
+        "flags": [
+          "humanly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "humanly"
+        ],
+        "fan": [
+          [
+            "humanly",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-eightflower-001",
+      "title": "Eight Flowers - all four flowers and all four seasons",
+      "cite": "TT SS-Two complete flower groups: 'Any player who collects 2 complete groups of 4 flower tiles (8 in total)... has achieved a 8 Flower Tile-set that scores the limit.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eightFlowers",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "eightFlowers",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "TT: 'The combination of hidden cards held by the player does not matter at all.' RULING R8c: a limit-hand award absorbs the components drawn from the SAME tiles and nothing else. Fully Concealed is a property of how the tile arrived, not of the tiles, so it survives every limit hand."
+    },
+    {
+      "id": "sg-eightflower-002",
+      "title": "Eight Flowers at a raised limit of 10",
+      "cite": "TT SS-Two complete flower groups: 'Any player who collects 2 complete groups of 4 flower tiles (8 in total)... has achieved a 8 Flower Tile-set that scores the limit.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eightFlowers",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "eightFlowers",
+            10
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "opts": {
+        "limit": 10
+      },
+      "note": "RULING R8c: a limit-hand award absorbs the components drawn from the SAME tiles and nothing else. Fully Concealed is a property of how the tile arrived, not of the tiles, so it survives every limit hand."
+    },
+    {
+      "id": "sg-eightflower-003",
+      "title": "Seven bonus tiles is not Eight Flowers - only the complete red group scores",
+      "cite": "TT SS-Complete flower group: 'A complete group of 4 flower tiles of the same colour scores a total of 2 points, 1 for the flower tile that matches the player's seat wind, and 1 for collecting all four.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lesserSequence",
+          "seatFlower",
+          "completeFlowerGroup",
+          "seatSeason"
+        ],
+        "fan": [
+          [
+            "lesserSequence",
+            1
+          ],
+          [
+            "seatFlower",
+            1
+          ],
+          [
+            "completeFlowerGroup",
+            1
+          ],
+          [
+            "seatSeason",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      },
+      "note": "Flowers F1-F4 complete (own F1 +1, group +1); seasons S1-S3 incomplete so only own S1 +1. No 8-flower trigger."
+    },
+    {
+      "id": "sg-kongonkong-001",
+      "title": "Kong on Kong - min(10, limit)",
+      "cite": "TT SS-Winning on Replacement Tile For Kong: 'he is considered to have performed a Kong on Kong... it is generally awarded 10 points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "456m 789m 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "2222p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "9m",
+        "flags": [
+          "kongOnKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "kongOnKong"
+        ],
+        "fan": [
+          [
+            "kongOnKong",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-kongonkong-002",
+      "title": "Kong on Kong at a raised limit of 10",
+      "cite": "TT SS-Winning on Replacement Tile For Kong: 'he is considered to have performed a Kong on Kong... it is generally awarded 10 points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "456m 789m 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "2222p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "9m",
+        "flags": [
+          "kongOnKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "kongOnKong"
+        ],
+        "fan": [
+          [
+            "kongOnKong",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    }
+  ]
+}

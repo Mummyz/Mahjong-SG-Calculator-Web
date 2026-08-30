@@ -1,0 +1,1381 @@
+{
+  "description": "Dragon triplets, the seat/prevailing wind matrix, Three Lesser and Great Scholars, Four Lesser and Great Blessings.",
+  "entries": [
+    {
+      "id": "sg-dragon-001",
+      "title": "One dragon triplet, otherwise plain",
+      "cite": "TT SS-Triplet of any Dragon Tile: 'Having a triplet of any Dragon Tile scores 1 point. This triplet can be obtained by Pong, Kong, or simply having these 3 tiles in your hidden hand.'",
+      "hand": {
+        "concealed": "CCC 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-dragon-002",
+      "title": "Two dragon triplets score 1 each",
+      "cite": "TT SS-Triplet of any Dragon Tile: 'Having a triplet of any Dragon Tile scores 1 point. This triplet can be obtained by Pong, Kong, or simply having these 3 tiles in your hidden hand.'",
+      "hand": {
+        "concealed": "CCC FFF 123m 456p 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-dragon-003",
+      "title": "Dragon triplet held concealed still scores",
+      "cite": "TT SS-Triplet of any Dragon Tile: 'Having a triplet of any Dragon Tile scores 1 point. This triplet can be obtained by Pong, Kong, or simply having these 3 tiles in your hidden hand.'",
+      "hand": {
+        "concealed": "PPP 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    },
+    {
+      "id": "sg-dragon-004",
+      "title": "Dragon kong scores the same as a dragon triplet - 15 tiles",
+      "cite": "TT SS-Triplet of any Dragon Tile: 'Having a triplet of any Dragon Tile scores 1 point. This triplet can be obtained by Pong, Kong, or simply having these 3 tiles in your hidden hand.'",
+      "hand": {
+        "concealed": "123m 456p 789s 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "CCCC",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-dragon-005",
+      "title": "A dragon pair alone scores nothing - rejected",
+      "cite": "TT SS-Triplet of any Dragon Tile: 'Having a triplet of any Dragon Tile scores 1 point. This triplet can be obtained by Pong, Kong, or simply having these 3 tiles in your hidden hand.'",
+      "hand": {
+        "concealed": "CC 123m 456p 789s 234m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-smallthree-001",
+      "title": "Three Lesser Scholars - fixed 3, dragons not counted again",
+      "cite": "TT SS-Three Lesser Scholars: 'The Three Lesser Scholars scores three points (one for the eye pair, and two for the pong/kong of the other two Dragon tiles).' (RULING R8)",
+      "hand": {
+        "concealed": "CCC FFF PP 123m 456p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallThreeDragons"
+        ],
+        "fan": [
+          [
+            "smallThreeDragons",
+            3
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      },
+      "note": "Mixed suits, so no flush stacks and the 3 stands alone. RULING R8."
+    },
+    {
+      "id": "sg-smallthree-002",
+      "title": "Three Lesser Scholars that is also a Triplets Hand",
+      "cite": "TT SS-Three Lesser Scholars: 'The Three Lesser Scholars scores three points (one for the eye pair, and two for the pong/kong of the other two Dragon tiles).' (RULING R8)",
+      "hand": {
+        "concealed": "CCC FFF PP 111m 222m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallThreeDragons",
+          "triplets",
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "smallThreeDragons",
+            3
+          ],
+          [
+            "triplets",
+            2
+          ],
+          [
+            "halfFlush",
+            2
+          ]
+        ],
+        "rawTai": 7,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "One suit plus honours: Half Flush stacks on the partial dragon hand (RULING R8b)."
+    },
+    {
+      "id": "sg-smallthree-003",
+      "title": "Three Lesser Scholars self-drawn and concealed",
+      "cite": "TT SS-Fully Concealed Hand (RULING R1)",
+      "hand": {
+        "concealed": "CCC FFF PP 123m 456m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallThreeDragons",
+          "fullyConcealed",
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "smallThreeDragons",
+            3
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "halfFlush",
+            2
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "One suit plus honours: Half Flush stacks on the partial dragon hand (RULING R8b)."
+    },
+    {
+      "id": "sg-smallthree-004",
+      "title": "Three Lesser Scholars in a Half Flush",
+      "cite": "TT SS-Three Lesser Scholars: 'The Three Lesser Scholars scores three points (one for the eye pair, and two for the pong/kong of the other two Dragon tiles).' (RULING R8)",
+      "hand": {
+        "concealed": "CCC FFF PP 123m 456m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallThreeDragons",
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "smallThreeDragons",
+            3
+          ],
+          [
+            "halfFlush",
+            2
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "One suit plus honours, so Half Flush stacks on the named dragon hand."
+    },
+    {
+      "id": "sg-bigthree-001",
+      "title": "Three Great Scholars - min(10, limit)",
+      "cite": "TT SS-Three Great Scholars: 'A Three Great Scholars scores 10 points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "CCC FFF PPP 123m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigThreeDragons"
+        ],
+        "fan": [
+          [
+            "bigThreeDragons",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "RULING R7/R8: fixed total; the three dragon triplets are not added again."
+    },
+    {
+      "id": "sg-bigthree-002",
+      "title": "Three Great Scholars at a raised limit of 10",
+      "cite": "TT SS-Three Great Scholars: 'A Three Great Scholars scores 10 points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "CCC FFF PPP 123m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigThreeDragons"
+        ],
+        "fan": [
+          [
+            "bigThreeDragons",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": 1024,
+          "fromEachOther": 512,
+          "winnerTotal": 2048
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-bigthree-003",
+      "title": "Three Great Scholars at a raised limit of 13 still caps at its own 10",
+      "cite": "TT SS-Three Great Scholars: 'A Three Great Scholars scores 10 points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "CCC FFF PPP 123m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigThreeDragons"
+        ],
+        "fan": [
+          [
+            "bigThreeDragons",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": 1024,
+          "fromEachOther": 512,
+          "winnerTotal": 2048
+        }
+      },
+      "opts": {
+        "limit": 13
+      }
+    },
+    {
+      "id": "sg-bigthree-004",
+      "title": "Three Great Scholars self-drawn",
+      "cite": "TT SS-Three Great Scholars: 'A Three Great Scholars scores 10 points, or the limit, whichever is the smaller number.' (RULING R7)",
+      "hand": {
+        "concealed": "CCC FFF PPP 123m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigThreeDragons",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "bigThreeDragons",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-wind-001",
+      "title": "Wind triplet: seat wind East, prevailing South",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "EEE 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatWind"
+        ],
+        "fan": [
+          [
+            "seatWind",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-wind-002",
+      "title": "Wind triplet: seat wind South, prevailing East",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "SSS 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatWind"
+        ],
+        "fan": [
+          [
+            "seatWind",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-wind-003",
+      "title": "Wind triplet: seat wind West, prevailing North",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "WWW 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "W",
+        "prevailing": "N",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatWind"
+        ],
+        "fan": [
+          [
+            "seatWind",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-wind-004",
+      "title": "Wind triplet: seat wind North, prevailing East",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "NNN 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatWind"
+        ],
+        "fan": [
+          [
+            "seatWind",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-wind-005",
+      "title": "Wind triplet: prevailing wind East only",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "EEE 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "prevailingWind"
+        ],
+        "fan": [
+          [
+            "prevailingWind",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-wind-006",
+      "title": "Wind triplet: prevailing wind West only",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "WWW 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "prevailingWind"
+        ],
+        "fan": [
+          [
+            "prevailingWind",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-wind-007",
+      "title": "Wind triplet: seat equals prevailing - one triplet scores 2",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "EEE 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-wind-008",
+      "title": "Wind triplet: seat equals prevailing South",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "SSS 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-wind-009",
+      "title": "Wind triplet: seat equals prevailing West",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "WWW 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "W",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-wind-010",
+      "title": "Wind triplet: seat equals prevailing North",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "NNN 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-wind-011",
+      "title": "Separate seat and prevailing wind triplets score 1 each",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "EEE SSS 123m 456p 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatWind",
+          "prevailingWind"
+        ],
+        "fan": [
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-wind-012",
+      "title": "A non-value wind triplet scores nothing - rejected",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "WWW 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-wind-013",
+      "title": "A seat wind pair scores nothing - only triplets count",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "EE 123m 456p 789s 234m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-wind-014",
+      "title": "Seat wind kong scores like the triplet",
+      "cite": "TT SS-Winds: 'Having a triplet of the seat wind or the prevailing wind scores 1 point... If the Prevailing Wind happens to coincide with your Seat Wind, and you manage to obtain a triplet of that wind, you score 2 points.' (RULING R9)",
+      "hand": {
+        "concealed": "123m 456p 789s 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "EEEE",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-smallfour-001",
+      "title": "Four Lesser Blessings, seat equals prevailing on a triplet wind",
+      "cite": "TT SS-Four Lesser Blessings: 'A Four Lesser Blessings score three or four points (two for the hand itself, plus the bonus points for a pong/kong of the prevailing wind and/or player wind).' (RULING R8)",
+      "hand": {
+        "concealed": "EEE SSS WWW NN 123m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallFourWinds",
+          "seatPrevailingWind",
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "smallFourWinds",
+            2
+          ],
+          [
+            "seatPrevailingWind",
+            2
+          ],
+          [
+            "halfFlush",
+            2
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Three wind triplets, a wind pair and one suited set is always one suit plus honours, so Small Four Winds is always also a Half Flush (RULING R8b)."
+    },
+    {
+      "id": "sg-smallfour-002",
+      "title": "Four Lesser Blessings with separate seat and prevailing triplets",
+      "cite": "TT SS-Four Lesser Blessings: 'A Four Lesser Blessings score three or four points (two for the hand itself, plus the bonus points for a pong/kong of the prevailing wind and/or player wind).' (RULING R8)",
+      "hand": {
+        "concealed": "EEE SSS WWW NN 123m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallFourWinds",
+          "seatWind",
+          "prevailingWind",
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "smallFourWinds",
+            2
+          ],
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "halfFlush",
+            2
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Three wind triplets, a wind pair and one suited set is always one suit plus honours, so Small Four Winds is always also a Half Flush (RULING R8b)."
+    },
+    {
+      "id": "sg-smallfour-003",
+      "title": "Four Lesser Blessings where the player's wind is the pair - no wind bonus",
+      "cite": "TT SS-Four Lesser Blessings: 'A Four Lesser Blessings score three or four points (two for the hand itself, plus the bonus points for a pong/kong of the prevailing wind and/or player wind).' (RULING R8)",
+      "hand": {
+        "concealed": "EEE SSS WWW NN 123m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallFourWinds",
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "smallFourWinds",
+            2
+          ],
+          [
+            "halfFlush",
+            2
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      },
+      "note": "Three wind triplets, a wind pair and one suited set is always one suit plus honours, so Small Four Winds is always also a Half Flush (RULING R8b)."
+    },
+    {
+      "id": "sg-smallfour-004",
+      "title": "Four Lesser Blessings, seat West prevailing East",
+      "cite": "TT SS-Four Lesser Blessings: 'A Four Lesser Blessings score three or four points (two for the hand itself, plus the bonus points for a pong/kong of the prevailing wind and/or player wind).' (RULING R8)",
+      "hand": {
+        "concealed": "EEE SSS WWW NN 123m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "W",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallFourWinds",
+          "seatWind",
+          "prevailingWind",
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "smallFourWinds",
+            2
+          ],
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "halfFlush",
+            2
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Three wind triplets, a wind pair and one suited set is always one suit plus honours, so Small Four Winds is always also a Half Flush (RULING R8b)."
+    },
+    {
+      "id": "sg-smallfour-005",
+      "title": "Four Lesser Blessings that is also All Honours",
+      "cite": "TT SS-Four Lesser Blessings: 'A Four Lesser Blessings score three or four points (two for the hand itself, plus the bonus points for a pong/kong of the prevailing wind and/or player wind).' (RULING R8)",
+      "hand": {
+        "concealed": "EEE SSS WWW NN CCC",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "All Honours (limit) outscores Small Four Winds; the engine must take the better reading."
+    },
+    {
+      "id": "sg-bigfour-001",
+      "title": "Four Great Blessings - the limit",
+      "cite": "TT SS-Four Great Blessings: 'A Four Great Blessings score the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "EEE SSS WWW NNN 11m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-bigfour-002",
+      "title": "Four Great Blessings self-drawn",
+      "cite": "TT SS-Four Great Blessings: 'A Four Great Blessings score the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "EEE SSS WWW NNN 11m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-bigfour-003",
+      "title": "Four Great Blessings at a raised limit of 10",
+      "cite": "TT SS-Four Great Blessings: 'A Four Great Blessings score the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "EEE SSS WWW NNN 11m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": 1024,
+          "fromEachOther": 512,
+          "winnerTotal": 2048
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    }
+  ]
+}

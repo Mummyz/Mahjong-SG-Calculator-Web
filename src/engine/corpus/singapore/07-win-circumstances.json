@@ -1,0 +1,659 @@
+{
+  "description": "Robbing the Kong, last available tile, kong and flower replacement wins, fully concealed, and their exclusions.",
+  "entries": [
+    {
+      "id": "sg-circ-001",
+      "title": "Robbing the Kong on an otherwise scoreless hand",
+      "cite": "TT SS-Robbing the Kong: 'Robbing the Kong scores one point.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m",
+        "flags": [
+          "robbingKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "robbingKong"
+        ],
+        "fan": [
+          [
+            "robbingKong",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-circ-002",
+      "title": "Winning on the last available tile",
+      "cite": "TT SS-Winning on the Last Available Tile: 'Winning on the Last Available Tile scores 1 point.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m",
+        "flags": [
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lastTile"
+        ],
+        "fan": [
+          [
+            "lastTile",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-circ-003",
+      "title": "Winning on a kong replacement tile",
+      "cite": "TT SS-Winning on Replacement Tile: 'Winning on Replacement Tile For Kong scores one point.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "kongReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "kongReplacement",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "kongReplacement",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    },
+    {
+      "id": "sg-circ-004",
+      "title": "Winning on a flower replacement tile",
+      "cite": "TT SS-Winning on Replacement Tile: 'Winning on Replacement Tile For Flower scores one point.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F2"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "flowerReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "flowerReplacement",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "flowerReplacement",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      },
+      "note": "Non-seat flower scores 0 but still triggered the replacement draw."
+    },
+    {
+      "id": "sg-circ-005",
+      "title": "Fully concealed self-draw alone",
+      "cite": "TT SS-Fully Concealed Hand: 'you do not eat or pong and draw all the tiles yourself, you must also self draw your winning tile. This adds one point.' (RULING R1)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      }
+    },
+    {
+      "id": "sg-circ-006",
+      "title": "Robbing the Kong on a two-sided Ping Hu wait - 5 points",
+      "cite": "TT SS-Robbing the Kong: 'if player B is waiting for 2 tiles to form Ping Hu, a Robbing the Kong will give him 5 points (4 for Ping Hu and 1 for Robbing the Kong).'",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p",
+        "flags": [
+          "robbingKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sequenceHand",
+          "robbingKong"
+        ],
+        "fan": [
+          [
+            "sequenceHand",
+            4
+          ],
+          [
+            "robbingKong",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "TT's own worked example."
+    },
+    {
+      "id": "sg-circ-007",
+      "title": "Robbing the Kong on a closed Ping Hu wait - 1 point only",
+      "cite": "TT SS-Robbing the Kong: 'this happened to be an in between tile or corner tile, Robbing the Kong will only give the winning player 1 point upon mahjong as the Ping Hu rule is not in effect.'",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3p",
+        "flags": [
+          "robbingKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "robbingKong"
+        ],
+        "fan": [
+          [
+            "robbingKong",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      },
+      "note": "TT's own worked example: Ping Hu is forfeited, and it does NOT fall back to Lesser Sequence."
+    },
+    {
+      "id": "sg-circ-008",
+      "title": "Last tile on a Triplets Hand",
+      "cite": "TT SS-Winning on the Last Available Tile: 'Winning on the Last Available Tile scores 1 point.'",
+      "hand": {
+        "concealed": "222m 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m",
+        "flags": [
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "lastTile"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "lastTile",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "sg-circ-009",
+      "title": "Kong replacement with an exposed kong - no Men Qing",
+      "cite": "TT SS-Winning on Replacement Tile: 'Winning on Replacement Tile For Kong scores one point.'",
+      "hand": {
+        "concealed": "456p 789s 222m 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p",
+        "flags": [
+          "kongReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "kongReplacement"
+        ],
+        "fan": [
+          [
+            "kongReplacement",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      }
+    },
+    {
+      "id": "sg-circ-010",
+      "title": "Flower replacement on a Lesser Sequence with the seat flower",
+      "cite": "TT SS-Winning on Replacement Tile: 'Winning on Replacement Tile For Flower scores one point.'",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55s",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "4p",
+        "flags": [
+          "flowerReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lesserSequence",
+          "seatFlower",
+          "flowerReplacement",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "lesserSequence",
+            1
+          ],
+          [
+            "seatFlower",
+            1
+          ],
+          [
+            "flowerReplacement",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 16,
+          "winnerTotal": 48
+        }
+      }
+    },
+    {
+      "id": "sg-circ-011",
+      "title": "Last tile drawn as a kong replacement is NOT Hai Di Lao Yue",
+      "cite": "TT SS-Winning on the Last Available Tile Note 1: 'This condition is fulfilled when the last 16th tile is drawn as a result of a Replacement Tile For Flower or Replacement Tile For Kong event.' - then it is NOT Hai Di Lao Yue.",
+      "hand": {
+        "concealed": "456p 789s 222m 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p",
+        "flags": [
+          "kongReplacement",
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "kongReplacement"
+        ],
+        "fan": [
+          [
+            "kongReplacement",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      },
+      "note": "Only the kong-replacement point applies; the last-tile point is suppressed."
+    },
+    {
+      "id": "sg-circ-012",
+      "title": "Concealed hand won by discard earns no Men Qing - rejected",
+      "cite": "TT SS-Fully Concealed Hand: 'you do not eat or pong and draw all the tiles yourself, you must also self draw your winning tile. This adds one point.' (RULING R1)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "note": "Men Qing requires the self-draw; without it this hand is 0 tai.",
+      "opts": {}
+    },
+    {
+      "id": "sg-circ-013",
+      "title": "Robbing the Kong plus a dragon triplet",
+      "cite": "TT SS-Robbing the Kong: 'Robbing the Kong scores one point.'",
+      "hand": {
+        "concealed": "CCC 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m",
+        "flags": [
+          "robbingKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "robbingKong"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "robbingKong",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-circ-014",
+      "title": "Last tile self-drawn and fully concealed",
+      "cite": "TT SS-Winning on the Last Available Tile: 'Winning on the Last Available Tile scores 1 point.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "lastTile",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "lastTile",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    },
+    {
+      "id": "sg-circ-015",
+      "title": "Last tile drawn as a flower replacement is NOT Hai Di Lao Yue",
+      "cite": "TT SS-Winning on the Last Available Tile Note 1: 'This condition is fulfilled when the last 16th tile is drawn as a result of a Replacement Tile For Flower or Replacement Tile For Kong event.' - then it is NOT Hai Di Lao Yue.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F2"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "flowerReplacement",
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "flowerReplacement",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "flowerReplacement",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    }
+  ]
+}

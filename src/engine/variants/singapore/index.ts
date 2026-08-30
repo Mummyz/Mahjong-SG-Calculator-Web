@@ -1,9 +1,33 @@
 /**
  * Singapore Mahjong — 148 tiles (144 + 4 animals).
  *
- * Run 1 ports the v1 rules here, under the Mahjong Rules Critic. Every rule
- * must trace to the canonical Singaporean scoring sources (incl.
- * singaporemahjong.com) and must be proven by the golden corpus in
- * src/engine/corpus/ BEFORE this unit is accepted.
+ * Every rule traces to docs/sources/RULING-LOG.md and is proven by the golden
+ * corpus in src/engine/corpus/singapore/.
  */
-export {}
+
+import type { BonusId, Wind } from '../../core/tiles'
+import type {
+  InstantPayout, PaymentBreakdown, RuleOptions, ScoreResult, VariantPlugin, WinContext,
+} from '../../core/variant'
+import type { HandInput } from '../../core/hand'
+import { SINGAPORE_TILE_SET } from './tileset'
+import { SINGAPORE_DEFAULTS, handSize, score } from './score'
+import { instantPayouts, payments } from './payments'
+
+export const singapore: VariantPlugin = {
+  id: 'singapore',
+  tileSet: SINGAPORE_TILE_SET,
+  defaults: SINGAPORE_DEFAULTS,
+  handSize,
+  score(hand: HandInput, ctx: WinContext, opts?: Partial<RuleOptions>): ScoreResult {
+    return score(hand, ctx, opts)
+  },
+  payments(s: ScoreResult, ctx: WinContext, opts?: Partial<RuleOptions>): PaymentBreakdown | null {
+    return payments(s, ctx, opts)
+  },
+  instantPayouts(bonus: readonly BonusId[], seat: Wind): readonly InstantPayout[] {
+    return instantPayouts(bonus, { seat })
+  },
+}
+
+export { SINGAPORE_TILE_SET, SINGAPORE_DEFAULTS, handSize, score, payments, instantPayouts }

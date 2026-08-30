@@ -1,0 +1,431 @@
+{
+  "description": "Hands the engine must REJECT: wrong tile counts, impossible tile multiplicities, no valid decomposition, malformed melds, bonus tiles in hand.",
+  "entries": [
+    {
+      "id": "sg-invalid-001",
+      "title": "Thirteen tiles - short hand",
+      "cite": "TT SS-Hand Structure: a standard winning hand is 4 sets plus 1 pair; each kong adds one tile. A hand that is not 14 + (kongs) tiles cannot win.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 5p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "wrongTileCount"
+      }
+    },
+    {
+      "id": "sg-invalid-002",
+      "title": "Fifteen tiles with no kong - long hand",
+      "cite": "TT SS-Hand Structure: a standard winning hand is 4 sets plus 1 pair; each kong adds one tile. A hand that is not 14 + (kongs) tiles cannot win.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 555p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "wrongTileCount"
+      }
+    },
+    {
+      "id": "sg-invalid-003",
+      "title": "Twelve tiles",
+      "cite": "TT SS-Hand Structure: a standard winning hand is 4 sets plus 1 pair; each kong adds one tile. A hand that is not 14 + (kongs) tiles cannot win.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "wrongTileCount"
+      }
+    },
+    {
+      "id": "sg-invalid-004",
+      "title": "Sixteen tiles declared with only one kong",
+      "cite": "TT SS-Hand Structure: a standard winning hand is 4 sets plus 1 pair; each kong adds one tile. A hand that is not 14 + (kongs) tiles cannot win.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111s",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "wrongTileCount"
+      },
+      "note": "14 concealed + 4 kong tiles = 18 for one kong; a one-kong hand must total 15."
+    },
+    {
+      "id": "sg-invalid-005",
+      "title": "Five copies of one tile",
+      "cite": "TT SS-Tile system: 148 tiles, 4 copies of each suited and honour tile, and exactly one of each flower, season and animal.",
+      "hand": {
+        "concealed": "11111m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "tileCountExceeded"
+      }
+    },
+    {
+      "id": "sg-invalid-006",
+      "title": "Five copies split across a meld and the hand",
+      "cite": "TT SS-Tile system: 148 tiles, 4 copies of each suited and honour tile, and exactly one of each flower, season and animal.",
+      "hand": {
+        "concealed": "111m 456p 789s 234m 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "tileCountExceeded"
+      },
+      "note": "Three 1m concealed plus a 1m kong is seven copies."
+    },
+    {
+      "id": "sg-invalid-007",
+      "title": "Fourteen tiles with no valid decomposition",
+      "cite": "TT SS-Hand Structure: 'Standard winning hand = 4 sets + 1 pair'. Tiles that admit no such decomposition are not a win.",
+      "hand": {
+        "concealed": "159m 159p 159s ESWNC",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "noValidDecomposition"
+      }
+    },
+    {
+      "id": "sg-invalid-008",
+      "title": "Fourteen tiles with four sets but no pair",
+      "cite": "TT SS-Hand Structure: 'Standard winning hand = 4 sets + 1 pair'. Tiles that admit no such decomposition are not a win.",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 56p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "noValidDecomposition"
+      }
+    },
+    {
+      "id": "sg-invalid-009",
+      "title": "Seven pairs is not a Singapore winning hand",
+      "cite": "TT SS-Hand Structure: 'Standard winning hand = 4 sets + 1 pair'. Tiles that admit no such decomposition are not a win.",
+      "hand": {
+        "concealed": "11m 22m 33m 44p 55p 66s 77s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "noValidDecomposition"
+      },
+      "note": "No seven-pairs hand exists in the Singapore ruleset."
+    },
+    {
+      "id": "sg-invalid-010",
+      "title": "A flower tile placed inside the concealed hand",
+      "cite": "TT SS-Bonus (flower/animal) Tiles: 'Bonus tiles are drawn separately - never counted in the 14-tile hand.'",
+      "hand": {
+        "concealed": "123m 456p 789s 22m 55p F1",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "bonusTileInHand"
+      }
+    },
+    {
+      "id": "sg-invalid-011",
+      "title": "An animal tile placed inside the concealed hand",
+      "cite": "TT SS-Bonus (flower/animal) Tiles: 'Bonus tiles are drawn separately - never counted in the 14-tile hand.'",
+      "hand": {
+        "concealed": "123m 456p 789s 22m 55p cat",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "bonusTileInHand"
+      }
+    },
+    {
+      "id": "sg-invalid-012",
+      "title": "A kong meld holding only three tiles",
+      "cite": "TT SS-Hand Structure: a standard winning hand is 4 sets plus 1 pair; each kong adds one tile. A hand that is not 14 + (kongs) tiles cannot win.",
+      "hand": {
+        "concealed": "456p 789s 222m 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "malformedMeld"
+      }
+    },
+    {
+      "id": "sg-invalid-013",
+      "title": "A chow meld of non-consecutive tiles",
+      "cite": "TT SS-Hand Structure: a standard winning hand is 4 sets plus 1 pair; each kong adds one tile. A hand that is not 14 + (kongs) tiles cannot win.",
+      "hand": {
+        "concealed": "456p 789s 222m 55p",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "135m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "malformedMeld"
+      }
+    },
+    {
+      "id": "sg-invalid-014",
+      "title": "A chow spanning two suits",
+      "cite": "TT SS-Hand Structure: a standard winning hand is 4 sets plus 1 pair; each kong adds one tile. A hand that is not 14 + (kongs) tiles cannot win.",
+      "hand": {
+        "concealed": "456p 789s 222m 55p",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "12m3p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "malformedMeld"
+      }
+    },
+    {
+      "id": "sg-invalid-015",
+      "title": "A chow of honour tiles",
+      "cite": "TT SS-Hand Structure: a standard winning hand is 4 sets plus 1 pair; each kong adds one tile. A hand that is not 14 + (kongs) tiles cannot win.",
+      "hand": {
+        "concealed": "456p 789s 222m 55p",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "ESW",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "malformedMeld"
+      }
+    },
+    {
+      "id": "sg-invalid-016",
+      "title": "The declared winning tile is not in the hand",
+      "cite": "TT SS-Hand Structure: 'Standard winning hand = 4 sets + 1 pair'. Tiles that admit no such decomposition are not a win.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "winningTileNotInHand"
+      }
+    },
+    {
+      "id": "sg-invalid-017",
+      "title": "Duplicate flower tiles - only one of each exists",
+      "cite": "TT SS-Tile system: 148 tiles, 4 copies of each suited and honour tile, and exactly one of each flower, season and animal.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "duplicateBonusTile"
+      }
+    },
+    {
+      "id": "sg-invalid-018",
+      "title": "Duplicate animal tiles",
+      "cite": "TT SS-Tile system: 148 tiles, 4 copies of each suited and honour tile, and exactly one of each flower, season and animal.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "cat",
+          "cat"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "duplicateBonusTile"
+      }
+    },
+    {
+      "id": "sg-invalid-019",
+      "title": "An unknown tile code",
+      "cite": "TT SS-Tile system: 148 tiles, 4 copies of each suited and honour tile, and exactly one of each flower, season and animal.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 5Xp",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "unknownTile"
+      }
+    },
+    {
+      "id": "sg-invalid-020",
+      "title": "A suited tile out of range",
+      "cite": "TT SS-Tile system: 148 tiles, 4 copies of each suited and honour tile, and exactly one of each flower, season and animal.",
+      "hand": {
+        "concealed": "123m 456p 780s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "unknownTile"
+      }
+    }
+  ]
+}

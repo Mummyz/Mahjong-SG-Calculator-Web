@@ -1,3 +1,4 @@
 export * from './tiles'
-export * from './hand'
 export * from './sets'
+export * from './hand'
+export * from './variant'

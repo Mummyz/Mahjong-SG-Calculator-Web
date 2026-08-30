@@ -1,0 +1,246 @@
+{
+  "description": "Hands with more than one legal reading; the engine must score the best one.",
+  "entries": [
+    {
+      "id": "sg-decomp-001",
+      "title": "Three identical chows also read as three pongs - the chow reading wins",
+      "cite": "TT SS-Full Flush (i): 'Full Flush Sequence Hand... generally awarded 10 points, or the limit.' (RULING R6)",
+      "hand": {
+        "concealed": "123m 123m 123m 456m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "6m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushSequence"
+        ],
+        "fan": [
+          [
+            "fullFlushSequence",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Readable as 111m/222m/333m or as 123m x3. Ping Hu makes the sequence reading better."
+    },
+    {
+      "id": "sg-decomp-002",
+      "title": "Shifted triple chow also reads as three pongs",
+      "cite": "TT SS-Full Flush (i): 'Full Flush Sequence Hand... generally awarded 10 points, or the limit.' (RULING R6)",
+      "hand": {
+        "concealed": "222m 333m 444m 567m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushSequence"
+        ],
+        "fan": [
+          [
+            "fullFlushSequence",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Readable as 222m/333m/444m or as 234m x3."
+    },
+    {
+      "id": "sg-decomp-003",
+      "title": "The pong reading wins when the chow reading scores nothing",
+      "cite": "TT SS-Triplets Hand: 'any 4 triplets and any pair of tiles (eyes).'",
+      "hand": {
+        "concealed": "111m 222m 333m 111p 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      },
+      "note": "Chow reading 123m x3 leaves a pong of 1p, so it is neither all-chow nor all-pong; the pong reading is a Triplets Hand."
+    },
+    {
+      "id": "sg-decomp-004",
+      "title": "The pong reading unlocks Hidden Treasure",
+      "cite": "TT SS-Hidden Treasure (RULING R7)",
+      "hand": {
+        "concealed": "111m 222m 333m 111p 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "hiddenTreasure",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "hiddenTreasure",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-decomp-005",
+      "title": "A bonus tile flips the best reading to Lesser Sequence at a raised limit",
+      "cite": "TT SS-Full Flush (i): 'Full Flush Sequence Hand... generally awarded 10 points, or the limit.' (RULING R6)",
+      "hand": {
+        "concealed": "222m 333m 444m 567m 99m",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushLesserSequence",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "fullFlushLesserSequence",
+            5
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 32,
+          "winnerTotal": 128
+        }
+      },
+      "note": "Ping Hu is blocked by the flower, so the sequence reading falls to Full Flush Lesser Sequence (5) which still beats the pong reading's Full Flush (4).",
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-decomp-006",
+      "title": "Nine Gates is preferred over reading the same tiles as a plain Full Flush",
+      "cite": "TT SS-Nine Gates (RULING R7)",
+      "hand": {
+        "concealed": "1112345678999m 5m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "nineGates"
+        ],
+        "fan": [
+          [
+            "nineGates",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    }
+  ]
+}

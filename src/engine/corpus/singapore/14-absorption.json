@@ -1,0 +1,349 @@
+{
+  "description": "How limit-hand awards absorb same-tile components, and how win-circumstance points combine.",
+  "entries": [
+    {
+      "id": "sg-absorb-001",
+      "title": "Hidden Treasure containing a dragon triplet - the dragon is absorbed",
+      "cite": "RULING R8c: a limit-hand award absorbs the components drawn from the same tiles. Circumstance points always survive; bonus-tile points survive everything except Eight Flowers.",
+      "hand": {
+        "concealed": "CCC 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "hiddenTreasure",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "hiddenTreasure",
+            10
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "note": "At a raised limit this is 10 + 1, not 10 + 1 + 1: the dragon triplet is inside the award.",
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-absorb-002",
+      "title": "Hidden Treasure containing a seat wind triplet - the wind is absorbed",
+      "cite": "RULING R8c: a limit-hand award absorbs the components drawn from the same tiles. Circumstance points always survive; bonus-tile points survive everything except Eight Flowers.",
+      "hand": {
+        "concealed": "EEE 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "hiddenTreasure",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "hiddenTreasure",
+            10
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-absorb-003",
+      "title": "Thirteen Wonders keeps its bonus tiles - they are different tiles",
+      "cite": "RULING R8c: a limit-hand award absorbs the components drawn from the same tiles. Circumstance points always survive; bonus-tile points survive everything except Eight Flowers.",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFP C",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenWonders",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "thirteenWonders",
+            10
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": 1024,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "note": "Bonus-tile points survive every limit hand except Eight Flowers.",
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-absorb-004",
+      "title": "Eight Flowers does not also collect its own flower points",
+      "cite": "RULING R8c: a limit-hand award absorbs the components drawn from the same tiles. Circumstance points always survive; bonus-tile points survive everything except Eight Flowers.",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eightFlowers",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "eightFlowers",
+            10
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "note": "The award is priced for exactly those eight tiles, so the seat flower, seat season and both group bonuses are absorbed.",
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-absorb-005",
+      "title": "Pure Terminals and Hidden Treasure read the same tiles - reported once",
+      "cite": "Two limit hands reading the same tiles both score the limit; the engine reports the more specific one and never adds them together. RULING R8c.",
+      "hand": {
+        "concealed": "111m 999m 111p 999p 11s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            10
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "note": "Four concealed terminal triplets self-drawn satisfy both; they must not be summed.",
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-absorb-006",
+      "title": "Robbing the Kong on the last available tile scores both",
+      "cite": "TT SS-Robbing the Kong: 'Robbing the Kong scores one point.'",
+      "hand": {
+        "concealed": "CCC 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m",
+        "flags": [
+          "robbingKong",
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "robbingKong",
+          "lastTile"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "robbingKong",
+            1
+          ],
+          [
+            "lastTile",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      },
+      "note": "Neither is a replacement draw, so the Hai Di Lao Yue suppression does not apply."
+    },
+    {
+      "id": "sg-absorb-007",
+      "title": "Robbing the Kong on a kong replacement suppresses only the last-tile point",
+      "cite": "TT SS-Winning on the Last Available Tile Note 1: the last tile drawn as a replacement is not Hai Di Lao Yue.",
+      "hand": {
+        "concealed": "CCC 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m",
+        "flags": [
+          "robbingKong",
+          "lastTile",
+          "kongReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "robbingKong",
+          "kongReplacement"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "robbingKong",
+            1
+          ],
+          [
+            "kongReplacement",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    }
+  ]
+}

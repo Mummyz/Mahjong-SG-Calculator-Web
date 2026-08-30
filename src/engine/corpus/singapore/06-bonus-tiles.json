@@ -1,0 +1,914 @@
+{
+  "description": "Own flower/season, non-seat flowers scoring zero, complete flower and season groups, animals and the all-four bonus.",
+  "entries": [
+    {
+      "id": "sg-bonus-001",
+      "title": "East holding flower 1 - own flower scores 1",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' Seat map: East=1, South=2, West=3, North=4. (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-002",
+      "title": "East holding flower 2 - a non-seat flower scores nothing, rejected",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' Seat map: East=1, South=2, West=3, North=4. (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F2"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "opts": {}
+    },
+    {
+      "id": "sg-bonus-003",
+      "title": "East holding season 1 - own season scores 1",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' Seat map: East=1, South=2, West=3, North=4. (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "S1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatSeason"
+        ],
+        "fan": [
+          [
+            "seatSeason",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-004",
+      "title": "South holding flower 2",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' Seat map: East=1, South=2, West=3, North=4. (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F2"
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-005",
+      "title": "West holding flower 3",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' Seat map: East=1, South=2, West=3, North=4. (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F3"
+        ]
+      },
+      "ctx": {
+        "seat": "W",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-006",
+      "title": "North holding flower 4",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' Seat map: East=1, South=2, West=3, North=4. (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F4"
+        ]
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-007",
+      "title": "East holding both own flower and own season",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' Seat map: East=1, South=2, West=3, North=4. (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "S1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower",
+          "seatSeason"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ],
+          [
+            "seatSeason",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-008",
+      "title": "East holding the complete flower group - 2 total",
+      "cite": "TT SS-Complete flower group: 'A complete group of 4 flower tiles of the same colour scores a total of 2 points, 1 for the flower tile that matches the player's seat wind, and 1 for collecting all four.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower",
+          "completeFlowerGroup"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ],
+          [
+            "completeFlowerGroup",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-009",
+      "title": "South holding the complete flower group - still 2 total",
+      "cite": "TT SS-Complete flower group: 'A complete group of 4 flower tiles of the same colour scores a total of 2 points, 1 for the flower tile that matches the player's seat wind, and 1 for collecting all four.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4"
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower",
+          "completeFlowerGroup"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ],
+          [
+            "completeFlowerGroup",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-010",
+      "title": "East holding the complete season group - 2 total",
+      "cite": "TT SS-Complete flower group: 'A complete group of 4 flower tiles of the same colour scores a total of 2 points, 1 for the flower tile that matches the player's seat wind, and 1 for collecting all four.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatSeason",
+          "completeSeasonGroup"
+        ],
+        "fan": [
+          [
+            "seatSeason",
+            1
+          ],
+          [
+            "completeSeasonGroup",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-011",
+      "title": "Three of four flowers - no group bonus",
+      "cite": "TT SS-Complete flower group: 'A complete group of 4 flower tiles of the same colour scores a total of 2 points, 1 for the flower tile that matches the player's seat wind, and 1 for collecting all four.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-012",
+      "title": "Complete flower group not containing the seat flower is impossible - all four always include it",
+      "cite": "TT SS-Complete flower group: 'A complete group of 4 flower tiles of the same colour scores a total of 2 points, 1 for the flower tile that matches the player's seat wind, and 1 for collecting all four.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4"
+        ]
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower",
+          "completeFlowerGroup"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ],
+          [
+            "completeFlowerGroup",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-013",
+      "title": "One animal",
+      "cite": "TT SS-Animal Tiles: 'Each animal tile obtained scores 1 point. One extra point (for a total of 5) is awarded if all 4 animals are collected.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "cat"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "animal"
+        ],
+        "fan": [
+          [
+            "animal",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-014",
+      "title": "Two animals",
+      "cite": "TT SS-Animal Tiles: 'Each animal tile obtained scores 1 point. One extra point (for a total of 5) is awarded if all 4 animals are collected.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "cat",
+          "rat"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "animal",
+          "animal"
+        ],
+        "fan": [
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-015",
+      "title": "Three animals",
+      "cite": "TT SS-Animal Tiles: 'Each animal tile obtained scores 1 point. One extra point (for a total of 5) is awarded if all 4 animals are collected.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "cat",
+          "rat",
+          "rooster"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "animal",
+          "animal",
+          "animal"
+        ],
+        "fan": [
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-016",
+      "title": "All four animals - 5 total, not 4",
+      "cite": "TT SS-Animal Tiles: 'Each animal tile obtained scores 1 point. One extra point (for a total of 5) is awarded if all 4 animals are collected.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "cat",
+          "rat",
+          "rooster",
+          "centipede"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "animal",
+          "animal",
+          "animal",
+          "animal",
+          "allAnimals"
+        ],
+        "fan": [
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "allAnimals",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-017",
+      "title": "All four animals plus the seat flower - capped at the limit",
+      "cite": "TT SS-Animal Tiles: 'Each animal tile obtained scores 1 point. One extra point (for a total of 5) is awarded if all 4 animals are collected.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "cat",
+          "rat",
+          "rooster",
+          "centipede",
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "animal",
+          "animal",
+          "animal",
+          "animal",
+          "allAnimals",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "allAnimals",
+            1
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Raw 6, capped to 5."
+    },
+    {
+      "id": "sg-bonus-018",
+      "title": "Triplets Hand plus all four animals - capped at the limit",
+      "cite": "TT SS-Animal Tiles: 'Each animal tile obtained scores 1 point. One extra point (for a total of 5) is awarded if all 4 animals are collected.' (RULING R10)",
+      "hand": {
+        "concealed": "222m 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": [
+          "cat",
+          "rat",
+          "rooster",
+          "centipede"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "animal",
+          "animal",
+          "animal",
+          "animal",
+          "allAnimals"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "animal",
+            1
+          ],
+          [
+            "allAnimals",
+            1
+          ]
+        ],
+        "rawTai": 7,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Raw 7, capped to 5."
+    },
+    {
+      "id": "sg-bonus-019",
+      "title": "Bonus tiles never enter the 14-tile hand - control with no bonus",
+      "cite": "TT SS-Flower Tiles: 'Each flower tile that matches a player's seat wind scores one point. Other flower tiles won't score any point.' Seat map: East=1, South=2, West=3, North=4. (RULING R10)",
+      "hand": {
+        "concealed": "CCC 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-bonus-020",
+      "title": "Own flower plus one animal",
+      "cite": "TT SS-Animal Tiles: 'Each animal tile obtained scores 1 point. One extra point (for a total of 5) is awarded if all 4 animals are collected.' (RULING R10)",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": [
+          "F1",
+          "cat"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatFlower",
+          "animal"
+        ],
+        "fan": [
+          [
+            "seatFlower",
+            1
+          ],
+          [
+            "animal",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    }
+  ]
+}

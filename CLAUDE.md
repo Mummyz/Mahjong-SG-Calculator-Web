@@ -122,7 +122,10 @@ otherwise.
   cites a source. "The engine disagrees" is not a source.
 - **Engine units are only accepted when the corpus is green.** Blocking.
 
-See `src/engine/corpus/README.md` for the full corpus rules.
+See `src/engine/corpus/README.md` for the full corpus rules, and
+`docs/sources/RULING-LOG.md` for every conflict between sources — or between a
+source and v1 — and the citation that settled it. **A ruling is changed by a new
+citation, never by a failing test.**
 
 ### DESIGN CRITIC (blocking on UI units)
 
@@ -150,7 +153,7 @@ See `src/engine/corpus/README.md` for the full corpus rules.
 | Run | Scope |
 |---|---|
 | **Run 0** | ✅ v2 scaffold, v1 preserved, this constitution |
-| **Run 1** | Core engine + Singapore port, with golden corpus |
+| **Run 1** | ✅ Core engine + Singapore port, golden corpus certified (264 tests) |
 | **Run 2** | Mobile UI v2 — variant select, pre-game tile info screen, tile picker, hand display |
 | **Run 3** | Hong Kong Old Style engine |
 | **Run 4** | Prediction (partial hands → candidate wins + tiles needed) |
@@ -168,8 +171,9 @@ public/v1/index.html      the permanent /v1/ calculator (hash-pinned)
 src/engine/core/          tiles, hand parser, set decomposition
 src/engine/variants/      singapore/, hongkong/
 src/engine/corpus/        golden test corpus — see its README
+docs/sources/             archived rule sources + the ruling log
 src/ui/                   Preact components (Run 2)
-src/i18n/                 en.json, id.json (Run 5)
+src/i18n/                 en.json + t(); id.json lands in Run 5
 src/test/                 cross-cutting guards
 .github/workflows/        deploy.yml — push to main → test → build → Pages
 ```

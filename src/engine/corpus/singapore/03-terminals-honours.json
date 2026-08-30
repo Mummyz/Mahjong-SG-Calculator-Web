@@ -1,0 +1,718 @@
+{
+  "description": "Mixed Terminals, Pure Terminals, All Honours, and their near-miss demotions.",
+  "entries": [
+    {
+      "id": "sg-mixedterm-001",
+      "title": "Mixed Terminals - the 4 already contains the Triplets Hand",
+      "cite": "TT SS-Mixed Terminals: 'A Mixed Terminals Hand scores 4 points (2 for triplets and 2 for mixed terminals).' (RULING R8)",
+      "hand": {
+        "concealed": "111m 999p 111s EEE 99s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      },
+      "note": "RULING R8: Triplets is NOT added on top; TT states the 4 is 2+2."
+    },
+    {
+      "id": "sg-mixedterm-002",
+      "title": "Mixed Terminals with a dragon triplet",
+      "cite": "TT SS-Triplet of any Dragon Tile: 'Having a triplet of any Dragon Tile scores 1 point.'",
+      "hand": {
+        "concealed": "111m 999p CCC EEE 99s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            4
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-mixedterm-003",
+      "title": "Mixed Terminals with a seat wind triplet",
+      "cite": "TT SS-Winds (RULING R9)",
+      "hand": {
+        "concealed": "111m 999p 111s EEE 99s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals",
+          "seatWind"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            4
+          ],
+          [
+            "seatWind",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-mixedterm-004",
+      "title": "Mixed Terminals overshooting the limit",
+      "cite": "TT SS-Scoring points: 'There is a typical maximum scoring limit of five points, though this has to be agreed among players.' (RULING R14)",
+      "hand": {
+        "concealed": "111m CCC EEE 999p 99s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals",
+          "dragonTriplet",
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            4
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 7,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Raw 7, capped to 5."
+    },
+    {
+      "id": "sg-mixedterm-005",
+      "title": "A concealed self-drawn Mixed Terminals is always Hidden Treasure",
+      "cite": "TT SS-Hidden Treasure: 'the winning party fulfills this combination with a Self-Pick, and has no exposed Pong tiles or Exposed Kong... generally awarded the limit.'",
+      "hand": {
+        "concealed": "111m 999p 111s EEE 99s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "selfDraw",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "hiddenTreasure",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "hiddenTreasure",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "Mixed Terminals requires the Triplets shape, so concealed + self-drawn necessarily also satisfies Si An Ke, which outscores it."
+    },
+    {
+      "id": "sg-mixedterm-006",
+      "title": "A middle-tile triplet breaks Mixed Terminals - plain Triplets Hand",
+      "cite": "TT SS-Mixed Terminals: 'A Mixed Terminals Hand scores 4 points (2 for triplets and 2 for mixed terminals).' (RULING R8)",
+      "hand": {
+        "concealed": "111m 999p 222s EEE 99s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-mixedterm-007",
+      "title": "All honours and terminals but with a chow - not Mixed Terminals",
+      "cite": "TT SS-Mixed Terminals: 'A Mixed Terminals Hand scores 4 points (2 for triplets and 2 for mixed terminals).' (RULING R8)",
+      "hand": {
+        "concealed": "111m 999p 111s 123m 99s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": false,
+        "rawTai": 0,
+        "reason": "belowMinimum"
+      },
+      "note": "Mixed Terminals requires the Triplets Hand shape; a chow drops it to 0 tai.",
+      "opts": {}
+    },
+    {
+      "id": "sg-pureterm-001",
+      "title": "Pure Terminals - the limit",
+      "cite": "TT SS-Pure Terminals: 'The Pure Terminals Hand is made up entirely of ones or nines... Due to its extreme rarity, this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "111m 999m 111p 999p 11s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-pureterm-002",
+      "title": "Pure Terminals self-drawn",
+      "cite": "TT SS-Pure Terminals: 'The Pure Terminals Hand is made up entirely of ones or nines... Due to its extreme rarity, this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "111m 999m 111p 999p 11s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-pureterm-003",
+      "title": "Pure Terminals at a raised limit of 10",
+      "cite": "TT SS-Pure Terminals: 'The Pure Terminals Hand is made up entirely of ones or nines... Due to its extreme rarity, this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "111m 999m 111p 999p 11s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": 1024,
+          "fromEachOther": 512,
+          "winnerTotal": 2048
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-pureterm-004",
+      "title": "Pure Terminals at a lowered limit of 3",
+      "cite": "TT SS-Pure Terminals: 'The Pure Terminals Hand is made up entirely of ones or nines... Due to its extreme rarity, this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "111m 999m 111p 999p 11s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            3
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      },
+      "opts": {
+        "limit": 3
+      }
+    },
+    {
+      "id": "sg-pureterm-005",
+      "title": "A single honour triplet demotes Pure Terminals to Mixed Terminals",
+      "cite": "TT SS-Pure Terminals: 'The Pure Terminals Hand is made up entirely of ones or nines... Due to its extreme rarity, this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "111m 999m 111p EEE 11s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-allhonours-001",
+      "title": "All Honours - the limit",
+      "cite": "TT SS-All Honour: 'The All Honours Hand is made up entirely of tiles from either the Winds tiles or Dragon tiles... this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "EEE SSS WWW CCC PP",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-allhonours-002",
+      "title": "All Honours self-drawn",
+      "cite": "TT SS-All Honour: 'The All Honours Hand is made up entirely of tiles from either the Winds tiles or Dragon tiles... this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "EEE SSS WWW CCC PP",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "selfDraw",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-allhonours-003",
+      "title": "All Honours at a lowered limit of 3",
+      "cite": "TT SS-All Honour: 'The All Honours Hand is made up entirely of tiles from either the Winds tiles or Dragon tiles... this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "EEE SSS WWW CCC PP",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            3
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      },
+      "opts": {
+        "limit": 3
+      }
+    },
+    {
+      "id": "sg-allhonours-004",
+      "title": "One suited pair breaks All Honours - Mixed Terminals instead",
+      "cite": "TT SS-All Honour: 'The All Honours Hand is made up entirely of tiles from either the Winds tiles or Dragon tiles... this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "EEE SSS WWW CCC 11m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            4
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "The dragon triplet is an independent bonus; Mixed Terminals absorbs only the Triplets shape. Consistent with sg-mixedterm-002."
+    },
+    {
+      "id": "sg-allhonours-005",
+      "title": "All Honours of three dragons and one wind",
+      "cite": "TT SS-All Honour: 'The All Honours Hand is made up entirely of tiles from either the Winds tiles or Dragon tiles... this is awarded the limit.' (RULING R7)",
+      "hand": {
+        "concealed": "CCC FFF PPP EEE SS",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "discard",
+        "winningTile": "E"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Also Big Three Dragons; the engine must take the better of the two, both being the limit here."
+    },
+    {
+      "id": "sg-mixedterm-008",
+      "title": "Mixed Terminals self-drawn with an exposed pong",
+      "cite": "TT SS-Mixed Terminals: 'A Mixed Terminals Hand scores 4 points (2 for triplets and 2 for mixed terminals).' (RULING R8)",
+      "hand": {
+        "concealed": "999p 111s EEE 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "selfDraw",
+        "winningTile": "9p"
+      },
+      "expect": {
+        "valid": true,
+        "fan": [
+          [
+            "mixedTerminals",
+            4
+          ]
+        ],
+        "patterns": [
+          "mixedTerminals"
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 16,
+          "winnerTotal": 48
+        }
+      },
+      "note": "The exposed pong blocks Hidden Treasure, leaving plain Mixed Terminals."
+    }
+  ]
+}

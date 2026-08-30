@@ -1,0 +1,189 @@
+{
+  "description": "Mid-game instant payouts (yao-dao and an-gang events), settled outside the winning hand.",
+  "entries": [
+    {
+      "id": "sg-instant-001",
+      "title": "Cat and rat together",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "E",
+      "bonus": [
+        "cat",
+        "rat"
+      ],
+      "expect": {
+        "payouts": [
+          {
+            "key": "catAndRat",
+            "fromEachPlayer": 2,
+            "total": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "sg-instant-002",
+      "title": "Rooster and centipede together",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "E",
+      "bonus": [
+        "rooster",
+        "centipede"
+      ],
+      "expect": {
+        "payouts": [
+          {
+            "key": "roosterAndCentipede",
+            "fromEachPlayer": 2,
+            "total": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "sg-instant-003",
+      "title": "Only one animal of a pair - no payout",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "E",
+      "bonus": [
+        "cat"
+      ],
+      "expect": {
+        "payouts": []
+      }
+    },
+    {
+      "id": "sg-instant-004",
+      "title": "All four animals pay cumulatively",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "E",
+      "bonus": [
+        "cat",
+        "rat",
+        "rooster",
+        "centipede"
+      ],
+      "expect": {
+        "payouts": [
+          {
+            "key": "catAndRat",
+            "fromEachPlayer": 2,
+            "total": 6
+          },
+          {
+            "key": "roosterAndCentipede",
+            "fromEachPlayer": 2,
+            "total": 6
+          },
+          {
+            "key": "allAnimals",
+            "fromEachPlayer": 4,
+            "total": 12
+          }
+        ]
+      }
+    },
+    {
+      "id": "sg-instant-005",
+      "title": "East holding both own flowers",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "E",
+      "bonus": [
+        "F1",
+        "S1"
+      ],
+      "expect": {
+        "payouts": [
+          {
+            "key": "bothSeatFlowers",
+            "fromEachPlayer": 2,
+            "total": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "sg-instant-006",
+      "title": "East holding flower 2 and season 2 - not East's, no payout",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "E",
+      "bonus": [
+        "F2",
+        "S2"
+      ],
+      "expect": {
+        "payouts": []
+      }
+    },
+    {
+      "id": "sg-instant-007",
+      "title": "South holding both own flowers",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "S",
+      "bonus": [
+        "F2",
+        "S2"
+      ],
+      "expect": {
+        "payouts": [
+          {
+            "key": "bothSeatFlowers",
+            "fromEachPlayer": 2,
+            "total": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "sg-instant-008",
+      "title": "Complete flower group is an An Gang level event",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "E",
+      "bonus": [
+        "F1",
+        "F2",
+        "F3",
+        "F4"
+      ],
+      "expect": {
+        "payouts": [
+          {
+            "key": "completeFlowerGroup",
+            "fromEachPlayer": 4,
+            "total": 12
+          }
+        ]
+      }
+    },
+    {
+      "id": "sg-instant-009",
+      "title": "Complete season group",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "N",
+      "bonus": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "expect": {
+        "payouts": [
+          {
+            "key": "completeSeasonGroup",
+            "fromEachPlayer": 4,
+            "total": 12
+          }
+        ]
+      }
+    },
+    {
+      "id": "sg-instant-010",
+      "title": "No bonus tiles at all",
+      "cite": "TT SS-Instant payment: a one-time payout by all playing parties for cat+mouse, chicken+centipede, all four animals, both seat flowers, and a complete flower group. TT Note 1.2: 'The payout above is cumulative.' TT Note 1.3 pegs the agreed rate to a one-point Self-Pick, i.e. 2 units per player, with an An Gang level event worth double.",
+      "seat": "E",
+      "bonus": [],
+      "expect": {
+        "payouts": []
+      }
+    }
+  ]
+}

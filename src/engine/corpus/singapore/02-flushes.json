@@ -1,0 +1,997 @@
+{
+  "description": "Half Flush, Full Flush and its named specials (Sequence / Triplets / Lesser Sequence), Pure Green Suit.",
+  "entries": [
+    {
+      "id": "sg-halfflush-001",
+      "title": "Half Flush, one suit plus a non-value wind triplet",
+      "cite": "TT SS-Half Flush: 'A Half Flush Hand scores 2 points... a pure set of tiles from one single suit... plus any set of tiles from the Winds Tiles or Dragon Tiles suit.'",
+      "hand": {
+        "concealed": "123m 456m 789m EEE 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-halfflush-002",
+      "title": "Half Flush with a dragon triplet",
+      "cite": "TT SS-Triplet of any Dragon Tile: 'Having a triplet of any Dragon Tile scores 1 point.'",
+      "hand": {
+        "concealed": "123m 456m 789m CCC 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "sg-halfflush-003",
+      "title": "Half Flush that is also a Triplets Hand",
+      "cite": "TT SS-Half Flush: 'A Half Flush Hand scores 2 points... a pure set of tiles from one single suit... plus any set of tiles from the Winds Tiles or Dragon Tiles suit.'",
+      "hand": {
+        "concealed": "111m 222m 333m EEE 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "triplets"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ],
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-halfflush-004",
+      "title": "Half Flush with a seat wind triplet",
+      "cite": "TT SS-Winds (RULING R9)",
+      "hand": {
+        "concealed": "123m 456m 789m EEE 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "S",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "seatWind"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ],
+          [
+            "seatWind",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "sg-halfflush-005",
+      "title": "Half Flush, dragon triplet, concealed self-draw",
+      "cite": "TT SS-Fully Concealed Hand (RULING R1)",
+      "hand": {
+        "concealed": "123m 456m 789m CCC 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "selfDraw",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "dragonTriplet",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 16,
+          "winnerTotal": 48
+        }
+      }
+    },
+    {
+      "id": "sg-halfflush-006",
+      "title": "Half Flush stack overshooting the limit - capped at 5",
+      "cite": "TT SS-Scoring points: 'There is a typical maximum scoring limit of five points, though this has to be agreed among players.' (RULING R14)",
+      "hand": {
+        "concealed": "111m 222m CCC EEE 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "triplets",
+          "dragonTriplet",
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ],
+          [
+            "triplets",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 7,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Raw 7 tai, capped to the default limit of 5."
+    },
+    {
+      "id": "sg-halfflush-007",
+      "title": "Half Flush in dots with a white dragon triplet",
+      "cite": "TT SS-Half Flush: 'A Half Flush Hand scores 2 points... a pure set of tiles from one single suit... plus any set of tiles from the Winds Tiles or Dragon Tiles suit.'",
+      "hand": {
+        "concealed": "123p 456p 789p PPP 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "9p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "sg-fullflush-001",
+      "title": "Full Flush, mixed chows and a pong",
+      "cite": "TT SS-Full Flush: 'If the set of tiles are entirely from one single suit only, then this combination is known as Full Flush Hand. This combination is awarded 4 points.'",
+      "hand": {
+        "concealed": "234m 234m 567m 888m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      },
+      "note": "Deliberately not the 1112345678999 shape, so Nine Gates cannot apply."
+    },
+    {
+      "id": "sg-fullflush-002",
+      "title": "Full Flush Triplets - fixed 8, capped to the limit",
+      "cite": "TT SS-Full Flush (ii): 'This Full Flush Triplets Hand will score 8 points (2 for the hand itself, 2 for a Triplets Hand, and 4 for a Full Flush Hand), or the limit.' (RULING R6)",
+      "hand": {
+        "concealed": "111m 222m 333m 444m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushTriplets"
+        ],
+        "fan": [
+          [
+            "fullFlushTriplets",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "RULING R6: 8 is a fixed total, not 2+4. Triplets and Full Flush are NOT added again."
+    },
+    {
+      "id": "sg-fullflush-003",
+      "title": "Full Flush Sequence - fixed 10, capped to the limit",
+      "cite": "TT SS-Full Flush (i): 'Full Flush Sequence Hand... it is generally awarded 10 points, or the limit.' (RULING R6)",
+      "hand": {
+        "concealed": "123m 456m 789m 234m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushSequence"
+        ],
+        "fan": [
+          [
+            "fullFlushSequence",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-fullflush-004",
+      "title": "Full Flush Lesser Sequence with the seat flower",
+      "cite": "TT SS-Full Flush (i): 'Full Flush Lesser Sequence Hand, in which the winning party has drawn flowers or animals, wins a total of 5 points, 1 for the Lesser Sequence Hand and 4 for Full Flush Hand.' (RULING R6)",
+      "hand": {
+        "concealed": "123m 456m 789m 234m 99m",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushLesserSequence",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "fullFlushLesserSequence",
+            5
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "Raw 6, capped to 5."
+    },
+    {
+      "id": "sg-fullflush-005",
+      "title": "Full Flush Lesser Sequence with a non-seat flower",
+      "cite": "TT SS-Full Flush (i): 'Full Flush Lesser Sequence Hand, in which the winning party has drawn flowers or animals, wins a total of 5 points, 1 for the Lesser Sequence Hand and 4 for Full Flush Hand.' (RULING R6)",
+      "hand": {
+        "concealed": "123m 456m 789m 234m 99m",
+        "melds": [],
+        "bonus": [
+          "F3"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushLesserSequence"
+        ],
+        "fan": [
+          [
+            "fullFlushLesserSequence",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-fullflush-006",
+      "title": "Full Flush containing a concealed kong - 15 tiles",
+      "cite": "TT SS-Full Flush: 'If the set of tiles are entirely from one single suit only, then this combination is known as Full Flush Hand. This combination is awarded 4 points.'",
+      "hand": {
+        "concealed": "456m 789m 234m 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-fullflush-007",
+      "title": "Full Flush Sequence self-drawn and fully concealed",
+      "cite": "TT SS-Full Flush (i): 'Full Flush Sequence Hand... it is generally awarded 10 points, or the limit.' (RULING R6)",
+      "hand": {
+        "concealed": "123m 456m 789m 234m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushSequence",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "fullFlushSequence",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-fullflush-008",
+      "title": "Full Flush Triplets at a raised limit of 10 - scores its true 8",
+      "cite": "TT SS-Full Flush (ii): 'This Full Flush Triplets Hand will score 8 points (2 for the hand itself, 2 for a Triplets Hand, and 4 for a Full Flush Hand), or the limit.' (RULING R6)",
+      "hand": {
+        "concealed": "111m 222m 333m 444m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushTriplets"
+        ],
+        "fan": [
+          [
+            "fullFlushTriplets",
+            8
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 256,
+          "fromEachOther": 128,
+          "winnerTotal": 512
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-fullflush-009",
+      "title": "Full Flush Sequence at a raised limit of 10 - scores its true 10",
+      "cite": "TT SS-Full Flush (i): 'Full Flush Sequence Hand... it is generally awarded 10 points, or the limit.' (RULING R6)",
+      "hand": {
+        "concealed": "123m 456m 789m 234m 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushSequence"
+        ],
+        "fan": [
+          [
+            "fullFlushSequence",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": 1024,
+          "fromEachOther": 512,
+          "winnerTotal": 2048
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-fullflush-010",
+      "title": "Full Flush Lesser Sequence at a raised limit of 10",
+      "cite": "TT SS-Full Flush (i): 'Full Flush Lesser Sequence Hand, in which the winning party has drawn flowers or animals, wins a total of 5 points, 1 for the Lesser Sequence Hand and 4 for Full Flush Hand.' (RULING R6)",
+      "hand": {
+        "concealed": "123m 456m 789m 234m 99m",
+        "melds": [],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushLesserSequence",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "fullFlushLesserSequence",
+            5
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 32,
+          "winnerTotal": 128
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-fullflush-011",
+      "title": "Full Flush in bamboo, won by discard",
+      "cite": "TT SS-Full Flush: 'If the set of tiles are entirely from one single suit only, then this combination is known as Full Flush Hand. This combination is awarded 4 points.'",
+      "hand": {
+        "concealed": "234s 234s 567s 888s 99s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-fullflush-012",
+      "title": "Full Flush Triplets self-drawn with an exposed pong",
+      "cite": "TT SS-Full Flush (ii): 'This Full Flush Triplets Hand will score 8 points (2 for the hand itself, 2 for a Triplets Hand, and 4 for a Full Flush Hand), or the limit.' (RULING R6)",
+      "hand": {
+        "concealed": "222p 333p 444p 99p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlushTriplets"
+        ],
+        "fan": [
+          [
+            "fullFlushTriplets",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "The exposed pong keeps this out of Hidden Treasure, isolating Full Flush Triplets."
+    },
+    {
+      "id": "sg-puregreen-001",
+      "title": "Pure Green Suit with a green dragon pair",
+      "cite": "TT SS-Pure Green Suit: 'A Pure Green Suit Hand scores four points instead of just two points for Mixed One Suit... The hand only consist 2,3,4,6 or 8 of the bamboo suit plus the Green Dragon as a pair or triplet.' (RULING R4)",
+      "hand": {
+        "concealed": "234s 234s 666s 888s FF",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureGreen"
+        ],
+        "fan": [
+          [
+            "pureGreen",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      },
+      "note": "RULING R4: Pure Green replaces the flush component; Half Flush is NOT added."
+    },
+    {
+      "id": "sg-puregreen-002",
+      "title": "Pure Green Suit with no dragon at all",
+      "cite": "TT SS-Pure Green Suit: 'A Pure Green Suit Hand scores four points instead of just two points for Mixed One Suit... The hand only consist 2,3,4,6 or 8 of the bamboo suit plus the Green Dragon as a pair or triplet.' (RULING R4)",
+      "hand": {
+        "concealed": "234s 234s 666s 888s 22s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureGreen"
+        ],
+        "fan": [
+          [
+            "pureGreen",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      },
+      "note": "All-bamboo, so also a Full Flush shape; Pure Green replaces it rather than stacking (RULING R4)."
+    },
+    {
+      "id": "sg-puregreen-003",
+      "title": "Pure Green Suit with a green dragon triplet",
+      "cite": "TT SS-Pure Green Suit: 'A Pure Green Suit Hand scores four points instead of just two points for Mixed One Suit... The hand only consist 2,3,4,6 or 8 of the bamboo suit plus the Green Dragon as a pair or triplet.' (RULING R4)",
+      "hand": {
+        "concealed": "234s 234s 666s FFF 88s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureGreen",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "pureGreen",
+            4
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-puregreen-004",
+      "title": "Bamboo hand containing a 5 - Full Flush, not Pure Green",
+      "cite": "TT SS-Pure Green Suit: 'A Pure Green Suit Hand scores four points instead of just two points for Mixed One Suit... The hand only consist 2,3,4,6 or 8 of the bamboo suit plus the Green Dragon as a pair or triplet.' (RULING R4)",
+      "hand": {
+        "concealed": "234s 234s 555s 888s 66s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-puregreen-005",
+      "title": "Bamboo hand with a red dragon - Half Flush, not Pure Green",
+      "cite": "TT SS-Pure Green Suit: 'A Pure Green Suit Hand scores four points instead of just two points for Mixed One Suit... The hand only consist 2,3,4,6 or 8 of the bamboo suit plus the Green Dragon as a pair or triplet.' (RULING R4)",
+      "hand": {
+        "concealed": "234s 234s 666s CCC 88s",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "4s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    }
+  ]
+}

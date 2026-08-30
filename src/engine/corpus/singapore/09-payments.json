@@ -1,0 +1,1087 @@
+{
+  "description": "TT's discard and self-pick payout tables transcribed literally for 1-5 tai, limit configurability, pao, and the Thirteen Wonders payment rule.",
+  "entries": [
+    {
+      "id": "sg-pay-discard-1",
+      "title": "Discard payout table, 1 tai: each loser 1, discarder 2, winner 4",
+      "cite": "TT SS-Scoring points, discard payout table, transcribed verbatim: 1 tai -> losers S$1 each / guilty S$2 / winner S$4; 2 -> 2/4/8; 3 -> 4/8/16; 4 -> 8/16/32; 5 (Limit) -> 16/32/64.",
+      "hand": {
+        "concealed": "123m 456p 789s 99m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-pay-discard-2",
+      "title": "Discard payout table, 2 tai: each loser 2, discarder 4, winner 8",
+      "cite": "TT SS-Scoring points, discard payout table, transcribed verbatim: 1 tai -> losers S$1 each / guilty S$2 / winner S$4; 2 -> 2/4/8; 3 -> 4/8/16; 4 -> 8/16/32; 5 (Limit) -> 16/32/64.",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "555p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-pay-discard-3",
+      "title": "Discard payout table, 3 tai: each loser 4, discarder 8, winner 16",
+      "cite": "TT SS-Scoring points, discard payout table, transcribed verbatim: 1 tai -> losers S$1 each / guilty S$2 / winner S$4; 2 -> 2/4/8; 3 -> 4/8/16; 4 -> 8/16/32; 5 (Limit) -> 16/32/64.",
+      "hand": {
+        "concealed": "222m 555p 111m 99p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "sg-pay-discard-4",
+      "title": "Discard payout table, 4 tai: each loser 8, discarder 16, winner 32",
+      "cite": "TT SS-Scoring points, discard payout table, transcribed verbatim: 1 tai -> losers S$1 each / guilty S$2 / winner S$4; 2 -> 2/4/8; 3 -> 4/8/16; 4 -> 8/16/32; 5 (Limit) -> 16/32/64.",
+      "hand": {
+        "concealed": "456m 789m 234p 55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sequenceHand"
+        ],
+        "fan": [
+          [
+            "sequenceHand",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "sg-pay-discard-5",
+      "title": "Discard payout table, 5 tai: each loser 16, discarder 32, winner 64",
+      "cite": "TT SS-Scoring points, discard payout table, transcribed verbatim: 1 tai -> losers S$1 each / guilty S$2 / winner S$4; 2 -> 2/4/8; 3 -> 4/8/16; 4 -> 8/16/32; 5 (Limit) -> 16/32/64.",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-pay-selfdraw-1",
+      "title": "Self-pick payout table, 1 tai: all three pay 2 each, winner 6",
+      "cite": "TT SS-Scoring points, self-pick payout table, transcribed verbatim: 1 tai -> all players S$2 each / winner S$6; 2 -> 4/12; 3 -> 8/24; 4 -> 16/48; 5 (Limit) -> 32/96.",
+      "hand": {
+        "concealed": "123m 456p 789s 99m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      }
+    },
+    {
+      "id": "sg-pay-selfdraw-2",
+      "title": "Self-pick payout table, 2 tai: all three pay 4 each, winner 12",
+      "cite": "TT SS-Scoring points, self-pick payout table, transcribed verbatim: 1 tai -> all players S$2 each / winner S$6; 2 -> 4/12; 3 -> 8/24; 4 -> 16/48; 5 (Limit) -> 32/96.",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "555p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    },
+    {
+      "id": "sg-pay-selfdraw-3",
+      "title": "Self-pick payout table, 3 tai: all three pay 8 each, winner 24",
+      "cite": "TT SS-Scoring points, self-pick payout table, transcribed verbatim: 1 tai -> all players S$2 each / winner S$6; 2 -> 4/12; 3 -> 8/24; 4 -> 16/48; 5 (Limit) -> 32/96.",
+      "hand": {
+        "concealed": "222m 555p 111m 99p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 8,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "sg-pay-selfdraw-4",
+      "title": "Self-pick payout table, 4 tai: all three pay 16 each, winner 48",
+      "cite": "TT SS-Scoring points, self-pick payout table, transcribed verbatim: 1 tai -> all players S$2 each / winner S$6; 2 -> 4/12; 3 -> 8/24; 4 -> 16/48; 5 (Limit) -> 32/96.",
+      "hand": {
+        "concealed": "456m 789m 234p 55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sequenceHand"
+        ],
+        "fan": [
+          [
+            "sequenceHand",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 16,
+          "winnerTotal": 48
+        }
+      }
+    },
+    {
+      "id": "sg-pay-selfdraw-5",
+      "title": "Self-pick payout table, 5 tai: all three pay 32 each, winner 96",
+      "cite": "TT SS-Scoring points, self-pick payout table, transcribed verbatim: 1 tai -> all players S$2 each / winner S$6; 2 -> 4/12; 3 -> 8/24; 4 -> 16/48; 5 (Limit) -> 32/96.",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-pay-limit-3",
+      "title": "Limit lowered to 3: a limit hand scores 3, winner gains 16",
+      "cite": "TT SS-Scoring points: 'There is a typical maximum scoring limit of five points, though this has to be agreed among players.' (RULING R14)",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            3
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      },
+      "opts": {
+        "limit": 3
+      }
+    },
+    {
+      "id": "sg-pay-limit-6",
+      "title": "Limit raised to 6: a limit hand scores 6, winner gains 128",
+      "cite": "TT SS-Scoring points: 'There is a typical maximum scoring limit of five points, though this has to be agreed among players.' (RULING R14)",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            6
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 32,
+          "winnerTotal": 128
+        }
+      },
+      "opts": {
+        "limit": 6
+      }
+    },
+    {
+      "id": "sg-pay-limit-10",
+      "title": "Limit raised to 10: a limit hand scores 10, winner gains 2048",
+      "cite": "TT SS-Scoring points: 'There is a typical maximum scoring limit of five points, though this has to be agreed among players.' (RULING R14)",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": 1024,
+          "fromEachOther": 512,
+          "winnerTotal": 2048
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-pay-limit-selfdraw-10",
+      "title": "Limit raised to 10, self-drawn: winner gains 3072",
+      "cite": "TT SS-Scoring points: 'There is a typical maximum scoring limit of five points, though this has to be agreed among players.' (RULING R14)",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            10
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 512,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 1024,
+          "winnerTotal": 3072
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-pay-cap-01",
+      "title": "A raw 7-tai stack is capped to the default limit of 5",
+      "cite": "TT SS-Scoring points: 'There is a typical maximum scoring limit of five points, though this has to be agreed among players.' (RULING R14)",
+      "hand": {
+        "concealed": "111m 222m CCC EEE 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "triplets",
+          "dragonTriplet",
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ],
+          [
+            "triplets",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 7,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-pay-cap-02",
+      "title": "The same raw 7-tai stack scores its true 7 when the limit is 10",
+      "cite": "TT SS-Scoring points: 'There is a typical maximum scoring limit of five points, though this has to be agreed among players.' (RULING R14)",
+      "hand": {
+        "concealed": "111m 222m CCC EEE 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "triplets",
+          "dragonTriplet",
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ],
+          [
+            "triplets",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 7,
+        "totalTai": 7,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 64,
+          "winnerTotal": 256
+        }
+      },
+      "opts": {
+        "limit": 10
+      }
+    },
+    {
+      "id": "sg-pay-pao-1",
+      "title": "Pao at 1 tai: the discarder alone pays the whole 4, the other two pay nothing",
+      "cite": "TT SS-Paying for all players: 'the player making such a discard paying for the other two losing players, in addition to their own (the other two losing players are vindicated - they do not pay anyone anything).' (RULING R11)",
+      "hand": {
+        "concealed": "123m 456p 789s 99m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m",
+        "pao": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-pay-pao-3",
+      "title": "Pao at 3 tai: the discarder alone pays the whole 16, the other two pay nothing",
+      "cite": "TT SS-Paying for all players: 'the player making such a discard paying for the other two losing players, in addition to their own (the other two losing players are vindicated - they do not pay anyone anything).' (RULING R11)",
+      "hand": {
+        "concealed": "222m 555p 111m 99p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m",
+        "pao": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets",
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ],
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "sg-pay-pao-5",
+      "title": "Pao at 5 tai: the discarder alone pays the whole 64, the other two pay nothing",
+      "cite": "TT SS-Paying for all players: 'the player making such a discard paying for the other two losing players, in addition to their own (the other two losing players are vindicated - they do not pay anyone anything).' (RULING R11)",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s",
+        "pao": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 0,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-pay-thirteen-discard",
+      "title": "Thirteen Wonders won by discard: all three pay 32 each, winner gains 96",
+      "cite": "TT SS-Thirteen Wonders: 'all players pay double that of the limit, regardless if the hand was won on a self-picked tile or not.' (RULING R12)",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFP C",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenWonders"
+        ],
+        "fan": [
+          [
+            "thirteenWonders",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-pay-thirteen-selfdraw",
+      "title": "Thirteen Wonders won by selfDraw: all three pay 32 each, winner gains 96",
+      "cite": "TT SS-Thirteen Wonders: 'all players pay double that of the limit, regardless if the hand was won on a self-picked tile or not.' (RULING R12)",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFP C",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenWonders",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "thirteenWonders",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "sg-pay-r13-off",
+      "title": "Limit hand with doubleSpecialHandPayout off (discard)",
+      "cite": "v1's rules modal claims 'Special hands (limit hands) are always paid double'. RULING R13 rejects this as a general rule and exposes it as the option doubleSpecialHandPayout, default off.",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-pay-r13-on",
+      "title": "Limit hand with doubleSpecialHandPayout on (discard)",
+      "cite": "v1's rules modal claims 'Special hands (limit hands) are always paid double'. RULING R13 rejects this as a general rule and exposes it as the option doubleSpecialHandPayout, default off.",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 32,
+          "winnerTotal": 128
+        }
+      },
+      "opts": {
+        "doubleSpecialHandPayout": true
+      }
+    },
+    {
+      "id": "sg-pay-r13-on-selfdraw",
+      "title": "Limit hand with doubleSpecialHandPayout on (selfDraw)",
+      "cite": "v1's rules modal claims 'Special hands (limit hands) are always paid double'. RULING R13 rejects this as a general rule and exposes it as the option doubleSpecialHandPayout, default off.",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      },
+      "opts": {
+        "doubleSpecialHandPayout": true
+      }
+    }
+  ]
+}

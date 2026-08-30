@@ -1,0 +1,464 @@
+{
+  "description": "Kong-aware hand sizes from 14 to 18 tiles, exposed versus concealed kongs, and kong scoring.",
+  "entries": [
+    {
+      "id": "sg-kong-001",
+      "title": "No kong - 14 tiles",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "222m 555p 888s 111m 99p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-kong-002",
+      "title": "One exposed kong - 15 tiles",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-kong-003",
+      "title": "One concealed kong - 15 tiles",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "222m 888s 111m 99p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-kong-004",
+      "title": "Two kongs - 16 tiles",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "888s 111m 99p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "2222m",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "8s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-kong-005",
+      "title": "Three kongs - 17 tiles",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "111m 99p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "2222m",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "8888s",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "triplets"
+        ],
+        "fan": [
+          [
+            "triplets",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-kong-006",
+      "title": "Four kongs - 18 tiles, Eighteen Arhats",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "99p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "2222m",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "8888s",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eighteenArhats"
+        ],
+        "fan": [
+          [
+            "eighteenArhats",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "sg-kong-007",
+      "title": "Dragon kong scores its dragon point",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "123m 456p 789s 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "CCCC",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "sg-kong-008",
+      "title": "Kong inside a Half Flush",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "123m 456m 789m 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "EEEE",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "W",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-kong-009",
+      "title": "Kong of the seat wind when seat equals prevailing",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "123m 456p 789s 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "EEEE",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatPrevailingWind"
+        ],
+        "fan": [
+          [
+            "seatPrevailingWind",
+            2
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "sg-kong-010",
+      "title": "Two kongs inside a Full Flush - 16 tiles",
+      "cite": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+      "hand": {
+        "concealed": "456m 789m 99m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "2222m",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            4
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    }
+  ]
+}
