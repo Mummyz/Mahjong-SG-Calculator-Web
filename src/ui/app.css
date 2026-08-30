@@ -77,7 +77,8 @@ body {
                 text-transform: uppercase; white-space: nowrap; overflow: hidden;
                 text-overflow: ellipsis; }
 .signboard__v { font: 600 0.8125rem/1.1 var(--f-num); font-variant-numeric: tabular-nums;
-                white-space: nowrap; }
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                min-width: 0; }
 .signboard__info {
   flex: 0 0 44px; min-height: 44px; display: flex; align-items: center; justify-content: center;
   border: 0; border-left: 1px solid rgb(255 255 255 / 0.4);
@@ -327,7 +328,8 @@ body {
             font-size: 0.8125rem; }
 
 /* ── declaring a meld ────────────────────────────────────────────────── */
-.declarerow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+.declarerow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+              margin-top: 10px; scroll-margin-bottom: 16px; }
 .declarerow > .btn { grid-column: 1 / -1; }
 .declareopt { min-height: 56px; border: 1px solid var(--mj-rule); border-radius: var(--mj-r);
               background: var(--mj-slip); color: var(--mj-ink); cursor: pointer;
@@ -439,3 +441,37 @@ body {
 /* Arming Clear turns it red and keeps its width, so Undo never moves. */
 .trayhead .linkbtn[aria-pressed="true"] { background: var(--mj-ang); border-color: var(--mj-ang);
                                           color: var(--mj-on-ang); }
+
+/* ── focus mode: while a meld is being declared, nothing else responds ── */
+.shell[data-focus] .seats,
+.shell[data-focus] .tray,
+.shell[data-focus] .bonusheld,
+.shell[data-focus] .trayhead,
+.shell[data-focus] .chipnote { opacity: 0.45; }
+.shell[data-focus] .signboard { opacity: 0.7; }
+.shell[data-focus] .tabs .tab[disabled] { opacity: 0.45; }
+/* Everything outside the meld being declared is visibly out of play. The
+   bonus grid has no wall-tile "face down" state to fall back on, so it dims
+   as a whole rather than pretending to be tappable. */
+.shell[data-focus] .bonusgrid { opacity: 0.45; }
+
+/* ── the submit wizard ───────────────────────────────────────────────── */
+.wizard__step { margin: 0; font: 600 0.6875rem/1 var(--f-sign); letter-spacing: 0.08em;
+                text-transform: uppercase; color: var(--mj-muted); }
+.wizard__flags { display: flex; flex-direction: column; gap: 6px; }
+.sheet .grid--7 { border-radius: var(--mj-r); }
+.wizard__melds { display: flex; flex-wrap: wrap; gap: 8px; }
+/* The wizard's exits live at the end of a scrolling sheet, and step 2 is
+   taller than the 86dvh cap on a 360x780 screen the moment a win method is
+   picked. Pinned to the bottom of the sheet, they stay reachable at any
+   flag count. The negative offset cancels the sheet's own bottom padding so
+   the row sits flush on the edge. */
+.sheet .dock__row {
+  display: flex; gap: 8px;
+  position: sticky; z-index: 1;
+  bottom: calc(-16px - env(safe-area-inset-bottom));
+  margin-top: auto;
+  padding: 10px 0 calc(16px + env(safe-area-inset-bottom));
+  background: var(--mj-ground);
+  box-shadow: 0 -1px 0 var(--mj-rule);
+}

@@ -1,0 +1,1331 @@
+{
+  "description": "How the hand was won — 自摸, 門前清, 搶槓, 海底撈月 / 河底撈魚, 槓上開花, 連槓開花, and the replacement that scores nothing",
+  "entries": [
+    {
+      "id": "hk-circ-01",
+      "title": "門前清 Fully Concealed, won on a discard",
+      "cite": "RULING HK12 · Family C 香港麻雀協會 official rules 「門前清 食糊時所有手牌皆為暗手，沒有明章。」 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「沒有上、碰、槓（包括暗槓）任何牌而食糊」",
+      "note": "Neither source conditions 門前清 on a self-draw. Singapore's 门清 (R1) does, so the same tiles score differently in the two variants.",
+      "hand": {
+        "concealed": "123m 456m 789m 234m 55m"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullFlush",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-circ-02",
+      "title": "A concealed kong breaks 門前清",
+      "cite": "RULING HK12 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「（包括暗槓）」 · Family C 香港麻雀協會 official rules 「（暗槓屬於明章）」",
+      "note": "Singapore tolerates a concealed kong inside 门清; Hong Kong does not. Both sources that carry the hand say so, from opposite directions.",
+      "hand": {
+        "concealed": "456m 789m 234m 55m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 0,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "hk-circ-03",
+      "title": "門前清 still scores when flowers are in play",
+      "cite": "RULING HK13 · Family C 香港麻雀協會 official rules 「門前清 食糊時所有手牌皆為暗手」 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「如果有打花牌就不計門前清這個番種」",
+      "note": "The flagged ruling. Family A would score 8 here, Family C 9. HK13 follows the official body.",
+      "hand": {
+        "concealed": "123m 456m 789m 234m 55m",
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullFlush",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-circ-04",
+      "title": "搶槓 Robbing the Kong",
+      "cite": "RULING HK8a/HK19 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「即可搶其槓食糊並多加一番」 · Family B mahjong.wikidot Hong Kong Old Style \"Robbing the Kong | 1\" · Family C 香港麻雀協會 official rules · Family E English Wikipedia, Old Hong Kong",
+      "note": "The robbable kong is a 加槓 — a fourth tile added to a pung already on the table — so three copies are locked in the robbed player's meld and the winner can hold exactly one: the robbed one. Here it completes a chow, which is the only thing a single tile can do. Settled like any other discard win (HK19); Family C's 搶槓當自摸 alternative is not modelled.",
+      "hand": {
+        "concealed": "234p 567m 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p",
+        "flags": [
+          "robbingKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "dragonTriplet",
+          "robbingKong",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "robbingKong",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-circ-05",
+      "title": "海底撈月 — self-drawing the last wall tile is worth two faan in total",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「食全局最後一隻牌，若為自摸則另計再加一番」 · Family C 香港麻雀協會 official rules 「海底撈月 自摸牌牆最後一張牌食糊。」",
+      "note": "The apparent 1-vs-2 disagreement between sources is the self-draw faan being counted separately or not; the engine counts it separately, so both readings land on 2.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p",
+        "flags": [
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "lastTile",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "lastTile",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 16,
+          "winnerTotal": 48
+        }
+      }
+    },
+    {
+      "id": "hk-circ-06",
+      "title": "河底撈魚 — winning on the last discard",
+      "cite": "RULING HK8a · Family B mahjong.wikidot Hong Kong Old Style \"Last Discard Win | 1\" · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「食最後一隻打出的牌，稱河底撈魚，亦可加一番」",
+      "note": "Same flag as hk-circ-05; the win method is what separates 海底撈月 from 河底撈魚.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7s",
+        "flags": [
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "lastDiscard",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "lastDiscard",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-circ-07",
+      "title": "槓上開花 — the replacement tile after a kong, worth two faan in total",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「明/暗/加槓後自摸，補花後不算，外加自摸另計共兩番」 · Family C 香港麻雀協會 official rules 「槓上自摸」 · Family B mahjong.wikidot Hong Kong Old Style \"Dead Wall Win | 1\"",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "9s",
+        "flags": [
+          "kongReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "kongReplacement",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "kongReplacement",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 16,
+          "winnerTotal": 48
+        }
+      }
+    },
+    {
+      "id": "hk-circ-08",
+      "title": "補花 — the replacement after a flower scores nothing extra",
+      "cite": "RULING HK15 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「明/暗/加槓後自摸，補花後不算」",
+      "note": "Family A states the exclusion inside the kong rule itself. Singapore pays 补花 one tai; Hong Kong pays nothing for it.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F2"
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "flowerReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        }
+      }
+    },
+    {
+      "id": "hk-circ-09",
+      "title": "連槓開花 — two kongs in a row, then the winning replacement",
+      "cite": "RULING HK9/HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 連槓開花 8 (footnoted 二至八番甚至例牌) · Family B mahjong.wikidot Hong Kong Old Style \"Kong-Kong-Kong | 8\"",
+      "note": "16 tiles for two kongs. 13 raw, capped to 10.",
+      "hand": {
+        "concealed": "555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "3333m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p",
+        "flags": [
+          "kongOnKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "kongOnKong",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "kongOnKong",
+            8
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 13,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-circ-10",
+      "title": "A 連槓開花 flag with only one kong is not 連槓開花",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「連續開兩個槓之後食糊」",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "7s",
+        "flags": [
+          "kongOnKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        }
+      }
+    },
+    {
+      "id": "hk-circ-11",
+      "title": "海底撈月 on a kong replacement — both score",
+      "cite": "RULING HK22 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「補花後不算」 is the only exclusion Family A states",
+      "note": "Singapore's TT excludes 海底 reached through a replacement; no Hong Kong source does, so HK22 lets both stand.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p",
+        "flags": [
+          "lastTile",
+          "kongReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "lastTile",
+          "kongReplacement",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "lastTile",
+            1
+          ],
+          [
+            "kongReplacement",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 7,
+        "totalTai": 7,
+        "limitApplied": false,
+        "base": 48,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 24,
+          "winnerTotal": 72
+        }
+      }
+    },
+    {
+      "id": "hk-circ-12",
+      "title": "門前清 with 自摸 — the two are separate faan",
+      "cite": "RULING HK8a/HK12 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "11 raw, capped to 10.",
+      "hand": {
+        "concealed": "123m 456m 789m 234m 55m"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullFlush",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-circ-13",
+      "title": "One claimed chow kills 門前清",
+      "cite": "RULING HK12 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "456m 789m 234m 55m",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-circ-14",
+      "title": "坎坎糊 self-drawn on the last wall tile",
+      "cite": "RULING HK9/HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "12 raw, capped to 10.",
+      "hand": {
+        "concealed": "111m 333m 555p 777s 99s"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1m",
+        "flags": [
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fourConcealedTriplets",
+          "selfDraw",
+          "lastTile",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "fourConcealedTriplets",
+            8
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "lastTile",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 12,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-circ-15",
+      "title": "河底撈魚 on a limit hand, cap raised to thirteen",
+      "cite": "RULING HK3/HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style",
+      "note": "15 raw against a 13 cap. 例牌 suppress hand patterns, never circumstances (HK10).",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m",
+        "flags": [
+          "lastTile"
+        ]
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "lastDiscard",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "lastDiscard",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 384,
+          "fromEachOther": 0,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-circ-16",
+      "title": "搶槓 with pao — the kong declarer pays everything",
+      "cite": "RULING HK18/HK19 · Family C 香港麻雀協會 official rules 「搶槓當自摸：搶槓視為開槓者出銃」 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 包牌",
+      "note": "Under full payment this is arithmetically the same as an ordinary discard; the pao flag only changes the split under half payment (HK18).",
+      "hand": {
+        "concealed": "234p 567m 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p",
+        "flags": [
+          "robbingKong"
+        ],
+        "pao": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "dragonTriplet",
+          "robbingKong",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "robbingKong",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-circ-17",
+      "title": "槓上開花 does not score on a discard win",
+      "cite": "RULING HK23 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「明/暗/加槓後自摸」 — 自摸 is inside the definition of the hand",
+      "note": "A replacement drawn from the dead wall is self-drawn by definition; there is no such thing as 槓上開花 off another player's discard.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m",
+        "flags": [
+          "kongReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-circ-18",
+      "title": "連槓開花 does not score on a discard win either",
+      "cite": "RULING HK23 · Family C 香港麻雀協會 official rules 「槓上槓 自摸連續開兩個槓之後食糊。」",
+      "note": "Without the guard this hand scored 連槓開花's eight faan — 128 off the discarder instead of 16, eight times the truth.",
+      "hand": {
+        "concealed": "555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "3333m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p",
+        "flags": [
+          "kongOnKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-circ-19",
+      "title": "搶槓 does not score on a self-draw",
+      "cite": "RULING HK23 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「即可搶其槓食糊」 — the tile is another player's",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "7s",
+        "flags": [
+          "robbingKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        }
+      }
+    },
+    {
+      "id": "hk-circ-20",
+      "title": "天糊 needs a hand nobody has claimed into",
+      "cite": "RULING HK23 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 天糊 is the dealer's dealt fourteen tiles",
+      "note": "An exposed pung means the dealer claimed a discard, so at least one turn has been played and the hand cannot be 天糊. Without the guard this paid 13 faan.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "9s",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        }
+      }
+    },
+    {
+      "id": "hk-circ-21",
+      "title": "地糊 needs a hand nobody has claimed into",
+      "cite": "RULING HK23 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 地糊 is a non-dealer's win on the dealer's first discard",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p",
+        "flags": [
+          "earthly"
+        ]
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-circ-22",
+      "title": "天糊 is not broken by a concealed kong being impossible — it needs a self-draw",
+      "cite": "RULING HK23 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 天糊, and RULING HK23",
+      "note": "The dealer's dealt hand is drawn, not thrown. A 天糊 flag on a discard win is discarded along with the wrong-seat case.",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 0,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "hk-circ-23",
+      "title": "人糊 survives a claimed meld, because the first go-round allows one",
+      "cite": "RULING HK23 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 人糊 「開局第一輪即食別家出銃」",
+      "note": "Unlike 天糊 and 地糊, 人糊 is a win somewhere in the first circuit, by which point a player may legitimately have claimed a discard. The restriction that applies to the other two does not apply here.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s",
+        "flags": [
+          "humanly"
+        ]
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "humanly",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "humanly",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 384,
+          "fromEachOther": 0,
+          "winnerTotal": 384
+        }
+      }
+    }
+  ]
+}

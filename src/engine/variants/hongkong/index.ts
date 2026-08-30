@@ -1,7 +1,29 @@
 /**
  * Hong Kong Old Style — 144 tiles, no animals.
  *
- * Run 3. Same gate as Singapore: canonical documented HK Old Style scoring,
- * proven by an independently written golden corpus.
+ * Every rule traces to docs/sources/RULING-LOG-HK.md and is proven by the
+ * golden corpus in src/engine/corpus/hongkong/, which was written from the
+ * archived sources before this code existed.
  */
-export {}
+
+import type { RuleOptions, PaymentBreakdown, ScoreResult, VariantPlugin, WinContext } from '../../core/variant'
+import type { HandInput } from '../../core/hand'
+import { HONGKONG_TILE_SET } from './tileset'
+import { HONGKONG_DEFAULTS, basePoints, handSize, score } from './score'
+import { payments } from './payments'
+
+export const hongkong: VariantPlugin = {
+  id: 'hongkong',
+  tileSet: HONGKONG_TILE_SET,
+  defaults: HONGKONG_DEFAULTS,
+  handSize,
+  score(hand: HandInput, ctx: WinContext, opts?: Partial<RuleOptions>): ScoreResult {
+    return score(hand, ctx, opts)
+  },
+  payments(s: ScoreResult, ctx: WinContext, opts?: Partial<RuleOptions>): PaymentBreakdown | null {
+    return payments(s, ctx, opts)
+  },
+  // RULING HK20 — Hong Kong Old Style has no mid-game instant payouts.
+}
+
+export { HONGKONG_TILE_SET, HONGKONG_DEFAULTS, basePoints, handSize, score, payments }

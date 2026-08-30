@@ -1,0 +1,521 @@
+{
+  "description": "三番起糊 — the minimum, what counts toward it, and what the table may set it to",
+  "entries": [
+    {
+      "id": "hk-min-01",
+      "title": "A one-faan hand cannot win at the default minimum",
+      "cite": "RULING HK2 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「食糊最少要有三番，叫做「三番起糊」。」 · Family B mahjong.wikidot Hong Kong Old Style \"1970s: The 3-3 System is adopted.\"",
+      "hand": {
+        "concealed": "456m 789m 234p 55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 2
+      }
+    },
+    {
+      "id": "hk-min-02",
+      "title": "Two dragon triplets are two faan, and two is not enough",
+      "cite": "RULING HK2 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family E English Wikipedia, Old Hong Kong \"at least the minimum faan value agreed in advance (often 3)\"",
+      "note": "Three suits, so no flush, and a 5s eye, so no 小三元. Two qualifying faan.",
+      "hand": {
+        "concealed": "123m 456p 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 3
+      }
+    },
+    {
+      "id": "hk-min-03",
+      "title": "Exactly three qualifying faan is a legal win",
+      "cite": "RULING HK2 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "對對糊 alone. 無花 pushes the total to 4 but plays no part in clearing the minimum.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-min-04",
+      "title": "A table playing 雞糊 sets the minimum to zero",
+      "cite": "RULING HK2 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「雞糊…現時一般不能單獨食糊」 · Family D 「筆者是不支持起和限制的」",
+      "hand": {
+        "concealed": "456m 789p 234s 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5s"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 0,
+          "winnerTotal": 2
+        }
+      }
+    },
+    {
+      "id": "hk-min-05",
+      "title": "A table playing 一番起糊 sets the minimum to one",
+      "cite": "RULING HK2 · Family B mahjong.wikidot Hong Kong Old Style HKOS baseline 「0-2」 · Family D 「開始時雞和不准和，漸漸地越加越高」",
+      "hand": {
+        "concealed": "456m 789m 234p 55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "opts": {
+        "minTai": 1
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-min-06",
+      "title": "At a one-faan minimum a 雞糊 still loses",
+      "cite": "RULING HK2 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style",
+      "note": "Only 無花 scores, and HK16 keeps it out of the count.",
+      "hand": {
+        "concealed": "456m 789p 234s 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2s"
+      },
+      "opts": {
+        "minTai": 1
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 1
+      }
+    },
+    {
+      "id": "hk-min-07",
+      "title": "花糊 is an instant win and is not subject to the minimum",
+      "cite": "RULING HK8b/HK16 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「集齊七隻花牌可即時食糊」",
+      "note": "The tile hand here is a 雞糊 and would not otherwise be a legal win.",
+      "hand": {
+        "concealed": "456m 789p 234s 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "8p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sevenFlowers"
+        ],
+        "fan": [
+          [
+            "sevenFlowers",
+            3
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    },
+    {
+      "id": "hk-min-08",
+      "title": "大花糊 likewise",
+      "cite": "RULING HK8b/HK16 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「摸齊八隻花可即時糊牌」",
+      "hand": {
+        "concealed": "456m 789p 234s 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eightFlowers"
+        ],
+        "fan": [
+          [
+            "eightFlowers",
+            8
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-min-09",
+      "title": "Three faan of which two are flowers is not a legal win",
+      "cite": "RULING HK16 · Family E English Wikipedia, Old Hong Kong \"Bonus tiles and a few other elements are not included in the minimum faan value\"",
+      "note": "平糊 1 qualifying, 一台花 2 not — Family E's worked example is this exact situation.",
+      "hand": {
+        "concealed": "456m 789m 234p 55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 3
+      }
+    },
+    {
+      "id": "hk-min-10",
+      "title": "Raising the minimum to five rejects what three would have allowed",
+      "cite": "RULING HK2 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「打較大上限番數嗰陣」",
+      "hand": {
+        "concealed": "333m 555m CCC EE",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "minTai": 5
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "halfFlush",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 0,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "hk-min-11",
+      "title": "The same 對對糊 fails a five-faan minimum",
+      "cite": "RULING HK2 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p"
+      },
+      "opts": {
+        "minTai": 5
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 4
+      }
+    },
+    {
+      "id": "hk-min-12",
+      "title": "自摸 counts toward the minimum",
+      "cite": "RULING HK16 · RULING HK16 — Family E excludes \"bonus tiles and a few other elements\" without naming the other elements, and HK16 reads that open set as exactly the three flower lines, which is an editorial choice and is recorded as one",
+      "note": "Six qualifying faan: 1 + 3 + 1 + 1. Only the flower lines are excluded by HK16.",
+      "hand": {
+        "concealed": "123m 456m 789m 234m EE"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "opts": {
+        "minTai": 6
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "halfFlush",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 7,
+        "totalTai": 7,
+        "limitApplied": false,
+        "base": 48,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 24,
+          "winnerTotal": 72
+        }
+      }
+    }
+  ]
+}

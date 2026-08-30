@@ -17,6 +17,7 @@ export const SINGAPORE_DEFAULTS: RuleOptions = {
   limit: 5,           // RULING R14
   minTai: 1,          // RULING R14
   doubleSpecialHandPayout: false, // RULING R13
+  halfPayment: false,             // Hong Kong only — RULING HK4
 }
 
 export const handSize = (kongCount: number): number => 14 + kongCount
@@ -85,13 +86,17 @@ function bonusComponents(hand: ParsedHand, ctx: WinContext): FanComponent[] {
   return out
 }
 
+/** RULING R17 — a circumstance point requires the circumstance. */
 function circumstanceComponents(hand: ParsedHand, ctx: WinContext): FanComponent[] {
   const out: FanComponent[] = []
   const noOpenMelds = hand.melds.every((m) => !m.open)
-  if (noOpenMelds && ctx.win === 'selfDraw') out.push(fan('fullyConcealed', 1))
-  if (has(ctx, 'robbingKong')) out.push(fan('robbingKong', 1))
-  if (has(ctx, 'kongReplacement')) out.push(fan('kongReplacement', 1))
-  if (has(ctx, 'flowerReplacement')) out.push(fan('flowerReplacement', 1))
+  const selfDraw = ctx.win === 'selfDraw'
+  if (noOpenMelds && selfDraw) out.push(fan('fullyConcealed', 1))
+  // TT makes the kong declarer the discarder, so 抢杠 is a discard win.
+  if (has(ctx, 'robbingKong') && !selfDraw) out.push(fan('robbingKong', 1))
+  // A replacement tile is DRAWN from the wall in every scenario TT lists.
+  if (has(ctx, 'kongReplacement') && selfDraw) out.push(fan('kongReplacement', 1))
+  if (has(ctx, 'flowerReplacement') && selfDraw) out.push(fan('flowerReplacement', 1))
   // TT: a last tile reached via a flower or kong replacement is not Hai Di Lao Yue.
   if (has(ctx, 'lastTile') && !has(ctx, 'kongReplacement') && !has(ctx, 'flowerReplacement')) {
     out.push(fan('lastTile', 1))
@@ -202,13 +207,20 @@ export function score(
   }
 
   const candidates: Candidate[] = []
-  // TT: Heavenly is "the first player, as the dealer"; Earthly and Humanly are
-  // both "a non-dealer". A flag from the wrong seat is not that hand.
+  // RULING R17. TT defines each seat hand by a moment, not just a seat.
+  // Heavenly is the dealer's dealt tiles, so it is self-drawn; Humanly is a
+  // non-dealer winning "by discard"; Earthly is the one TT gives two
+  // scenarios, so its win method is unrestricted. None of the three can have
+  // a claimed meld in it, because nobody has had the chance to claim — but a
+  // concealed kong out of the dealt tiles is explicitly allowed, and TT names
+  // that exception itself under Humanly.
   const isDealer = ctx.seat === 'E'
+  const selfDraw = ctx.win === 'selfDraw'
+  const unclaimed = hand.melds.every((m) => !m.open)
   const circumstanceHand: string | null =
-    has(ctx, 'heavenly') && isDealer ? 'heavenly'
-      : has(ctx, 'earthly') && !isDealer ? 'earthly'
-        : has(ctx, 'humanly') && !isDealer ? 'humanly'
+    has(ctx, 'heavenly') && isDealer && selfDraw && unclaimed ? 'heavenly'
+      : has(ctx, 'earthly') && !isDealer && unclaimed ? 'earthly'
+        : has(ctx, 'humanly') && !isDealer && !selfDraw && unclaimed ? 'humanly'
           : null
 
   // RULING R8c. Tile-priced awards absorb only same-tile components; the

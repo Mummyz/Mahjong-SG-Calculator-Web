@@ -1,38 +1,36 @@
-import { useEffect, useMemo, useState } from 'preact/hooks'
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { t } from '../../i18n'
 import { Tile, BonusTile, tileName } from '../components/Tile'
 import { Signboard } from '../components/Signboard'
 import { Seats } from '../components/Seats'
-import { Sheet } from '../components/Sheet'
 import {
   ANIMALS, DRAGONS, FLOWERS, SEASONS, WINDS,
   type BonusId, type TileId, tally,
 } from '../../engine/core/tiles'
 import type { MeldInput } from '../../engine/core/hand'
-import type { WinFlag } from '../../engine/core/variant'
 import {
-  buildMeld, concealedKongs, concealedTarget, isDealer, legalNextTiles,
-  tilesRemaining, yourSeat, type MeldKind, type TableState,
-} from '../../engine/variants/singapore/table'
+  buildMeld, concealedKongs, concealedTarget, concealedTargets, handIsComplete,
+  handIsReadable, legalNextTiles, tilesRemaining, yourSeat,
+  type MeldKind, type TableState,
+} from '../../engine/session/table'
+import { VARIANTS, type VariantId } from '../../engine/variants'
 
+/**
+ * The tiles, and nothing else.
+ *
+ * How the hand was won is not part of this state — it is asked for once, in
+ * the submit wizard, after the tiles are proven complete. Nothing about the
+ * win can go stale here because nothing about the win is stored here.
+ */
 export interface HandState {
   concealed: TileId[]
   /** Melds claimed from the table. Concealed kongs are never in here. */
   melds: MeldInput[]
   bonus: BonusId[]
-  winningTile: TileId | null
-  win: 'selfDraw' | 'discard' | null
-  /** Index of the player who threw it, not a wind. */
-  discarderIndex: number | null
-  flags: WinFlag[]
-  pao: boolean
   log: ('tile' | 'meld')[]
 }
 
-export const EMPTY_HAND: HandState = {
-  concealed: [], melds: [], bonus: [], winningTile: null,
-  win: null, discarderIndex: null, flags: [], pao: false, log: [],
-}
+export const EMPTY_HAND: HandState = { concealed: [], melds: [], bonus: [], log: [] }
 
 type TabKey = 'characters' | 'dots' | 'bamboo' | 'honours' | 'bonus'
 const TABS: { key: TabKey; cjk: string }[] = [
@@ -43,32 +41,13 @@ const SUIT_OF_TAB: Partial<Record<TabKey, 'm' | 'p' | 's'>> =
   { characters: 'm', dots: 'p', bamboo: 's' }
 const SUIT_CJK: Record<string, string> = { m: '萬', p: '筒', s: '索' }
 
-const FLAGS: WinFlag[] = [
-  'robbingKong', 'lastTile', 'kongReplacement', 'flowerReplacement',
-  'kongOnKong', 'heavenly', 'earthly', 'humanly',
-]
-
 const toggle = <T,>(list: T[], v: T): T[] =>
   list.includes(v) ? list.filter((x) => x !== v) : [...list, v]
 
 const meldTiles = (m: MeldInput): TileId[] => m.tiles.trim().split(/\s+/)
 
-/** Circumstances ruled out by this seat, this kong count, or how the hand was won. */
-const SELF_DRAW_ONLY: WinFlag[] = ['kongReplacement', 'flowerReplacement', 'heavenly', 'kongOnKong']
-const DISCARD_ONLY: WinFlag[] = ['robbingKong', 'humanly']
-
-function blockedReason(
-  f: WinFlag, dealer: boolean, kongs: number, win: 'selfDraw' | 'discard' | null,
-): string | null {
-  if (f === 'heavenly' && !dealer) return t('flag.disabled.dealerOnly')
-  if ((f === 'earthly' || f === 'humanly') && dealer) return t('flag.disabled.nonDealerOnly')
-  if (f === 'kongOnKong' && kongs < 2) return t('flag.disabled.needsTwoKongs')
-  if (win === 'discard' && SELF_DRAW_ONLY.includes(f)) return t('flag.disabled.selfDrawOnly')
-  if (win === 'selfDraw' && DISCARD_ONLY.includes(f)) return t('flag.disabled.discardOnly')
-  return null
-}
-
-export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore }: {
+export function HandEntry({ variant, table, stake, limit, hand, setHand, onMenu, onScore }: {
+  variant: VariantId
   table: TableState
   stake: number
   limit: number
@@ -80,10 +59,7 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
   const [tab, setTab] = useState<TabKey>('characters')
   const [declare, setDeclare] = useState<{ kind: MeldKind; chosen: TileId[] } | null>(null)
   const [picking, setPicking] = useState(false)
-  const [unusual, setUnusual] = useState(false)
-  const [detail, setDetail] = useState<WinFlag | 'pao' | null>(null)
   const [confirmClear, setConfirmClear] = useState(false)
-  const [editWin, setEditWin] = useState(false)
   const [refused, setRefused] = useState(false)
 
   const used = useMemo(
@@ -91,22 +67,33 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
     [hand.concealed, hand.melds],
   )
   const autoKongs = useMemo(() => concealedKongs(hand.concealed), [hand.concealed])
-  const target = concealedTarget(hand)
-  const complete = target >= 2 && (
-    hand.concealed.length === target
-    // Four of a tile is nearly always a concealed kong, but an irregular hand
-    // like Nine Gates can hold four with no meld at all, so the shorter
-    // reading counts as finished too.
-    || (autoKongs.length > 0 && hand.concealed.length === target - autoKongs.length)
-  )
+  const { min: targetMin, max: targetMax } = concealedTargets(hand)
+  const complete = handIsComplete(hand)
+  const readable = complete && handIsReadable(VARIANTS[variant], hand)
   const kongCount = hand.melds.filter((m) => m.t === 'kong').length + autoKongs.length
-  const dealer = isDealer(table, table.youIndex)
+
+  /**
+   * Four of a tile is a concealed kong only once the hand is the size that
+   * says so. Until then those four tiles are four tiles: claiming a kong early
+   * made a fourteen-tile hand ask for seventeen and hang three empty slots off
+   * the tray it had no use for.
+   */
+  const kongsInPlay = autoKongs.length > 0 && hand.concealed.length === targetMax
+    && targetMax !== targetMin
+  const shownTarget = hand.concealed.length <= targetMin ? targetMin : targetMax
+  const slotsLeft = complete ? 0 : Math.max(0, shownTarget - hand.concealed.length)
 
   const legal = declare ? legalNextTiles(declare.kind, declare.chosen, used) : null
+  /**
+   * While a meld is being declared — including while its kind is still being
+   * chosen — nothing else on the screen responds. The chooser is part of the
+   * declare, not a step before it: a wall tap during it used to add a loose
+   * tile behind the player's back.
+   */
+  const focus = declare !== null || picking
 
-
-  /** The loose tiles, with each auto-detected kong pulled out as a group. */
   const loose = useMemo(() => {
+    if (!kongsInPlay) return [...hand.concealed]
     const rest = [...hand.concealed]
     for (const k of autoKongs) {
       for (let i = 0; i < 4; i++) {
@@ -115,13 +102,18 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
       }
     }
     return rest
-  }, [hand.concealed, autoKongs])
+  }, [hand.concealed, autoKongs, kongsInPlay])
 
-  // The winning tile is one tile, not every copy of it: mark the first match
-  // so "won on this" never appears twice.
-  const wonIndex = complete && hand.winningTile !== null
-    ? loose.indexOf(hand.winningTile)
-    : -1
+  // A declare cannot outlive the hand it was started in.
+  const emptied = hand.concealed.length === 0 && hand.melds.length === 0
+  useEffect(() => {
+    if (emptied) { setDeclare(null); setPicking(false) }
+  }, [emptied])
+
+  const declareRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (picking) declareRef.current?.scrollIntoView({ block: 'end' })
+  }, [picking])
 
   // A hand holds four sets and a pair, so a fifth meld cannot exist, and a
   // meld must leave room for the tiles already keyed.
@@ -135,19 +127,19 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
   }
   const canDeclare = (['chow', 'pong', 'kong'] as MeldKind[]).some(meldRoom)
 
-  useEffect(() => {
-    const patch: Partial<HandState> = {}
-    const stale = hand.flags.filter((f) => blockedReason(f, dealer, kongCount, hand.win) !== null)
-    if (stale.length) patch.flags = hand.flags.filter((f) => !stale.includes(f))
-    // A tile swallowed by a concealed kong can no longer be the winning tile.
-    if (hand.winningTile !== null && !loose.includes(hand.winningTile)) {
-      patch.winningTile = null
-    }
-    if (hand.win === 'selfDraw' && hand.pao) patch.pao = false
-    if (Object.keys(patch).length) setHand(patch)
-  }, [dealer, kongCount, hand.flags, hand.winningTile, hand.win, hand.pao, loose])
+  /** Declare says what is actually left rather than just going dead. */
+  const declareLabel = (): string => {
+    if (canDeclare && !complete) return t('hand.declare')
+    if (complete) return t('hand.declareComplete')
+    if (hand.melds.length >= 4) return t('hand.declareNoRoom')
+    if (slotsLeft === 1) return t('hand.declareOneLeft')
+    if (slotsLeft === 2) return t('hand.declarePairLeft')
+    return t('hand.declareNoRoom')
+  }
 
   const tapWall = (id: TileId) => {
+    // The kind chooser is open: the wall is scenery until it is answered.
+    if (picking) return
     if (declare) {
       if (declare.chosen.includes(id)) {
         setDeclare({ ...declare, chosen: declare.chosen.filter((x) => x !== id) })
@@ -174,52 +166,23 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
     setHand({ concealed: next, log: [...hand.log, 'tile'] })
   }
 
-  const tapTray = (id: TileId, index: number) => {
-    if (complete) { setHand({ winningTile: id }); return }
-    const at = hand.concealed.indexOf(id, index)
-    const i = at >= 0 ? at : hand.concealed.indexOf(id)
-    const next = hand.concealed.filter((_, j) => j !== i)
-    const log = [...hand.log]
-    const lastTile = log.lastIndexOf('tile')
-    if (lastTile >= 0) log.splice(lastTile, 1)
-    setHand({
-      concealed: next, log,
-      winningTile: hand.winningTile && next.includes(hand.winningTile) ? hand.winningTile : null,
-    })
-  }
-
   /** Take one copy of a tile back out of the concealed hand. */
   const removeOne = (id: TileId) => {
     const i = hand.concealed.indexOf(id)
     if (i < 0) return
-    const next = hand.concealed.filter((_, j) => j !== i)
     const log = [...hand.log]
     const lastTile = log.lastIndexOf('tile')
     if (lastTile >= 0) log.splice(lastTile, 1)
-    setHand({
-      concealed: next, log,
-      winningTile: hand.winningTile && next.includes(hand.winningTile) ? hand.winningTile : null,
-    })
+    setHand({ concealed: hand.concealed.filter((_, j) => j !== i), log })
   }
 
   const undo = () => {
-    setConfirmClear(false)
-    setDeclare(null)
+    setConfirmClear(false); setDeclare(null)
     const last = hand.log[hand.log.length - 1]
     const log = hand.log.slice(0, -1)
     if (last === 'meld') { setHand({ melds: hand.melds.slice(0, -1), log }); return }
-    if (last === 'tile') {
-      const next = hand.concealed.slice(0, -1)
-      setHand({
-        concealed: next, log,
-        winningTile: hand.winningTile && next.includes(hand.winningTile) ? hand.winningTile : null,
-      })
-    }
+    if (last === 'tile') setHand({ concealed: hand.concealed.slice(0, -1), log })
   }
-
-  const winKnown = hand.win === 'selfDraw'
-    || (hand.win === 'discard' && hand.discarderIndex !== null)
-  const ready = complete && hand.winningTile !== null && winKnown
 
   const note = declare
     ? declare.kind === 'chow'
@@ -227,34 +190,29 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
         ? t('hand.pickChowFirst')
         : t('hand.pickChowMore', { n: tilesRemaining('chow', declare.chosen) })
       : declare.kind === 'pong' ? t('hand.pickPong') : t('hand.pickKong')
-    : refused
-      ? t('hand.full')
-      : complete && hand.winningTile === null
-        ? t('hand.tapWinningTile')
-        : null
+    : refused ? t('hand.full') : null
 
   const suit = SUIT_OF_TAB[tab]
   const wallTile = (id: TileId) => {
-    // A tile already tapped into the meld shows as taken, not as dead, so the
-    // player can see what they have picked so far.
     const chosen = declare?.chosen.includes(id) ?? false
     return (
-      <Tile key={id} id={id} count={used.get(id) ?? 0} onClick={tapWall}
-        taken={chosen} dead={!chosen && legal ? !legal.has(id) : false} />
+      <Tile key={id} id={id} count={used.get(id) ?? 0}
+        onClick={focus && !declare ? undefined : tapWall}
+        taken={chosen} dead={!chosen && (legal ? !legal.has(id) : picking)} />
     )
   }
-  const others = table.players.map((_, i) => i).filter((i) => i !== table.youIndex)
-  const nameOf = (i: number) => table.players[i] || t('table.playerN', { n: i + 1 })
 
   return (
-    <div class="shell">
-      <Signboard table={table} stake={stake} limit={limit} onMenu={onMenu} />
+    <div class="shell" data-focus={focus ? 'true' : undefined}>
+      <Signboard table={table} stake={stake} limit={limit}
+        onMenu={focus ? () => {} : onMenu} disabled={focus} />
       <Seats table={table} />
 
       <div class="tabs" role="tablist" aria-label={t('hand.pickerSuits')}>
         {TABS.map((x) => (
           <button type="button" key={x.key} class="tab" role="tab"
             aria-selected={tab === x.key ? 'true' : 'false'}
+            disabled={focus && x.key === 'bonus'}
             onClick={() => setTab(x.key)}>
             <span class="tab__cjk" aria-hidden="true">{x.cjk}</span>
             <span class="tab__cap">{t(`hand.tab.${x.key}`)}</span>
@@ -291,11 +249,11 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
                     <span class="caps">{t(`tileinfo.group.${key}`)}</span>
                     <span class="grouplabel__rule" />
                   </div>
-                  <div class="grid grid--4">
+                  <div class="grid grid--4 bonusgrid">
                     {group.map((b) => (
                       <BonusTile key={b} id={b} seat={yourSeat(table)}
                         held={hand.bonus.includes(b)}
-                        onClick={declare
+                        onClick={focus
                           ? undefined
                           : (id) => setHand({ bonus: toggle(hand.bonus, id) })} />
                     ))}
@@ -305,18 +263,19 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
           </>
         )}
 
-        {/* ── the hand: melds and loose tiles in one tray ── */}
         <div class="trayhead">
           <span class="caps">{t('hand.yourHand')}</span>
           <span class="trayhead__n">
-            {t('hand.count', { n: hand.concealed.length, needed: target })}
+            {complete
+              ? t('hand.countComplete', { n: hand.concealed.length })
+              : t('hand.count', { n: hand.concealed.length, needed: shownTarget })}
           </span>
           <span class="trayhead__sp" />
-          <button type="button" class="linkbtn" disabled={!hand.log.length} onClick={undo}>
+          <button type="button" class="linkbtn" disabled={focus || !hand.log.length} onClick={undo}>
             {t('hand.undo')}
           </button>
           <button type="button" class="linkbtn"
-            disabled={!hand.log.length && !hand.bonus.length}
+            disabled={focus || (!hand.log.length && !hand.bonus.length)}
             aria-pressed={confirmClear ? 'true' : 'false'}
             onClick={() => {
               if (!confirmClear) {
@@ -324,8 +283,7 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
                 window.setTimeout(() => setConfirmClear(false), 4000)
                 return
               }
-              setHand({ ...EMPTY_HAND })
-              setConfirmClear(false); setDeclare(null)
+              setHand({ ...EMPTY_HAND }); setConfirmClear(false); setDeclare(null)
             }}>
             {confirmClear ? t('hand.clearConfirm') : t('hand.clear')}
           </button>
@@ -334,7 +292,7 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
         <div class="tray">
           {hand.melds.map((m, i) => (
             <button type="button" class="tray__group tray__group--exposed" key={`m${i}`}
-              aria-label={t('hand.meldRemove')}
+              disabled={focus} aria-label={t('hand.meldRemove')}
               onClick={() => {
                 const log = [...hand.log]
                 const at = log.lastIndexOf('meld')
@@ -347,12 +305,11 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
               <span class="tray__tag">{t(`hand.tag${m.t[0]!.toUpperCase()}${m.t.slice(1)}`)}</span>
             </button>
           ))}
-          {autoKongs.map((k) => (
+          {(kongsInPlay ? autoKongs : []).map((k) => (
             <div class="tray__group" key={`k${k}`}>
               <div class="tray__tiles">
                 {[0, 1, 2, 3].map((j) => (
-                  <Tile key={j} id={k} mini removes={!complete}
-                    onClick={complete ? undefined : () => removeOne(k)} />
+                  <Tile key={j} id={k} mini removes onClick={focus ? undefined : () => removeOne(k)} />
                 ))}
               </div>
               <span class="tray__tag tray__tag--auto">{t('hand.tagConcealedKong')}</span>
@@ -360,22 +317,21 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
           ))}
           {loose.map((id, i) => (
             <div class="tray__one" key={`${id}-${i}`}>
-              <Tile id={id} mini removes={!complete} wonOn={i === wonIndex}
-                onClick={() => tapTray(id, i)} />
-              {i === wonIndex && <span class="tray__won">{t('hand.wonOnTag')}</span>}
+              <Tile id={id} mini removes onClick={focus ? undefined : () => removeOne(id)} />
             </div>
           ))}
-          {Array.from({ length: Math.max(0, target - hand.concealed.length) }, (_, i) => (
+          {Array.from({ length: slotsLeft }, (_, i) => (
             <div class="tray__one" key={`s${i}`}><div class="slot" aria-hidden="true" /></div>
           ))}
         </div>
 
-        {autoKongs.map((k) => (
+        {(kongsInPlay ? autoKongs : []).map((k) => (
           <p class="chipnote" key={`n${k}`}>
             {t('hand.concealedKongFound', { tile: tileName(k) })}
           </p>
         ))}
-        <button type="button" class="bonusheld" onClick={() => setTab('bonus')}>
+
+        <button type="button" class="bonusheld" disabled={focus} onClick={() => setTab('bonus')}>
           {hand.bonus.length > 0
             ? hand.bonus.map((b) => (
               <span class="bonusheld__x" key={b}>{t(`tile.bonus.${b}`)}</span>
@@ -384,12 +340,16 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
           <span class="bonusheld__go">{t('hand.bonusAdd')}</span>
         </button>
 
-        {/* ── declare ── */}
-        {declare ? null : picking ? (
-          <div class="declarerow">
+        {picking ? (
+          <div class="declarerow" ref={declareRef}>
             {(['chow', 'pong', 'kong'] as MeldKind[]).map((k) => (
               <button type="button" key={k} class="declareopt" disabled={!meldRoom(k)}
-                onClick={() => { setDeclare({ kind: k, chosen: [] }); setPicking(false) }}>
+                onClick={() => {
+                  // The bonus tab has no wall tiles on it, so a declare
+                  // started from there would strand the player in focus mode.
+                  if (tab === 'bonus') setTab('characters')
+                  setDeclare({ kind: k, chosen: [] }); setPicking(false)
+                }}>
                 <span class="declareopt__k">
                   {t(`hand.declare${k[0]!.toUpperCase()}${k.slice(1)}`)}
                 </span>
@@ -402,61 +362,12 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
               {t('hand.declareCancel')}
             </button>
           </div>
-        ) : (
-          <>
-            <button type="button" class="btn btn--block" style="margin-top:10px"
-              disabled={complete || !canDeclare} onClick={() => setPicking(true)}>
-              {t('hand.declare')}
-            </button>
-            {(complete || !canDeclare) && (
-              <p class="capnote">{t('hand.declareDone')}</p>
-            )}
-          </>
-        )}
-
-        {/* ── anything unusual ── */}
-        <div class="disclose">
-          <button type="button" class="disclose__btn" aria-expanded={unusual}
-            onClick={() => setUnusual((v) => !v)}>
-            <span>{t('hand.unusual')}</span>
-            <span class="disclose__n">
-              {hand.flags.length + (hand.pao ? 1 : 0)
-                ? t('hand.unusualCount', { n: hand.flags.length + (hand.pao ? 1 : 0) })
-                : t('hand.unusualNone')}
-            </span>
+        ) : !declare && (
+          <button type="button" class="btn btn--block" style="margin-top:10px"
+            disabled={complete || !canDeclare} onClick={() => setPicking(true)}>
+            {declareLabel()}
           </button>
-          {unusual && (
-            <div class="disclose__body">
-              {FLAGS.map((f) => {
-                const why = blockedReason(f, dealer, kongCount, hand.win)
-                return (
-                  <div class="unusual" key={f}>
-                    <button type="button" class="unusual__pick" disabled={why !== null}
-                      aria-pressed={hand.flags.includes(f) ? 'true' : 'false'}
-                      onClick={() => setHand({ flags: toggle(hand.flags, f) })}>
-                      <span class="unusual__name">{t(`flag.${f}`)}</span>
-                      <span class="unusual__sub">{why ?? t(`flag.${f}.sub`)}</span>
-                    </button>
-                    <button type="button" class="unusual__why" onClick={() => setDetail(f)}
-                      aria-label={t('hand.whatsThis')}>?</button>
-                  </div>
-                )
-              })}
-              {hand.win === 'discard' && (
-                <div class="unusual">
-                  <button type="button" class="unusual__pick"
-                    aria-pressed={hand.pao ? 'true' : 'false'}
-                    onClick={() => setHand({ pao: !hand.pao })}>
-                    <span class="unusual__name">{t('flag.pao')}</span>
-                    <span class="unusual__sub">{t('flag.pao.sub')}</span>
-                  </button>
-                  <button type="button" class="unusual__why" onClick={() => setDetail('pao')}
-                    aria-label={t('hand.whatsThis')}>?</button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       <div class="dock">
@@ -468,47 +379,15 @@ export function HandEntry({ table, stake, limit, hand, setHand, onMenu, onScore 
             </button>
           )}
         </p>
-
-        {hand.win === null || editWin ? (
-          <div class="wingrid" role="radiogroup" aria-label={t('hand.whoWon')}>
-            <button type="button" class="wingrid__opt" role="radio"
-              aria-checked={hand.win === 'selfDraw' ? 'true' : 'false'}
-              onClick={() => {
-                setHand({ win: 'selfDraw', discarderIndex: null, pao: false }); setEditWin(false)
-              }}>
-              {t('hand.selfDrew')}
-            </button>
-            {others.map((i) => (
-              <button type="button" key={i} class="wingrid__opt" role="radio"
-                aria-checked={hand.win === 'discard' && hand.discarderIndex === i ? 'true' : 'false'}
-                onClick={() => { setHand({ win: 'discard', discarderIndex: i }); setEditWin(false) }}>
-                {t('hand.threwIt', { name: nameOf(i) })}
-              </button>
-            ))}
-          </div>
-        ) : (
-          <button type="button" class="winsummary" onClick={() => setEditWin(true)}>
-            <span>{hand.win === 'selfDraw'
-              ? t('hand.selfDrew')
-              : t('hand.threwIt', { name: nameOf(hand.discarderIndex!) })}</span>
-            <span class="winsummary__edit">{t('result.editHand')}</span>
-          </button>
-        )}
-
-        <button type="button" class="btn btn--primary btn--block" disabled={!ready}
-          onClick={onScore}>
-          {ready ? t('hand.ready')
-            : !complete ? t('hand.needTiles', { n: Math.max(0, target - hand.concealed.length) })
-              : hand.winningTile === null ? t('hand.needWinningTile')
-                : t('hand.needWinner')}
+        <button type="button" class="btn btn--primary btn--block"
+          disabled={focus || !readable} onClick={onScore}>
+          {readable
+            ? t('hand.scoreReady')
+            : complete
+              ? t('hand.notAHand')
+              : t('hand.needTiles', { n: Math.max(1, shownTarget - hand.concealed.length) })}
         </button>
       </div>
-
-      {detail && (
-        <Sheet title={t(`flag.${detail}`)} onClose={() => setDetail(null)}>
-          <p>{t(`flag.${detail}.detail`)}</p>
-        </Sheet>
-      )}
     </div>
   )
 }

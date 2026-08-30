@@ -28,6 +28,8 @@ export interface HandInput {
 
 export type RejectReason =
   | 'unknownTile'
+  /** A real tile, but not one this variant plays — animals in Hong Kong. */
+  | 'tileNotInSet'
   | 'bonusTileInHand'
   | 'duplicateBonusTile'
   | 'tileCountExceeded'

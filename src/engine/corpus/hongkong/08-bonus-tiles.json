@@ -1,0 +1,852 @@
+{
+  "description": "花牌 — 正花, 一台花, 無花, and the two flower hands that win on the spot. Also the rule that none of this reaches the minimum",
+  "entries": [
+    {
+      "id": "hk-bonus-01",
+      "title": "正花 — the flower matching your seat",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「正花：花牌跟座位的風位（門風）吻合。」 · Family B mahjong.wikidot Hong Kong Old Style \"Seat Flower | 1\" · Family E English Wikipedia, Old Hong Kong",
+      "note": "East is seat 1, so F1 is East's own flower.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "seatFlower"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "seatFlower",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-02",
+      "title": "正花 — the season matching your seat",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style \"Seat Season | 1\"",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "S1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "seatSeason"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "seatSeason",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-03",
+      "title": "Own flower and own season together",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "S1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "seatFlower",
+          "seatSeason"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "seatFlower",
+            1
+          ],
+          [
+            "seatSeason",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-04",
+      "title": "A flower belonging to another seat scores nothing — and still kills 無花",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「正花：花牌跟座位的風位（門風）吻合。」 · 「無花：沒有花牌。」",
+      "note": "Holding any bonus tile at all forfeits 無花, whether or not it scores.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F2"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 0,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-05",
+      "title": "無花 — no bonus tiles at all",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「無花：沒有花牌。」 · Family B mahjong.wikidot Hong Kong Old Style \"No Flowers/Seasons | 1\" · Family E English Wikipedia, Old Hong Kong",
+      "note": "Singapore has no equivalent: an empty flower tray is worth a faan here and nothing there.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-06",
+      "title": "一台花 — all four flowers, which replaces the 正花 of that series",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「一檯花：集齊同一系列的花牌…不再計同系列的正花」 · Family B mahjong.wikidot Hong Kong Old Style \"Four Flowers | 2\"",
+      "note": "2, not 3: the own flower is inside the set and is not counted again.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "completeFlowerGroup"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "completeFlowerGroup",
+            2
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-07",
+      "title": "一台花 — all four seasons",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style \"Four Seasons | 2\"",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "completeSeasonGroup"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "completeSeasonGroup",
+            2
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-08",
+      "title": "All four flowers plus the player's own season",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style",
+      "note": "The replacement in HK8a is per series: the season line is untouched by the flower set.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "completeFlowerGroup",
+          "seatSeason"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "completeFlowerGroup",
+            2
+          ],
+          [
+            "seatSeason",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 0,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-09",
+      "title": "花糊 — seven bonus tiles win the hand on the spot, as a three-faan self-draw",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「集齊七隻花牌可即時食糊，計兩番加自摸一番」 · 「花糊：集齊七隻花牌，當三番自摸。」",
+      "note": "Paid as a self-draw however it was reached, which is what 「當三番自摸」 means. The tile hand is irrelevant to the award and is only here because a corpus entry needs a legal hand.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sevenFlowers"
+        ],
+        "fan": [
+          [
+            "sevenFlowers",
+            3
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-10",
+      "title": "大花糊 — all eight bonus tiles, as an eight-faan self-draw",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「摸齊八隻花可即時糊牌，計八番自摸」 · Family B mahjong.wikidot Hong Kong Old Style \"8 Flowers & Seasons | 8\" · Family E English Wikipedia, Old Hong Kong",
+      "note": "Suppresses every other line including the flower lines it is made of.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eightFlowers"
+        ],
+        "fan": [
+          [
+            "eightFlowers",
+            8
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-11",
+      "title": "大花糊 under a thirteen-faan cap stays at eight",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種",
+      "note": "It is a priced hand, not a limit hand.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "7s"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eightFlowers"
+        ],
+        "fan": [
+          [
+            "eightFlowers",
+            8
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-12",
+      "title": "Two qualifying faan plus two flower faan is still not a legal win",
+      "cite": "RULING HK16 · Family E English Wikipedia, Old Hong Kong \"Bonus tiles… are not included in the minimum faan value\"",
+      "note": "Dragon triplet 1 + prevailing wind 1 = 2 qualifying; own flower and own season add 2 more for a total of 4, and the hand still cannot win.",
+      "hand": {
+        "concealed": "123m 456m 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F3",
+          "S3"
+        ]
+      },
+      "ctx": {
+        "seat": "W",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 4
+      }
+    },
+    {
+      "id": "hk-bonus-13",
+      "title": "無花 does not carry a two-faan hand over the minimum either",
+      "cite": "RULING HK16 · Family E English Wikipedia, Old Hong Kong",
+      "note": "Total is exactly 3, which looks like a legal win and is not: 無花 is flower-derived.",
+      "hand": {
+        "concealed": "123m 456m 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "W",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 3
+      }
+    },
+    {
+      "id": "hk-bonus-14",
+      "title": "One more qualifying faan makes the same shape legal",
+      "cite": "RULING HK16/HK2 · Family E English Wikipedia, Old Hong Kong · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種",
+      "note": "Three qualifying faan now, so the two flower faan may be added on top.",
+      "hand": {
+        "concealed": "123m 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F3",
+          "S3"
+        ]
+      },
+      "ctx": {
+        "seat": "W",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "dragonTriplet",
+          "prevailingWind",
+          "seatFlower",
+          "seatSeason"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "seatFlower",
+            1
+          ],
+          [
+            "seatSeason",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-15",
+      "title": "All eight bonus tiles alongside a 例牌 — the flower hand still prices it",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「摸齊八隻花可即時糊牌」",
+      "note": "大花糊 is an instant win: it is declared the moment the eighth flower is drawn, before any 大四喜 could be completed. At the default cap the two would be indistinguishable, which is why this entry raises it.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eightFlowers"
+        ],
+        "fan": [
+          [
+            "eightFlowers",
+            8
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-bonus-16",
+      "title": "花糊 overrides the flower lines it is made of",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「集齊七隻花牌…當三番自摸」",
+      "note": "North holds a complete 一台花 of seasons and their own 正花 in S4, which would be 3 faan of flower lines on their own, plus 對對糊 3. None of it is read: seven flowers ends the deal on the spot and prices the whole hand at 3.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "S1",
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "sevenFlowers"
+        ],
+        "fan": [
+          [
+            "sevenFlowers",
+            3
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    }
+  ]
+}

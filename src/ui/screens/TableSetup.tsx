@@ -1,21 +1,28 @@
 import { useState } from 'preact/hooks'
-import { t } from '../../i18n'
+import { t, tv } from '../../i18n'
 import { formatStake } from '../format'
 import { WINDS } from '../../engine/core/tiles'
-import { seatWindOf, type TableState } from '../../engine/variants/singapore/table'
+import { seatWindOf, type TableState } from '../../engine/session/table'
+import type { VariantId } from '../../engine/variants'
 
 export const LIMIT_MIN = 1
 export const LIMIT_MAX = 13
 const STAKES = [0.1, 0.2, 0.5, 1]
 const WIND_GLYPH: Record<string, string> = { E: '東', S: '南', W: '西', N: '北' }
 
-export interface Money { stake: number; limit: number }
+export interface Money {
+  stake: number
+  limit: number
+  /** RULING HK4 — 陪銃制. Hong Kong only; the Singapore engine never reads it. */
+  halfPayment: boolean
+}
 
 /**
  * Set up once. Names are the point: every seat is referred to by name from
  * here on, so the ledger reads like the table talks.
  */
-export function TableSetup({ table, money, onTable, onMoney, onDone, firstRun }: {
+export function TableSetup({ variant, table, money, onTable, onMoney, onDone, firstRun }: {
+  variant: VariantId
   table: TableState
   money: Money
   onTable: (patch: Partial<TableState>) => void
@@ -23,6 +30,7 @@ export function TableSetup({ table, money, onTable, onMoney, onDone, firstRun }:
   onDone: () => void
   firstRun: boolean
 }) {
+  const isHK = variant === 'hongkong'
   const [limitText, setLimitText] = useState(String(money.limit))
   const [stakeText, setStakeText] = useState(
     STAKES.includes(money.stake) ? '' : String(money.stake),
@@ -126,8 +134,27 @@ export function TableSetup({ table, money, onTable, onMoney, onDone, firstRun }:
           </p>
         )}
 
+        {isHK && (
+          <div class="field">
+            <span class="field__label">{t('table.payment')}</span>
+            <div class="chiprow" role="radiogroup" aria-label={t('table.payment')}>
+              <button type="button" class="chip" role="radio"
+                aria-checked={money.halfPayment ? 'false' : 'true'}
+                onClick={() => onMoney({ halfPayment: false })}>
+                {t('table.payment.full')}
+              </button>
+              <button type="button" class="chip" role="radio"
+                aria-checked={money.halfPayment ? 'true' : 'false'}
+                onClick={() => onMoney({ halfPayment: true })}>
+                {t('table.payment.half')}
+              </button>
+            </div>
+            <span class="field__hint">{t('table.paymentHint')}</span>
+          </div>
+        )}
+
         <div class="field">
-          <span class="field__label">{t('table.stake')}</span>
+          <span class="field__label">{tv(variant, 'table.stake')}</span>
           <div class="chiprow" role="radiogroup" aria-label={t('table.stake')}>
             {STAKES.map((s) => (
               <button type="button" key={s} class="chip" role="radio"
@@ -144,7 +171,7 @@ export function TableSetup({ table, money, onTable, onMoney, onDone, firstRun }:
             value={stakeText} placeholder={formatStake(money.stake)}
             onInput={(e) => setStakeText((e.target as HTMLInputElement).value)}
             onBlur={commitStake} />
-          <span class="field__hint">{t('table.stakeHint')}</span>
+          <span class="field__hint">{tv(variant, 'table.stakeHint')}</span>
         </div>
 
         <div class="field">
@@ -152,7 +179,9 @@ export function TableSetup({ table, money, onTable, onMoney, onDone, firstRun }:
           <input id="limit" class="input" type="text" inputMode="numeric" value={limitText}
             onInput={(e) => setLimitText((e.target as HTMLInputElement).value)}
             onBlur={commitLimit} />
-          <span class="field__hint">{t('table.limitHint', { min: LIMIT_MIN, max: LIMIT_MAX })}</span>
+          <span class="field__hint">
+            {tv(variant, 'table.limitHint', { min: LIMIT_MIN, max: LIMIT_MAX })}
+          </span>
         </div>
       </div>
 

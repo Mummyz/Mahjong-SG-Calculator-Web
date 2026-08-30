@@ -29,6 +29,12 @@ export interface RuleOptions {
   readonly minTai: number
   /** RULING R13 — off by default; not a general Singapore rule. */
   readonly doubleSpecialHandPayout: boolean
+  /**
+   * RULING HK4 — 陪銃制: the discarder pays half the winner's total and the
+   * other two pay a quarter each, instead of the discarder paying all of it.
+   * Hong Kong only; Singapore never reads it.
+   */
+  readonly halfPayment: boolean
 }
 
 export type WinMethod = 'discard' | 'selfDraw'
@@ -66,7 +72,12 @@ export interface ScoreOk {
   readonly rawTai: number
   readonly totalTai: number
   readonly limitApplied: boolean
-  /** The 1-tai stake multiplier: 2^(totalTai − 1). */
+  /**
+   * The money figure the payment table is built from. Each variant documents
+   * what it means: Singapore's is the 1-tai stake multiplier 2^(totalTai − 1)
+   * (RULING R11); Hong Kong's is the winner's total on a discard win, read
+   * straight off the published 出銃 column (RULING HK17).
+   */
   readonly base: number
   readonly hand: ParsedHand
 }

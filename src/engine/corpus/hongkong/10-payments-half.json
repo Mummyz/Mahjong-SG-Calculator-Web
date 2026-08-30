@@ -1,0 +1,1233 @@
+{
+  "description": "陪銃制 / 出銃么二制 — the same totals, split 2:1:1 across the three losers instead of loaded entirely onto the discarder",
+  "entries": [
+    {
+      "id": "hk-payhalf-d02",
+      "title": "陪銃制 discard at 2 faan — 2 from the discarder, 1 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 2,
+        "halfPayment": true,
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 2,
+        "limitApplied": true,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d03",
+      "title": "陪銃制 discard at 3 faan — 4 from the discarder, 2 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 3,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 3,
+        "limitApplied": true,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 2,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d04",
+      "title": "陪銃制 discard at 4（滿糊） faan — 8 from the discarder, 4 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 4,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 4,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d05",
+      "title": "陪銃制 discard at 5 faan — 12 from the discarder, 6 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 5,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 12,
+          "fromEachOther": 6,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d06",
+      "title": "陪銃制 discard at 6 faan — 16 from the discarder, 8 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 6,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 6,
+        "limitApplied": true,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 8,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d07",
+      "title": "陪銃制 discard at 7 faan — 24 from the discarder, 12 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 7,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 7,
+        "limitApplied": true,
+        "base": 48,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 12,
+          "winnerTotal": 48
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d08",
+      "title": "陪銃制 discard at 8 faan — 32 from the discarder, 16 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 8,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 8,
+        "limitApplied": true,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d09",
+      "title": "陪銃制 discard at 9 faan — 48 from the discarder, 24 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 9,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 9,
+        "limitApplied": true,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 48,
+          "fromEachOther": 24,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d10",
+      "title": "陪銃制 discard at 10（細爆） faan — 64 from the discarder, 32 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 10,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 32,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d11",
+      "title": "陪銃制 discard at 11 faan — 96 from the discarder, 48 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 11,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 11,
+        "limitApplied": true,
+        "base": 192,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 48,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d12",
+      "title": "陪銃制 discard at 12 faan — 128 from the discarder, 64 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 12,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 12,
+        "limitApplied": true,
+        "base": 256,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 64,
+          "winnerTotal": 256
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-d13",
+      "title": "陪銃制 discard at 13（爆棚） faan — 192 from the discarder, 96 from each of the others",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「傳統廣東麻雀是陪銃制，即如果甲出銃給乙…甲要支付本身出銃的金額，而丙和丁則須支付甲的金額的一半。」 · Family D 「把授受法轉為「出銃么二制」」",
+      "note": "The winner still collects the published total; only the split differs.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 13,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 192,
+          "fromEachOther": 96,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-s03",
+      "title": "Self-draw at 3 faan is identical under both conventions",
+      "cite": "RULING HK4 · Family B mahjong.wikidot Hong Kong Old Style \"Self-Draw Split | x2 x2 x2\" under both Clear Chapter and New Chapter · Family D 「自摸時便以和牌者代替莊家，也就是說，和牌者向三家各收取雙倍的分數」",
+      "note": "Compare hk-payfull-s03 — the same three numbers. The self-draw side is not a setting.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 3,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers",
+          "selfDraw"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ],
+          [
+            "selfDraw",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 3,
+        "limitApplied": true,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-s08",
+      "title": "Self-draw at 8 faan is identical under both conventions",
+      "cite": "RULING HK4 · Family B mahjong.wikidot Hong Kong Old Style \"Self-Draw Split | x2 x2 x2\" under both Clear Chapter and New Chapter · Family D 「自摸時便以和牌者代替莊家，也就是說，和牌者向三家各收取雙倍的分數」",
+      "note": "Compare hk-payfull-s08 — the same three numbers. The self-draw side is not a setting.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 8,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers",
+          "selfDraw"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ],
+          [
+            "selfDraw",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 8,
+        "limitApplied": true,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-s10",
+      "title": "Self-draw at 10（細爆） faan is identical under both conventions",
+      "cite": "RULING HK4 · Family B mahjong.wikidot Hong Kong Old Style \"Self-Draw Split | x2 x2 x2\" under both Clear Chapter and New Chapter · Family D 「自摸時便以和牌者代替莊家，也就是說，和牌者向三家各收取雙倍的分數」",
+      "note": "Compare hk-payfull-s10 — the same three numbers. The self-draw side is not a setting.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 10,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers",
+          "selfDraw"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ],
+          [
+            "selfDraw",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-s13",
+      "title": "Self-draw at 13（爆棚） faan is identical under both conventions",
+      "cite": "RULING HK4 · Family B mahjong.wikidot Hong Kong Old Style \"Self-Draw Split | x2 x2 x2\" under both Clear Chapter and New Chapter · Family D 「自摸時便以和牌者代替莊家，也就是說，和牌者向三家各收取雙倍的分數」",
+      "note": "Compare hk-payfull-s13 — the same three numbers. The self-draw side is not a setting.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 13,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers",
+          "selfDraw"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ],
+          [
+            "selfDraw",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 192,
+          "winnerTotal": 576
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-pao",
+      "title": "包牌 on a discard under half payment loads the whole loss onto one player",
+      "cite": "RULING HK18 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「如果打陪銃制：任何食糊嘅九章落地包出銃（包一半）、十二章落地包自摸。」",
+      "note": "Without pao this row would be 64 / 32 / 32; with it the discarder pays all 128.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m",
+        "pao": true
+      },
+      "opts": {
+        "limit": 10,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-payhalf-eight",
+      "title": "The eight-faan row, the only half-payment split any source prints in money",
+      "cite": "RULING HK4 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例如「一二蚊」上限八番（即出銃八番玩家要付256元、其餘玩家要付128元）」",
+      "note": "Family A's currency example is 256 / 128 / 128 at a chip size eight times this table's, and the 2:1:1 ratio is the same: here 32 / 16 / 16.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 8,
+        "halfPayment": true
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 8,
+        "limitApplied": true,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      }
+    }
+  ]
+}

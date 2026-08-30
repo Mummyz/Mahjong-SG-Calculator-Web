@@ -31,3 +31,20 @@ export function t(key: MessageKey | string, vars?: Record<string, string | numbe
     Object.prototype.hasOwnProperty.call(vars, name) ? String(vars[name]) : m,
   )
 }
+
+/**
+ * A string that may differ between variants.
+ *
+ * Resolves `key.<variant>` when the bundle carries one and plain `key`
+ * otherwise, so only the strings that genuinely differ have to be written
+ * twice. Singapore's Four Great Blessings and Hong Kong's Great Four Winds
+ * are the same hand; the two regions simply do not call it the same thing.
+ */
+export function tv(
+  variant: string,
+  key: MessageKey | string,
+  vars?: Record<string, string | number>,
+): string {
+  const specific = `${key}.${variant}`
+  return t(BUNDLES[current][specific] !== undefined ? specific : key, vars)
+}

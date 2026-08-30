@@ -76,3 +76,41 @@ triple was expanded from those same published rules by the authoring helper, so
 that 200-odd triples did not have to be typed by hand. If that expansion were
 wrong, `09-payments.json` fails. The engine implements the arithmetic
 independently.
+
+---
+
+## Layout (Hong Kong Old Style, Run 3)
+
+`hongkong/` holds fourteen files, 226 entries. Every entry carries a `cite`
+naming the ruling in `docs/sources/RULING-LOG-HK.md` that settled it and the
+source family that ruling rests on, quoted from
+`docs/sources/hongkong-old-style-reconciliation.md`.
+
+| File | Covers |
+|---|---|
+| `01-shapes.json` | 平糊 / 對對糊 / 坎坎糊, which are mutually exclusive, and the 3-faan minimum |
+| `02-flushes.json` | 混一色 and 清一色, and what does and does not break them |
+| `03-terminals-honours.json` | 花幺, 清幺九, 字一色 — the two 例牌 and the one that is not |
+| `04-dragons.json` | 番子 triplets, 小三元 and 大三元 as the sums their sources write |
+| `05-winds.json` | 門風 / 圈風 / 雙番, 小四喜 and 大四喜 |
+| `06-limit-hands.json` | 十三么, 十八羅漢, 九子連環, 天糊 / 地糊 / 人糊, and the cap |
+| `07-circumstances.json` | 自摸, 門前清, 搶槓, 海底撈月 / 河底撈魚, 槓上開花, 連槓開花, 補花 |
+| `08-bonus-tiles.json` | 正花, 一台花, 無花, 花糊, 大花糊 |
+| `09-payments-full.json` | Family A's 全銃制 table, row by row, discard and self-draw |
+| `10-payments-half.json` | The 陪銃制 2 : 1 : 1 split, and the self-draw rows that do not change |
+| `11-minimum.json` | 三番起糊, what counts towards it, and the settings a table can pick |
+| `12-kongs.json` | Hand sizes 14 to 18 |
+| `13-invalid.json` | Hands that must be REJECTED, including animals |
+| `14-variant-differences.json` | Tiles that score differently in the two variants |
+
+### How the Hong Kong payments were authored
+
+`09-payments-full.json` transcribes Family A's 「分數計算（全銃制）」 table one
+row per entry — those base figures were typed from the source. Each row pins
+the hand to an exact faan count by setting the cap, so the whole published
+curve from 0 to 13 is covered without having to construct fourteen hands of
+exactly the right value. `10-payments-half.json` does the same for the 2 : 1 : 1
+split. Every other file's payment triple was expanded from those same published
+rules by the authoring helper. If that expansion were wrong, file 09 fails.
+The engine implements the curve independently, and
+`hongkong.corpus.test.ts` checks `basePoints()` against the typed-out column.

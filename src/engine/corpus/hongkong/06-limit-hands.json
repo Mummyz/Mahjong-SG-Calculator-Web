@@ -1,0 +1,856 @@
+{
+  "description": "十三么, 十八羅漢, 九子連環, 天糊 / 地糊 / 人糊 — the 例牌 priced at thirteen, and how the cap setting shows them",
+  "entries": [
+    {
+      "id": "hk-limit-01",
+      "title": "十三么 Thirteen Orphans",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 十三么 例牌 13 · Family C 香港麻雀協會 official rules 「十三么九才可以搶暗槓」 · Family E English Wikipedia, Old Hong Kong",
+      "note": "Raw 15, capped to 10. English Wikipedia notes the HKMA scores this at its 10-faan cap.",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFPC"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenOrphans",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "thirteenOrphans",
+            13
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-limit-02",
+      "title": "十三么 under a thirteen-faan cap",
+      "cite": "RULING HK3/HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「十三番例牌」",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFPC"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "F"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenOrphans",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "thirteenOrphans",
+            13
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 384,
+          "fromEachOther": 0,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-limit-03",
+      "title": "十三么 self-drawn",
+      "cite": "RULING HK8b/HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · RULING HK10",
+      "note": "16 raw → 13. Unlike Singapore's R12, Hong Kong pays 十三么 by the ordinary rule for how it was won.",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFPC"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "P"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenOrphans",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "thirteenOrphans",
+            13
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 16,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 192,
+          "winnerTotal": 576
+        }
+      }
+    },
+    {
+      "id": "hk-limit-04",
+      "title": "十八羅漢 Four Kongs",
+      "cite": "RULING HK9/HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 十八羅漢 例牌 13, 「不同規例中作十至十八番計不等」",
+      "note": "18 tiles: 14 plus one per kong. Family B scores this 18 in one place and 12 in another; HK9 takes 13.",
+      "hand": {
+        "concealed": "99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "3333m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "7777s",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eighteenArhats",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "eighteenArhats",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-limit-05",
+      "title": "十八羅漢 under a thirteen-faan cap",
+      "cite": "RULING HK3/HK9 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種",
+      "hand": {
+        "concealed": "99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "3333m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "7777s",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eighteenArhats",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "eighteenArhats",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 384,
+          "fromEachOther": 0,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-limit-06",
+      "title": "十八羅漢 with all four kongs concealed",
+      "cite": "RULING HK9/HK12 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules 「（暗槓屬於明章）」",
+      "note": "Still no 門前清: HK12 says any kong breaks it, concealed or not.",
+      "hand": {
+        "concealed": "99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "3333m",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "7777s",
+            "open": false
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "9s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eighteenArhats",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "eighteenArhats",
+            13
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-limit-07",
+      "title": "九子連環 Nine Gates",
+      "cite": "RULING HK9/HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 九子連環 10 · Family C 香港麻雀協會 official rules 10",
+      "note": "Raw 12, capped to 10. Family B scores it 15; HK9 takes the 10 that A and C agree on.",
+      "hand": {
+        "concealed": "11123455678999m"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "nineGates",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "nineGates",
+            10
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 12,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-limit-08",
+      "title": "九子連環 under a thirteen-faan cap",
+      "cite": "RULING HK3/HK9 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "12 faan → base 256. The 例牌 suppresses 清一色, which would otherwise add 7.",
+      "hand": {
+        "concealed": "11123455678999m"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "nineGates",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "nineGates",
+            10
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 12,
+        "totalTai": 12,
+        "limitApplied": false,
+        "base": 256,
+        "pay": {
+          "fromDiscarder": 256,
+          "fromEachOther": 0,
+          "winnerTotal": 256
+        }
+      }
+    },
+    {
+      "id": "hk-limit-09",
+      "title": "天糊 Heavenly Hand — the dealer's opening draw",
+      "cite": "RULING HK9/HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 天糊 例牌 13, 「「天糊」同「地糊」等奇牌，一定要事先說明例牌番數」",
+      "note": "Family B scores 天糊 at 10; HK9 takes Family A's 13. Under the default cap the two agree.",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2p",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "heavenly",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "heavenly",
+            13
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 16,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-limit-10",
+      "title": "地糊 Earthly Hand — a non-dealer on the dealer's first discard",
+      "cite": "RULING HK9/HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 地糊 例牌 13",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55p"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p",
+        "flags": [
+          "earthly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "earthly",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "earthly",
+            13
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-limit-11",
+      "title": "人糊 Hand of Man",
+      "cite": "RULING HK9/HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 人糊 「開局第一輪即食別家出銃」 例牌 13, 「部份規例僅計三番」",
+      "note": "Family A also records a 3-faan reading of this hand. HK9 takes the 例牌.",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55p"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3p",
+        "flags": [
+          "humanly"
+        ]
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "humanly",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "humanly",
+            13
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 384,
+          "fromEachOther": 0,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-limit-12",
+      "title": "A 天糊 flag from a player who is not the dealer is not 天糊",
+      "cite": "RULING HK23 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 天糊 is the dealer's dealt hand; RULING HK23 gates it on the seat",
+      "note": "Heavenly belongs to the dealer alone; the seat is South here, so the flag is discarded.",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55p"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 8,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-limit-13",
+      "title": "A 地糊 flag from the dealer is not 地糊",
+      "cite": "RULING HK23 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 地糊 is a non-dealer's win on the dealer's first discard; RULING HK23 gates it on the seat",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p",
+        "flags": [
+          "earthly"
+        ]
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 0,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "hk-limit-14",
+      "title": "Two 例牌 at once — the higher one prices the hand and nothing stacks",
+      "cite": "RULING HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例牌不另計其他牌型」",
+      "note": "This hand is 大四喜 and 字一色 simultaneously. 13 beats 10, and HK10 forbids adding them.",
+      "hand": {
+        "concealed": "EEE SSS WWW NNN CC"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "C"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 16,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 192,
+          "winnerTotal": 576
+        }
+      }
+    },
+    {
+      "id": "hk-limit-15",
+      "title": "十三么 with the fourteenth tile duplicating a suited terminal",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family E English Wikipedia, Old Hong Kong",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFP 1m"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenOrphans",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "thirteenOrphans",
+            13
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 384,
+          "fromEachOther": 0,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-limit-16",
+      "title": "十三么 under an eight-faan cap",
+      "cite": "RULING HK3 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「八番例牌」",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFPC"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "E"
+      },
+      "opts": {
+        "limit": 8
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenOrphans",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "thirteenOrphans",
+            13
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 8,
+        "limitApplied": true,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 0,
+          "winnerTotal": 64
+        }
+      }
+    }
+  ]
+}

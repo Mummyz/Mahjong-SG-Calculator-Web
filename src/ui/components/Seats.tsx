@@ -1,5 +1,5 @@
 import { t } from '../../i18n'
-import { isDealer, seatWindOf, type TableState } from '../../engine/variants/singapore/table'
+import { isDealer, seatWindOf, type TableState } from '../../engine/session/table'
 
 const WIND_GLYPH: Record<string, string> = { E: '東', S: '南', W: '西', N: '北' }
 

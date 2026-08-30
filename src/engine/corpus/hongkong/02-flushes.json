@@ -1,0 +1,649 @@
+{
+  "description": "混一色 and 清一色, and what does and does not break them",
+  "entries": [
+    {
+      "id": "hk-flush-01",
+      "title": "混一色 Mixed One Suit — one suit plus honours",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style \"Half Flush | 3\" · Family C 香港麻雀協會 official rules 「混一色 手牌全由一色的數牌加上番子組成。」 · Family E English Wikipedia, Old Hong Kong",
+      "hand": {
+        "concealed": "456m 789m 234m EE",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "halfFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-flush-02",
+      "title": "清一色 Pure One Suit — one suit, no honours",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 清一色 (footnoted 六至十番) · Family B mahjong.wikidot Hong Kong Old Style \"Pure Flush | 7\" · Family C 香港麻雀協會 official rules · Family E English Wikipedia, Old Hong Kong",
+      "note": "Chows and pungs mixed, so no shape faan — the flush stands alone.",
+      "hand": {
+        "concealed": "234p 567p 999p 55p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111p",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "6p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 0,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "hk-flush-03",
+      "title": "清一色 with 對對糊",
+      "cite": "RULING HK8a/HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style · Family C 香港麻雀協會 official rules",
+      "note": "10 faan at the default cap without a single 例牌.",
+      "hand": {
+        "concealed": "333p 555p 777p 99p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111p",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush",
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-flush-04",
+      "title": "清一色 is not also 混一色",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules 「清一色 只有一種花式（筒、索或萬），沒有番子的糊牌。」",
+      "note": "The flush group is exclusive: the honour-free hand scores 7, never 7+3.",
+      "hand": {
+        "concealed": "456m 789m 234m 55m",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-flush-05",
+      "title": "混一色 with a dragon triplet",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「凡擁有一副由紅中、發財、白板組成的刻子即加算一番」 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "123s 456s 789s 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-flush-06",
+      "title": "One honour pair is enough to make it 混一色, not 清一色",
+      "cite": "RULING HK8a · Family C 香港麻雀協會 official rules 「混一色 手牌全由一色的數牌加上番子組成。」",
+      "hand": {
+        "concealed": "456s 789s 234s PP",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123s",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "halfFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-flush-07",
+      "title": "Two suits — no flush of any kind",
+      "cite": "RULING HK8a · Family C 香港麻雀協會 official rules",
+      "note": "The exposed chow is characters and the rest is dots, so neither flush applies.",
+      "hand": {
+        "concealed": "456p 789p 234p 55p",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-flush-08",
+      "title": "混一色 with 對對糊 and both wind faan",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「若門風與圈風重疊時計兩番」 · Family C 香港麻雀協會 official rules 「門風及圈風重疊時計兩番。」",
+      "note": "East seat in the East round: the one triplet scores both lines — 「雙番東」.",
+      "hand": {
+        "concealed": "333m 555m EEE PP",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "halfFlush",
+          "seatWind",
+          "prevailingWind",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-flush-09",
+      "title": "清一色 self-drawn and fully concealed",
+      "cite": "RULING HK8a/HK12 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules 「門前清 食糊時所有手牌皆為暗手」",
+      "note": "10 faan at the cap. Same tiles as a Singapore Full Flush Sequence, which would score differently.",
+      "hand": {
+        "concealed": "123s 456s 789s 234s 55s"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "2s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullFlush",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-flush-10",
+      "title": "混一色 with a wind triplet that is neither seat nor prevailing",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "West triplet, South seat, East round — the wind triplet is worth nothing on its own.",
+      "hand": {
+        "concealed": "456m 789m WWW EE",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "8m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-flush-11",
+      "title": "混一色 with a kong of the suit",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "15 tiles for one kong. The kong is suited, so the honour content is the two triplets and the pair.",
+      "hand": {
+        "concealed": "456m 789m CC",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "6m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-flush-12",
+      "title": "清一色 of bamboo, all triplets, self-drawn — over the cap",
+      "cite": "RULING HK3/HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules 「以10番為上限」",
+      "note": "12 raw faan clipped to 10 by the default cap.",
+      "hand": {
+        "concealed": "333s 555s 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111s",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush",
+          "allTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 12,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    }
+  ]
+}

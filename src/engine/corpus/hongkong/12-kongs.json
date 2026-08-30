@@ -1,0 +1,648 @@
+{
+  "description": "Hand sizes 14 to 18, and what a kong does and does not change",
+  "entries": [
+    {
+      "id": "hk-kong-01",
+      "title": "No kongs — fourteen tiles",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「標準嘅香港蔴雀會使用上述144隻牌。」",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-kong-02",
+      "title": "One kong — fifteen tiles",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-kong-03",
+      "title": "Two kongs — sixteen tiles",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "3333m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-kong-04",
+      "title": "Three kongs — seventeen tiles",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "3333m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-kong-05",
+      "title": "Four kongs — eighteen tiles, and 十八羅漢",
+      "cite": "RULING HK9 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 十八羅漢 例牌",
+      "hand": {
+        "concealed": "99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "3333m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "7777s",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eighteenArhats",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "eighteenArhats",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-kong-06",
+      "title": "A concealed kong scores the same faan as an exposed one",
+      "cite": "RULING HK8a · Family C 香港麻雀協會 official rules 「（暗槓屬於明章）」",
+      "note": "Identical to hk-kong-03, where both sets are exposed. Hong Kong Old Style pays nothing for concealment as such — only 門前清, which a kong breaks either way (HK12). The claimed 333m is what keeps this hand out of 坎坎糊; see hk-shape-15.",
+      "hand": {
+        "concealed": "555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          },
+          {
+            "t": "pong",
+            "tiles": "333m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-kong-07",
+      "title": "A kong of the prevailing wind scores the wind line",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "123m 456m 789p 55s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "EEEE",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "prevailingWind",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-kong-08",
+      "title": "A kong of dragons scores the dragon line",
+      "cite": "RULING HK8a · Family C 香港麻雀協會 official rules 「三元牌 紅中、發財、白板的坎子」",
+      "hand": {
+        "concealed": "123m 456m 789p 55s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "PPPP",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "8p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-kong-09",
+      "title": "A kong keeps 對對糊 intact",
+      "cite": "RULING HK8a · Family C 香港麻雀協會 official rules 「對對糊 手牌有四個坎/槓﹐沒有順子。」",
+      "hand": {
+        "concealed": "333m 555p 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "7777s",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-kong-10",
+      "title": "A kong makes 平糊 impossible",
+      "cite": "RULING HK8a · Family C 香港麻雀協會 official rules 「平糊 手牌有四個順子﹐沒有坎/槓。」",
+      "note": "Family C's definition rules out kongs explicitly, not merely pungs.",
+      "hand": {
+        "concealed": "456m 789m 234m 55m",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 0,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "hk-kong-11",
+      "title": "Four concealed kongs are still not 門前清",
+      "cite": "RULING HK12 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「（包括暗槓）」 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "3333m",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "5555p",
+            "open": false
+          },
+          {
+            "t": "kong",
+            "tiles": "7777s",
+            "open": false
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "eighteenArhats",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "eighteenArhats",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 384,
+          "fromEachOther": 0,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-kong-12",
+      "title": "槓上開花 needs a kong to have happened",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「明/暗/加槓後自摸」",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "9s",
+        "flags": [
+          "kongReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "kongReplacement",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "kongReplacement",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 16,
+          "winnerTotal": 48
+        }
+      }
+    }
+  ]
+}

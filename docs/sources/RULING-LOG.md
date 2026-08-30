@@ -241,7 +241,7 @@ option `doubleSpecialHandPayout`, **default off**.
 "typically five points, though this has to be agreed among players" — default
 5, configurable. Both corroborated by `SMC`, `SGM`, `SS`.
 
-## R16 — The dealer keeps the deal on a washout *(needs owner confirmation)*
+## R16 — The dealer keeps the deal on a washout (ratified)
 
 **Ruling:** when a hand ends with nobody winning (荒牌), the deal does **not**
 pass — the same player deals again, and the round does not advance.
@@ -250,10 +250,44 @@ pass — the same player deals again, and the round does not advance.
 says what happens to the deal. This is the common Singapore convention and the
 one most tables play, so it is what `advanceTable` implements.
 
-**Flagged for the owner.** Some tables pass the deal on a washout instead. If
-that is how the owner's table plays, this is a one-line change in
-`src/engine/variants/singapore/table.ts` plus its test, and the owner's word
-becomes the citation the way it did for R12.
+**RATIFIED BY THE OWNER, 2026-08-30**: the dealer keeps the deal on a washout
+and the round holds, exactly as implemented. No longer provisional — the
+owner's ruling is the citation, and changing it requires the owner.
+
+## R17 — A circumstance point requires the circumstance
+
+**Ruling:** a flag that contradicts how the hand was won scores nothing, and
+the three seat hands require a hand nobody has claimed into.
+
+`TT` defines each of these by a moment, not merely by a name, and the engine
+was reading only the name:
+
+- 杠上 / 花上: 「he is considered to score a 'Winning on Replacement Tile'」 —
+  the replacement is *drawn* from the wall in every one of `TT`'s three
+  scenarios. A replacement tile cannot arrive on a discard. **Self-draw only.**
+- 抢杠: 「the player who performs the 'Kong' … will be the 'guilty' party who
+  is considered to have discarded that tile」. **Discard only.**
+- 天胡: 「the first player, as the dealer, wins the round on the first turn
+  (i.e. with the tiles given after dealing and flower/animal/kong … replacement
+  needed without draw card)」. **Dealer, self-draw, and no claimed meld** —
+  nobody has discarded yet, so nothing can have been claimed. `TT` explicitly
+  allows a kong out of the dealt tiles, so a **concealed kong does not break
+  it**.
+- 地胡: 「a non-dealer wins from the dealer's first discard. Scenario 2 whereby
+  a non-dealer wins upon drawing the first card in the game.」 **Non-dealer, no
+  claimed meld**, and — uniquely — `TT` gives it both a discard and a self-draw
+  scenario, so the win method is not restricted.
+- 人胡: 「a non-dealer wins by discard within the first go around of the game
+  before his/her first draw & **no exposed meld (except Concealed Kong) formed
+  by anyone**」. **Non-dealer, discard, no claimed meld** — and `TT` names the
+  concealed-kong exception itself.
+
+The submit wizard already filters most of these combinations out of what it
+offers. That is a convenience, not a guarantee: the engine is the authority.
+
+Hong Kong reaches the same place from its own sources — see HK23 in
+`RULING-LOG-HK.md` — with one difference `TT` forces: Singapore's 地胡 may be
+self-drawn and Hong Kong's 地糊 may not.
 
 ## R15 — Out of scope for Run 1
 
@@ -261,3 +295,17 @@ Deliberately not modelled, and not in the corpus: 七抢一 Robbing the Eighth,
 诈胡 fake-hand penalties, 小相公/大相公 short/long hand penalties, sacred and
 missed discard prohibitions, and the mid-game instant payouts' *doubling*
 before 补花. Instant payouts themselves (咬到 / 暗杠 events) **are** modelled.
+
+---
+
+## Hong Kong Old Style
+
+The Hong Kong rulings live in their own file, [`RULING-LOG-HK.md`](./RULING-LOG-HK.md)
+(HK1–HK22), against the reconciled research in
+[`hongkong-old-style-reconciliation.md`](./hongkong-old-style-reconciliation.md).
+They are kept separate because almost none of them interact with the Singapore
+ones: the two variants share a tile parser and a table module, and nothing else.
+
+Five HK rulings are flagged for the owner, the same way R12 and R16 were:
+**HK3** (10-faan cap), **HK4** (full vs half payment), **HK7** (washout),
+**HK9** (the six conflicted hand values), **HK13** (門前清 in flower play).

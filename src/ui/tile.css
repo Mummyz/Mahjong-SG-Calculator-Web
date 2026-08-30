@@ -94,15 +94,35 @@
 .tile__seat[data-own="true"] { background: var(--mj-jade); color: var(--mj-on-jade); }
 
 /* ── selected: the entire face inverts. The single most important pixel. ── */
-.tile[aria-pressed="true"] {
+/* data-held keeps the look when the tile is not a control — a recorded flower
+   is still recorded while a meld is being declared. */
+.tile[aria-pressed="true"],
+.tile[data-held="true"] {
   background: var(--mj-jade);
   color: var(--mj-on-jade);
   box-shadow: none;
 }
 .tile[aria-pressed="true"] .tile__mark,
 .tile[aria-pressed="true"] .tile__glyph,
-.tile[aria-pressed="true"] .tile__cap { color: var(--mj-on-jade); }
+.tile[aria-pressed="true"] .tile__cap,
+.tile[data-held="true"] .tile__glyph { color: var(--mj-on-jade); }
 .tile[aria-pressed="true"][data-h="P"]::after { box-shadow: inset 0 0 0 3px var(--mj-on-jade); }
+
+/* ── taken: part of the meld being declared. ────────────────────────────
+   Distinct from "selected", because during a declare a wall tile can be both
+   already held (jade, with a count badge) and tapped into the meld. Without
+   its own treatment the two are byte-identical and tapping does nothing
+   visible. The ink block is the strongest mark the palette has after jade. */
+.tile[data-taken="true"] {
+  background: var(--mj-ink);
+  color: var(--mj-on-ink);
+  box-shadow: inset 0 0 0 2px var(--mj-jade);
+}
+.tile[data-taken="true"] .tile__mark,
+.tile[data-taken="true"] .tile__glyph,
+.tile[data-taken="true"] .tile__cap { color: var(--mj-on-ink); }
+.tile[data-taken="true"] .tile__count { background: var(--mj-on-ink); color: var(--mj-ink); }
+.tile[data-taken="true"][data-h="P"]::after { box-shadow: inset 0 0 0 3px var(--mj-on-ink); }
 
 .tile__count {
   position: absolute; z-index: 1; top: 3px; right: 3px; min-width: 20px; height: 20px;

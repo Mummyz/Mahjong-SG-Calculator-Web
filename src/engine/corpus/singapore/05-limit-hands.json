@@ -1216,6 +1216,333 @@
       "opts": {
         "limit": 10
       }
+    },
+    {
+      "id": "sg-heavenly-003",
+      "title": "Heavenly Hand needs a hand nobody has claimed into",
+      "cite": "RULING R17. TT SS-Heavenly Hand: 'the first player, as the dealer, wins the round on the first turn (i.e. with the tiles given after dealing and flower/animal/kong ... replacement needed without draw card).'",
+      "hand": {
+        "concealed": "123m 456p 789s 55p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "C C C",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "1m",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      },
+      "note": "A claimed pung means somebody has discarded, so at least one turn has been played and the deal is over. The flag is discarded exactly as a wrong-seat flag already was."
+    },
+    {
+      "id": "sg-heavenly-004",
+      "title": "Heavenly Hand survives a concealed kong out of the dealt tiles",
+      "cite": "RULING R17. TT SS-Heavenly Hand: 'the first player, as the dealer, wins the round on the first turn (i.e. with the tiles given after dealing and flower/animal/kong ... replacement needed without draw card).'",
+      "hand": {
+        "concealed": "456p 789s 222m 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1m 1m 1m 1m",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "heavenly",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "heavenly",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "TT names the kong replacement inside its own definition of the hand, so a kong declared from the dealt tiles is part of what Heavenly Hand IS. Fifteen tiles for the kong."
+    },
+    {
+      "id": "sg-heavenly-005",
+      "title": "Heavenly Hand cannot be won on a discard",
+      "cite": "RULING R17. TT SS-Heavenly Hand: 'the first player, as the dealer, wins the round on the first turn (i.e. with the tiles given after dealing and flower/animal/kong ... replacement needed without draw card).'",
+      "hand": {
+        "concealed": "123m 456p 789s 55p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "C C C",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p",
+        "flags": [
+          "heavenly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      },
+      "note": "The dealer's fourteenth tile is dealt, not thrown."
+    },
+    {
+      "id": "sg-earthly-002",
+      "title": "Earthly Hand may be self-drawn — TT gives it two scenarios",
+      "cite": "RULING R17. TT SS-Earthly Hand: 'a non-dealer wins from the dealer's first discard. Scenario 2 whereby a non-dealer wins upon drawing the first card in the game.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "earthly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "earthly",
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "earthly",
+            5
+          ],
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 5,
+        "limitApplied": true,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      },
+      "note": "This is the one seat hand TT does NOT restrict to a discard: 'Scenario 2 whereby a non-dealer wins upon drawing the first card in the game.' Hong Kong's 地糊 has no such second scenario — see HK23."
+    },
+    {
+      "id": "sg-earthly-003",
+      "title": "Earthly Hand needs a hand nobody has claimed into",
+      "cite": "RULING R17. TT SS-Earthly Hand: 'a non-dealer wins from the dealer's first discard. Scenario 2 whereby a non-dealer wins upon drawing the first card in the game.'",
+      "hand": {
+        "concealed": "123m 456p 789s 55p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "C C C",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p",
+        "flags": [
+          "earthly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      },
+      "note": "Only the dealer's first discard has been thrown; a claimed pung means more than that has happened."
+    },
+    {
+      "id": "sg-humanly-002",
+      "title": "Humanly Hand survives a concealed kong, which TT says in as many words",
+      "cite": "RULING R17. TT SS-Humanly Hand: 'a non-dealer wins by discard within the first go around of the game before his/her first draw & no exposed meld (except Concealed Kong) formed by anyone.'",
+      "hand": {
+        "concealed": "456p 789s 222m 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1m 1m 1m 1m",
+            "open": false
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p",
+        "flags": [
+          "humanly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "humanly"
+        ],
+        "fan": [
+          [
+            "humanly",
+            5
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        }
+      },
+      "note": "'no exposed meld (except Concealed Kong) formed by anyone' — the exception is TT's, not an inference. No Fully Concealed here: R1 needs a self-draw and this is a discard win."
+    },
+    {
+      "id": "sg-humanly-003",
+      "title": "Humanly Hand cannot be self-drawn",
+      "cite": "RULING R17. TT SS-Humanly Hand: 'a non-dealer wins by discard within the first go around of the game before his/her first draw & no exposed meld (except Concealed Kong) formed by anyone.'",
+      "hand": {
+        "concealed": "123m 456p 789s 222m 55p",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m",
+        "flags": [
+          "humanly"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fullyConcealed"
+        ],
+        "fan": [
+          [
+            "fullyConcealed",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      },
+      "note": "TT: 'a non-dealer wins BY DISCARD within the first go around'."
     }
   ]
 }

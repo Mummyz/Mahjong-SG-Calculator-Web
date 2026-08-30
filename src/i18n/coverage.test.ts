@@ -13,15 +13,19 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import en from './en.json'
 
-const corpusDir = fileURLToPath(new URL('../engine/corpus/singapore/', import.meta.url))
-const files = readdirSync(corpusDir).filter((f) => f.endsWith('.json'))
+// Both corpora, because both variants ship. Between them they are the
+// exhaustive list of what the engine can emit.
+const corpusDirs = ['singapore', 'hongkong'].map((v) =>
+  fileURLToPath(new URL(`../engine/corpus/${v}/`, import.meta.url)))
+const files = corpusDirs.flatMap((d) =>
+  readdirSync(d).filter((f) => f.endsWith('.json')).map((f) => d + f))
 
 const patterns = new Set<string>()
 const reasons = new Set<string>()
 const instants = new Set<string>()
 
 for (const f of files) {
-  const doc = JSON.parse(readFileSync(corpusDir + f, 'utf8')) as {
+  const doc = JSON.parse(readFileSync(f, 'utf8')) as {
     entries: {
       expect: {
         patterns?: string[]
@@ -93,9 +97,8 @@ describe('i18n coverage', () => {
     const BONUS = ['F1', 'F2', 'F3', 'F4', 'S1', 'S2', 'S3', 'S4',
                    'cat', 'rat', 'rooster', 'centipede']
     const FLAGS = ['robbingKong', 'lastTile', 'kongReplacement', 'flowerReplacement',
-                   'heavenly', 'earthly', 'humanly', 'kongOnKong', 'pao',
-                   'disabled.dealerOnly', 'disabled.nonDealerOnly', 'disabled.needsTwoKongs']
-    const EXPLAINED = FLAGS.filter((f) => !f.startsWith('disabled.'))
+                   'heavenly', 'earthly', 'humanly', 'kongOnKong', 'pao']
+    const EXPLAINED = FLAGS
     const GROUPS = ['characters', 'dots', 'bamboo', 'winds', 'dragons',
                     'flowers', 'seasons', 'animals']
     const reachable = new Set<string>([
@@ -111,13 +114,31 @@ describe('i18n coverage', () => {
       ...BONUS.map((b) => `tile.bonus.${b}`),
       ...FLAGS.map((f) => `flag.${f}`),
       ...GROUPS.map((g) => `tileinfo.group.${g}`),
+      // Rendered through tv() or a variant id, not a literal.
+      'tileinfo.jokers.singapore', 'tileinfo.jokers.hongkong',
+      'table.payment.full', 'table.payment.half',
+      ...['singapore', 'hongkong'].flatMap((v) => [`variant.${v}.name`, `variant.${v}.blurb`]),
       ...['characters', 'dots', 'bamboo', 'honours', 'bonus'].map((x) => `hand.tab.${x}`),
       ...['Chow', 'Pong', 'Kong'].flatMap((k) => [
         `hand.declare${k}`, `hand.declare${k}Sub`, `hand.tag${k}`,
       ]),
       ...EXPLAINED.flatMap((f) => [`flag.${f}.sub`, `flag.${f}.detail`]),
     ])
-    const dead = [...keys].filter((k) => !src.includes(`'${k}'`) && !reachable.has(k))
+    // A key ending .singapore / .hongkong is reached through tv(), which
+    // falls back to the un-suffixed key — so the base key appearing in the
+    // source is what makes the variant-specific one live.
+    const VARIANTS = ['singapore', 'hongkong']
+    const live = (k: string): boolean => {
+      if (src.includes(`'${k}'`) || reachable.has(k)) return true
+      for (const v of VARIANTS) {
+        if (k.endsWith(`.${v}`)) {
+          const base = k.slice(0, -(v.length + 1))
+          if (src.includes(`'${base}'`) || reachable.has(base)) return true
+        }
+      }
+      return false
+    }
+    const dead = [...keys].filter((k) => !live(k))
     expect(dead, 'strings nothing renders').toEqual([])
   })
 
@@ -147,5 +168,19 @@ describe('i18n coverage', () => {
   it('found a non-trivial corpus to check against', () => {
     expect(patterns.size).toBeGreaterThan(25)
     expect(reasons.size).toBeGreaterThan(5)
+  })
+
+  it('names every pattern in the regional form each variant uses', () => {
+    // A .hongkong string is only safe if Singapore has an answer too: either
+    // an un-suffixed base that tv() falls back to, or its own .singapore
+    // sibling. Otherwise the Singapore screen renders a raw key.
+    for (const k of Object.keys(en)) {
+      if (!k.endsWith('.hongkong')) continue
+      const base = k.slice(0, -'.hongkong'.length)
+      expect(
+        keys.has(base) || keys.has(`${base}.singapore`),
+        `${k} leaves Singapore with no string for ${base}`,
+      ).toBe(true)
+    }
   })
 })

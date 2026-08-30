@@ -7,7 +7,7 @@
 
 import { useMemo, useState } from 'preact/hooks'
 import { t } from '../i18n'
-import { singapore } from '../engine/variants/singapore'
+import { VARIANTS, VARIANT_IDS, type VariantId } from '../engine/variants'
 import {
   ANIMALS, DRAGONS, FLOWERS, SEASONS, SUITS, WINDS, parseTiles, sortTiles,
   type BonusId, type TileId, type Wind,
@@ -62,6 +62,9 @@ export function DevHarness() {
   const [limit, setLimit] = useState(5)
   const [minTai, setMinTai] = useState(1)
   const [doubleSpecial, setDoubleSpecial] = useState(false)
+  const [variant, setVariant] = useState<VariantId>('singapore')
+  const [halfPayment, setHalfPayment] = useState(false)
+  const plugin = VARIANTS[variant]
 
   // Parse rather than split on spaces: "123m" is three tiles, not one.
   const handTiles = useMemo(() => {
@@ -78,21 +81,22 @@ export function DevHarness() {
       winningTile: winningTile || undefined,
       flags, pao,
     }
-    const opts = { limit, minTai, doubleSpecialHandPayout: doubleSpecial }
-    const r = singapore.score({ concealed, melds, bonus }, ctx, opts)
+    const opts = { limit, minTai, doubleSpecialHandPayout: doubleSpecial, halfPayment }
+    const r = plugin.score({ concealed, melds, bonus }, ctx, opts)
     return {
       result: r,
-      pay: singapore.payments(r, ctx, opts),
-      instant: singapore.instantPayouts!(bonus, seat),
+      pay: plugin.payments(r, ctx, opts),
+      instant: plugin.instantPayouts?.(bonus, seat) ?? [],
     }
-  }, [concealed, melds, bonus, seat, prevailing, win, winningTile, flags, pao,
-      limit, minTai, doubleSpecial])
+  }, [plugin, concealed, melds, bonus, seat, prevailing, win, winningTile, flags, pao,
+      limit, minTai, doubleSpecial, halfPayment])
 
   const others = WINDS.filter((w) => w !== seat)
   const loadExample = (e: Example) => {
     setConcealed(e.concealed); setMelds(e.melds); setBonus(e.bonus)
     setSeat(e.seat); setPrevailing(e.prevailing); setWin(e.win)
     setWinningTile(e.winningTile); setFlags([]); setPao(false)
+    setVariant('singapore'); setHalfPayment(false)
     setLimit(5); setMinTai(1); setDoubleSpecial(false)
     setDiscarder(e.seat === 'S' ? 'W' : 'S')
   }
@@ -124,10 +128,28 @@ export function DevHarness() {
 
       <section>
         <h2>{t('harness.variant')}</h2>
-        <div>
-          {t('variant.singapore.name')}{' '}
-          <span class="pill">{t('variant.tiles', { count: singapore.tileSet.total })}</span>
+        <div class="chips">
+          {VARIANT_IDS.map((v) => (
+            <button class="act" key={v} aria-pressed={variant === v ? 'true' : 'false'}
+              onClick={() => {
+                setVariant(v)
+                // Each variant's own agreed-before-play defaults, so switching
+                // does not silently score Hong Kong at Singapore's limit.
+                setLimit(VARIANTS[v].defaults.limit)
+                setMinTai(VARIANTS[v].defaults.minTai)
+              }}>
+              {t(`variant.${v}.name`)}{' '}
+              <span class="pill">{t('variant.tiles', { count: VARIANTS[v].tileSet.total })}</span>
+            </button>
+          ))}
         </div>
+        {variant === 'hongkong' && (
+          <label class="row">
+            <input type="checkbox" checked={halfPayment}
+              onChange={(e) => setHalfPayment((e.target as HTMLInputElement).checked)} />
+            {t('table.payment.half')}
+          </label>
+        )}
       </section>
 
       <section>

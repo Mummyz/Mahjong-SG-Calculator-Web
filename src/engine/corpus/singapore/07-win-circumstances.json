@@ -654,6 +654,147 @@
           "winnerTotal": 12
         }
       }
+    },
+    {
+      "id": "sg-circ-016",
+      "title": "A kong replacement win cannot arrive on a discard",
+      "cite": "RULING R17. TT SS-Winning on Replacement Tile: the replacement is DRAWN from the wall in all three of TT's scenarios ('drawing a Replacement Tile For Kong').",
+      "hand": {
+        "concealed": "123m 456p 789s 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "C C C C",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m",
+        "flags": [
+          "kongReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      },
+      "note": "Fifteen tiles for the kong. Without the guard the flag paid a point for an event that cannot happen."
+    },
+    {
+      "id": "sg-circ-017",
+      "title": "A flower replacement win cannot arrive on a discard either",
+      "cite": "RULING R17. TT SS-Winning on Replacement Tile: the replacement is DRAWN from the wall in all three of TT's scenarios ('drawing a Replacement Tile For Kong').",
+      "hand": {
+        "concealed": "123m 456p 789s 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "C C C C",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p",
+        "flags": [
+          "flowerReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 1,
+          "winnerTotal": 4
+        }
+      },
+      "note": ""
+    },
+    {
+      "id": "sg-circ-018",
+      "title": "Robbing the Kong cannot be self-drawn",
+      "cite": "RULING R17. TT SS-Instant payment Note 1.1: on a Robbing the Kong 'the player who performs the Kong ... will be the guilty party who is considered to have discarded that tile'.",
+      "hand": {
+        "concealed": "123m 456p 789s 55p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "C C C",
+            "open": true
+          }
+        ],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "7s",
+        "flags": [
+          "robbingKong"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 1,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        }
+      },
+      "note": "The robbed tile belongs to the player who declared the kong; TT makes them the discarder."
     }
   ]
 }

@@ -2,18 +2,23 @@
  * The table session: who deals, which wind each player is sitting on, and how
  * that changes between hands.
  *
- * This is variant-owned because the rotation rule is a variant rule — in
- * Singapore the dealer keeps the deal when they win, and the prevailing wind
- * only advances once the deal has been all the way round the table.
+ * Rotation is a variant rule, and the two variants in the FINAL LINEUP happen
+ * to agree on every part of it — the dealer keeps the deal by winning and
+ * keeps it on a washout, and the prevailing wind advances only once the deal
+ * has been all the way round the table. Singapore RULING R16; Hong Kong
+ * RULINGS HK6 and HK7, which was chosen to match so that one table module
+ * serves both. If a third variant ever disagreed this would move behind the
+ * plugin interface; today that would overstate how much they differ.
  *
- * It also owns turning a keyed hand into engine input, because what counts as
- * a concealed kong is a variant question too.
+ * Scoring a keyed hand IS variant-dependent, so `scoreKeyedHand` takes the
+ * plugin. Everything else here is tiles and seats.
  */
 
-import { WINDS, tally, type TileId, type Wind } from '../../core/tiles'
-import type { HandInput, MeldInput } from '../../core/hand'
-import type { RuleOptions, ScoreResult, WinContext } from '../../core/variant'
-import { score } from './score'
+import { WINDS, tally, type TileId, type Wind } from '../core/tiles'
+import type { HandInput, MeldInput } from '../core/hand'
+import type {
+  RuleOptions, ScoreOk, ScoreRejected, ScoreResult, VariantPlugin, WinContext,
+} from '../core/variant'
 
 export interface TableState {
   /** Four names in seating order. The deal passes along this order. */
@@ -96,13 +101,22 @@ export const concealedKongs = (concealed: readonly TileId[]): TileId[] =>
  *
  * Fourteen, plus one for every kong — a kong is four tiles doing the work of
  * three, and the replacement tile makes up the difference.
+ *
+ * `max` reads every tile held four times over as a concealed kong; `min`
+ * reads none of them as one. Both are real hands: 1p2p3p four times over
+ * holds three tiles four times and is a complete fourteen-tile hand with no
+ * kong in it at all. The UI must not assert either reading before the hand is
+ * the size that settles it.
  */
-export function concealedTarget(hand: KeyedHand): number {
+export function concealedTargets(hand: KeyedHand): { min: number; max: number } {
   const meldTiles = hand.melds.reduce((n, m) => n + m.tiles.trim().split(/\s+/).length, 0)
   const exposedKongs = hand.melds.filter((m) => m.t === 'kong').length
-  const auto = concealedKongs(hand.concealed).length
-  return 14 + exposedKongs + auto - meldTiles
+  const min = 14 + exposedKongs - meldTiles
+  return { min, max: min + concealedKongs(hand.concealed).length }
 }
+
+/** The larger of the two readings — what a tap is allowed to grow the hand to. */
+export const concealedTarget = (hand: KeyedHand): number => concealedTargets(hand).max
 
 /**
  * Every reading of a keyed hand worth handing to the engine.
@@ -229,22 +243,96 @@ export function buildMeld(kind: MeldKind, chosen: readonly TileId[]): MeldInput 
 
 /**
  * Score a keyed hand, trying every reading `composeHands` offers and keeping
- * the best. When none of them wins, the first reading's rejection is the one
- * reported, because that is the hand the player thinks they keyed.
+ * the best.
+ *
+ * When none of them wins, the rejection reported is the most informative one.
+ * `composeHands` puts the konged reading first, and for a fourteen-tile hand
+ * that holds four of something the konged reading is one tile short — so
+ * reporting it verbatim told a player with fourteen tiles that they needed
+ * fourteen tiles. A rejection that is about the tile COUNT is only worth
+ * showing when no reading got past the count.
  */
 export function scoreKeyedHand(
+  plugin: VariantPlugin,
   hand: KeyedHand,
   ctx: WinContext,
   opts?: Partial<RuleOptions>,
 ): { result: ScoreResult; input: HandInput } {
   const inputs = composeHands(hand)
-  let best: { result: ScoreResult; input: HandInput } | null = null
+  let best: { result: ScoreOk; input: HandInput } | null = null
+  let rejected: { result: ScoreRejected; input: HandInput } | null = null
+
   for (const input of inputs) {
-    const result = score(input, ctx, opts)
-    if (!result.valid) { best ??= { result, input }; continue }
-    if (!best || !best.result.valid || result.totalTai > best.result.totalTai) {
-      best = { result, input }
+    const result = plugin.score(input, ctx, opts)
+    if (!result.valid) {
+      if (rejected === null || rejected.result.reason === 'wrongTileCount') {
+        rejected = { result, input }
+      }
+      continue
     }
+    if (!best || result.totalTai > best.result.totalTai) best = { result, input }
   }
-  return best ?? { result: score(inputs[0]!, ctx, opts), input: inputs[0]! }
+  return best ?? rejected ?? { result: plugin.score(inputs[0]!, ctx, opts), input: inputs[0]! }
+}
+
+// ─── submitting a hand ───────────────────────────────────────────────────
+
+/**
+ * How the hand was won. Collected at submit time, never earlier: the win
+ * context is only meaningful once the tiles are proven complete.
+ */
+export interface WinSubmission {
+  readonly winningTile: TileId
+  readonly win: 'selfDraw' | 'discard'
+  /** Index of the player who threw it; null on a self-draw. */
+  readonly discarderIndex: number | null
+  readonly flags: readonly string[]
+  readonly pao: boolean
+}
+
+/** Is the keyed hand the right size to be a winning hand? */
+export function handIsComplete(hand: KeyedHand): boolean {
+  const { min, max } = concealedTargets(hand)
+  if (min < 2) return false
+  // Four of a tile is nearly always a concealed kong, but an irregular hand
+  // can hold four with no meld at all, so the shorter reading counts too.
+  return hand.concealed.length === max || hand.concealed.length === min
+}
+
+/**
+ * Do these tiles make a hand at all?
+ *
+ * The size check above is about counting; this is about whether the engine can
+ * read the tiles as four sets and a pair, or as one of the irregular hands.
+ * It needs no win context, so the player can be told before the submit wizard
+ * rather than after it — mis-keying one of fourteen taps is the likeliest
+ * mistake at a table, and walking someone through two wizard steps to reach
+ * "these are not a hand" throws their answers away for nothing.
+ */
+export function handIsReadable(plugin: VariantPlugin, hand: KeyedHand): boolean {
+  if (!handIsComplete(hand)) return false
+  // The seat and the win method are not known yet and do not matter: this
+  // asks about structure. A hand that is merely below the minimum HAS a
+  // structure, and the player should be told that after scoring rather than
+  // be stopped from scoring at all.
+  const ctx: WinContext = { seat: 'E', prevailing: 'E', win: 'selfDraw' }
+  for (const input of composeHands(hand)) {
+    const r = plugin.score(input, ctx)
+    if (r.valid || r.reason === 'belowMinimum') return true
+  }
+  return false
+}
+
+/**
+ * Does a submission still describe the hand in front of us?
+ *
+ * This is the guard against the Run 2B bug class: a winning tile chosen while
+ * the hand was complete, then left behind when a tile was undone. Any change
+ * that removes the winning tile from the hand invalidates the whole
+ * submission, so no stale win context can survive an edit.
+ */
+export function submissionMatchesHand(hand: KeyedHand, sub: WinSubmission | null): boolean {
+  if (sub === null) return false
+  if (!handIsComplete(hand)) return false
+  return hand.concealed.includes(sub.winningTile)
 }

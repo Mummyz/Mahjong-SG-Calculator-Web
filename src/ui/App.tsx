@@ -1,31 +1,46 @@
 import { useEffect, useRef, useState } from 'preact/hooks'
-import { t } from '../i18n'
+import { t, tv } from '../i18n'
 import { VariantSelect } from './screens/VariantSelect'
 import { TileInfo } from './screens/TileInfo'
 import { TableSetup, type Money } from './screens/TableSetup'
 import { HandEntry, EMPTY_HAND, type HandState } from './screens/HandEntry'
 import { Results } from './screens/Results'
 import { Sheet } from './components/Sheet'
+import { SubmitWizard } from './components/SubmitWizard'
 import {
-  advanceTable, newTable, yourSeat, type TableState,
-} from '../engine/variants/singapore/table'
+  advanceTable, concealedKongs, newTable, submissionMatchesHand, yourSeat,
+  type TableState, type WinSubmission,
+} from '../engine/session/table'
+import type { WinFlag } from '../engine/core/variant'
+import { VARIANTS, isVariantId, type VariantId } from '../engine/variants'
 import './app.css'
 import './tile.css'
 
 type Screen = 'variant' | 'tileinfo' | 'setup' | 'hand' | 'result'
 const SCREENS: Screen[] = ['variant', 'tileinfo', 'setup', 'hand', 'result']
 
-const DEFAULT_MONEY: Money = { stake: 0.5, limit: 5 }
+/**
+ * Opening money settings per variant. The limit is each variant's own default
+ * ruling — Singapore R14, Hong Kong HK3 — and the stake is scaled to the size
+ * of that variant's published points table, so a hand costs a plausible amount
+ * before anyone touches the settings.
+ */
+const DEFAULT_MONEY: Record<VariantId, Money> = {
+  singapore: { stake: 0.5, limit: VARIANTS.singapore.defaults.limit, halfPayment: false },
+  hongkong: { stake: 0.1, limit: VARIANTS.hongkong.defaults.limit, halfPayment: false },
+}
 const defaultTable = (): TableState =>
   newTable([1, 2, 3, 4].map((n) => t('table.playerN', { n })), 0, 0)
 
 interface Saved {
   /** False until the player has been through setup for this table. */
   started: boolean
+  variant: VariantId
   screen: Screen
   table: TableState
   money: Money
   hand: HandState
+  submission: WinSubmission | null
   infoOrigin: Screen
   setupOrigin: Screen
 }
@@ -47,6 +62,8 @@ const restore = (): Saved | null => {
     if (!v.money || !v.hand || !Array.isArray(v.hand.concealed) || !Array.isArray(v.hand.log)) {
       return null
     }
+    if (!isVariantId(v.variant)) return null
+    if (typeof v.money.halfPayment !== 'boolean') return null
     return v as Saved
   } catch {
     return null
@@ -56,14 +73,22 @@ const restore = (): Saved | null => {
 export function App() {
   const saved = restore()
   const [screen, setScreenState] = useState<Screen>(saved?.screen ?? 'variant')
+  const [variant, setVariant] = useState<VariantId>(saved?.variant ?? 'singapore')
   const [table, setTable] = useState<TableState>(saved?.table ?? defaultTable())
-  const [money, setMoney] = useState<Money>(saved?.money ?? DEFAULT_MONEY)
+  const [money, setMoney] = useState<Money>(saved?.money ?? DEFAULT_MONEY.singapore)
   const [hand, setHandState] = useState<HandState>(saved?.hand ?? EMPTY_HAND)
   const [infoOrigin, setInfoOrigin] = useState<Screen>(saved?.infoOrigin ?? 'variant')
   const [setupOrigin, setSetupOrigin] = useState<Screen>(saved?.setupOrigin ?? 'tileinfo')
   const [menu, setMenu] = useState(false)
   const [whoWon, setWhoWon] = useState(false)
   const [confirmNew, setConfirmNew] = useState(false)
+  /** Which who-won row is armed. advanceTable has no inverse, so it is armed. */
+  const [confirmPass, setConfirmPass] = useState<number | 'washout' | null>(null)
+  const [wizard, setWizard] = useState(false)
+  const wizardRef = useRef(false)
+  wizardRef.current = wizard
+  const [submission, setSubmission] = useState<WinSubmission | null>(saved?.submission ?? null)
+  const [explain, setExplain] = useState<WinFlag | 'pao' | null>(null)
   const [started, setStarted] = useState(saved?.started ?? false)
 
   const go = (next: Screen, replace = false) => {
@@ -80,6 +105,14 @@ export function App() {
   useEffect(() => {
     try { history.replaceState({ screen }, '') } catch { /* ignore */ }
     const onPop = (e: PopStateEvent) => {
+      // Back closes the wizard first: it is a layer over hand entry, and
+      // leaving the screen underneath it open would reopen it on the way
+      // forward again.
+      if (wizardRef.current) {
+        setWizard(false)
+        try { history.pushState({ screen: 'hand' }, '') } catch { /* ignore */ }
+        return
+      }
       const s = (e.state as { screen?: Screen } | null)?.screen
       if (!s) return
       // Back must never walk into a hand belonging to a table that was cleared.
@@ -96,22 +129,46 @@ export function App() {
   useEffect(() => {
     try {
       localStorage.setItem(KEY,
-        JSON.stringify({ started, screen, table, money, hand, infoOrigin, setupOrigin }))
+        JSON.stringify({
+          started, variant, screen, table, money, hand, submission, infoOrigin, setupOrigin,
+        }))
     } catch { /* private mode, quota — the app works, it just forgets */ }
-  }, [started, screen, table, money, hand, infoOrigin, setupOrigin])
+  }, [started, variant, screen, table, money, hand, submission, infoOrigin, setupOrigin])
 
   const patchTable = (p: Partial<TableState>) => setTable((s) => ({ ...s, ...p }))
   const patchMoney = (p: Partial<Money>) => setMoney((s) => ({ ...s, ...p }))
-  const patchHand = (p: Partial<HandState>) => setHandState((s) => ({ ...s, ...p }))
+  const patchHand = (p: Partial<HandState>) => {
+    // Any change to the tiles throws away the win context. This is the guard
+    // against the Run 2B bug class — see submissionMatchesHand.
+    setSubmission(null)
+    setHandState((s) => ({ ...s, ...p }))
+  }
 
-  const closeMenu = () => { setMenu(false); setWhoWon(false); setConfirmNew(false) }
+  const closeMenu = () => {
+    setMenu(false); setWhoWon(false); setConfirmNew(false); setConfirmPass(null)
+  }
 
   /** Move the table on without scoring — someone else won, or nobody did. */
   const passHand = (winnerIndex: number | null) => {
     setTable((s) => advanceTable(s, winnerIndex))
-    setHandState(EMPTY_HAND)
+    setHandState(EMPTY_HAND); setSubmission(null)
     closeMenu()
     go('hand', true)
+  }
+
+  /**
+   * Moving the deal on throws away a hand that took a couple of dozen taps and
+   * rotates seats that cannot be rotated back — TableSetup locks the dealer
+   * once the table has started. Every cheaper destructive action in the app
+   * already asks twice; this is the expensive one.
+   */
+  const arm = (who: number | 'washout') => {
+    if (confirmPass !== who) {
+      setConfirmPass(who)
+      window.setTimeout(() => setConfirmPass(null), 4000)
+      return
+    }
+    passHand(who === 'washout' ? null : who)
   }
 
   const menuSheet = menu && (
@@ -119,14 +176,24 @@ export function App() {
       {whoWon ? (
         <div class="menulist">
           {table.players.map((_, i) => i).filter((i) => i !== table.youIndex).map((i) => (
-            <button type="button" class="menuitem" key={i} onClick={() => passHand(i)}>
+            <button type="button" class="menuitem" key={i}
+              aria-pressed={confirmPass === i ? 'true' : 'false'}
+              onClick={() => arm(i)}>
               <span class="menuitem__k">
                 {table.players[i] || t('table.playerN', { n: i + 1 })}
               </span>
+              {confirmPass === i && (
+                <span class="menuitem__s">{t('hand.whoWonConfirm')}</span>
+              )}
             </button>
           ))}
-          <button type="button" class="menuitem" onClick={() => passHand(null)}>
+          <button type="button" class="menuitem"
+            aria-pressed={confirmPass === 'washout' ? 'true' : 'false'}
+            onClick={() => arm('washout')}>
             <span class="menuitem__k">{t('menu.washout')}</span>
+            {confirmPass === 'washout' && (
+              <span class="menuitem__s">{t('hand.whoWonConfirm')}</span>
+            )}
           </button>
         </div>
       ) : (
@@ -154,8 +221,9 @@ export function App() {
                 return
               }
               try { localStorage.removeItem(KEY) } catch { /* ignore */ }
-              setTable(defaultTable()); setMoney(DEFAULT_MONEY); setHandState(EMPTY_HAND)
-              setStarted(false); closeMenu(); go('variant', true)
+              setTable(defaultTable()); setMoney(DEFAULT_MONEY.singapore)
+              setHandState(EMPTY_HAND)
+              setSubmission(null); setStarted(false); closeMenu(); go('variant', true)
             }}>
             <span class="menuitem__k">
               {confirmNew ? t('menu.newTableConfirm') : t('menu.newTable')}
@@ -169,11 +237,18 @@ export function App() {
 
   switch (screen) {
     case 'variant':
-      return <VariantSelect onPick={() => { setInfoOrigin('variant'); go('tileinfo') }} />
+      return (
+        <VariantSelect onPick={(v) => {
+          // Picking a variant starts that variant's session: its own tile set,
+          // its own limit, its own money. Nothing carries over from the other.
+          if (v !== variant) { setMoney(DEFAULT_MONEY[v]); setHandState(EMPTY_HAND) }
+          setVariant(v); setInfoOrigin('variant'); go('tileinfo')
+        }} />
+      )
 
     case 'tileinfo':
       return (
-        <TileInfo seat={yourSeat(table)} fromHand={infoOrigin === 'hand'}
+        <TileInfo variant={variant} seat={yourSeat(table)} fromHand={infoOrigin === 'hand'}
           onBack={() => go(infoOrigin)}
           onContinue={() => {
             if (infoOrigin === 'hand') { go('hand'); return }
@@ -183,24 +258,54 @@ export function App() {
 
     case 'setup':
       return (
-        <TableSetup table={table} money={money} onTable={patchTable} onMoney={patchMoney}
-          firstRun={setupOrigin !== 'hand'}
+        <TableSetup variant={variant} table={table} money={money}
+          onTable={patchTable} onMoney={patchMoney}
+          firstRun={!started}
           onDone={() => { setStarted(true); go('hand') }} />
       )
 
     case 'hand':
       return (
         <>
-          <HandEntry table={table} stake={money.stake} limit={money.limit}
+          <HandEntry variant={variant} table={table} stake={money.stake} limit={money.limit}
             hand={hand} setHand={patchHand}
-            onMenu={() => setMenu(true)} onScore={() => go('result')} />
+            onMenu={() => setMenu(true)}
+            onScore={() => {
+              setWizard(true)
+              try { history.pushState({ screen: 'hand' }, '') } catch { /* ignore */ }
+            }} />
           {menuSheet}
+          {wizard && (
+            <SubmitWizard variant={variant} table={table}
+              // Every concealed tile, not a filtered subset. Stripping the
+              // tiles held four times over hid the winning tile itself on
+              // hands like Nine Gates, and the engine's own guard is only
+              // `concealed.includes(winningTile)`.
+              loose={hand.concealed} melds={hand.melds}
+              kongCount={hand.melds.filter((m) => m.t === 'kong').length
+                + concealedKongs(hand.concealed).length}
+              onCancel={() => setWizard(false)}
+              onExplain={setExplain}
+              onSubmit={(s) => { setSubmission(s); setWizard(false); go('result') }} />
+          )}
+          {explain && (
+            <Sheet title={t(`flag.${explain}`)} onClose={() => setExplain(null)}>
+              {/* The explainers are variant rules, not general facts: Singapore
+                  refuses the last-tile point off a replacement (TT) and Hong
+                  Kong pays it (HK22). tv() picks the right one. */}
+              <p>{tv(variant, `flag.${explain}.detail`)}</p>
+            </Sheet>
+          )}
         </>
       )
 
     case 'result':
+      // A submission that no longer describes the hand is not shown at all.
+      if (!submissionMatchesHand(hand, submission)) { go('hand', true); return null }
       return (
-        <Results table={table} stake={money.stake} limit={money.limit} hand={hand}
+        <Results variant={variant} table={table} stake={money.stake} limit={money.limit}
+          halfPayment={money.halfPayment} hand={hand}
+          submission={submission!}
           onEdit={() => go('hand')}
           onNext={() => {
             // You are the winner of the hand you just scored, so the table

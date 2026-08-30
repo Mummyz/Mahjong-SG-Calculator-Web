@@ -2,16 +2,18 @@ import { t } from '../../i18n'
 import { formatStake } from '../format'
 import {
   isDealer, prevailingWind, yourSeat, type TableState,
-} from '../../engine/variants/singapore/table'
+} from '../../engine/session/table'
 
 const WIND_GLYPH: Record<string, string> = { E: '東', S: '南', W: '西', N: '北' }
 
 /** Always on screen: which hand, which round, which wind you are, and the money. */
-export function Signboard({ table, stake, limit, onMenu }: {
+export function Signboard({ table, stake, limit, onMenu, disabled }: {
   table: TableState
   stake: number
   limit: number
   onMenu: () => void
+  /** Focus mode: a meld is being declared and nothing else responds. */
+  disabled?: boolean
 }) {
   const round = prevailingWind(table)
   const seat = yourSeat(table)
@@ -39,7 +41,7 @@ export function Signboard({ table, stake, limit, onMenu }: {
           stake: formatStake(stake), limit,
         })}</span>
       </div>
-      <button type="button" class="signboard__info" onClick={onMenu}
+      <button type="button" class="signboard__info" onClick={onMenu} disabled={disabled}
         aria-label={t('signboard.menu')}>⋯</button>
     </div>
   )

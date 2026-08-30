@@ -1,0 +1,838 @@
+{
+  "description": "番子 dragon triplets and the two named dragon hands, which the sources write as sums rather than as lookups",
+  "entries": [
+    {
+      "id": "hk-drag-01",
+      "title": "One dragon triplet",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「凡擁有一副由紅中、發財、白板組成的刻子即加算一番」 · Family B mahjong.wikidot Hong Kong Old Style · Family C 香港麻雀協會 official rules 「三元牌 紅中、發財、白板的坎子」 · Family E English Wikipedia, Old Hong Kong",
+      "hand": {
+        "concealed": "123m 456m 789p 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-drag-02",
+      "title": "Two dragon triplets, no dragon pair — no 小三元",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「小三元本身計三番，再加兩番三元牌刻子的番數」",
+      "note": "小三元 needs the third dragon as the eye. Here the eye is 5s, so only the two triplets score.",
+      "hand": {
+        "concealed": "123m 456m 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 0,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "hk-drag-03",
+      "title": "小三元 Small Dragons — Family A's printed 5, reached as 3 + 1 + 1",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「小三元本身計三番，再加兩番三元牌刻子的番數，為方便計算直接寫成五番」 · Family C 香港麻雀協會 official rules 「小三元…另外加計三元牌，實為五番。」",
+      "note": "Characters and dots, so no 混一色 muddies the arithmetic: the printed 5 is exactly 3 + 1 + 1.",
+      "hand": {
+        "concealed": "123m 456p PP",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallThreeDragons",
+          "dragonTriplet",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "smallThreeDragons",
+            3
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 0,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "hk-drag-04",
+      "title": "大三元 Great Dragons — Family A's printed 8, reached as 5 + 1 + 1 + 1",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「大三元本身計五番，再加三番三元牌刻子的番數，為方便計算直接寫成八番」 · Family C 香港麻雀協會 official rules 「大三元 有三個坎/槓的三元牌，另外加計三元牌，實為八番。」 · Family B mahjong.wikidot Hong Kong Old Style \"Big Three Dragons | 8\"",
+      "hand": {
+        "concealed": "123m 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "PPP",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigThreeDragons",
+          "dragonTriplet",
+          "dragonTriplet",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigThreeDragons",
+            5
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-drag-05",
+      "title": "大三元 with 對對糊 and 混一色 — over the cap",
+      "cite": "RULING HK8/HK3 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "17 raw faan clipped to 10. 大三元 is not 例牌, so everything composes.",
+      "hand": {
+        "concealed": "111m 55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "PPP",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigThreeDragons",
+          "dragonTriplet",
+          "dragonTriplet",
+          "dragonTriplet",
+          "allTriplets",
+          "halfFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigThreeDragons",
+            5
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-drag-06",
+      "title": "小三元 with 混一色",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "Characters plus honours only, so the flush counts alongside the dragon hand.",
+      "hand": {
+        "concealed": "123m 456m PP",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallThreeDragons",
+          "dragonTriplet",
+          "dragonTriplet",
+          "halfFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "smallThreeDragons",
+            3
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-drag-07",
+      "title": "A dragon kong counts as a dragon triplet",
+      "cite": "RULING HK8a · Family C 香港麻雀協會 official rules 「三元牌 紅中、發財、白板的坎子」",
+      "hand": {
+        "concealed": "123m 456m 789p 55s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "CCCC",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-drag-08",
+      "title": "大三元 with one dragon set held as a kong",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "123m 55s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "CCCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "PPP",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigThreeDragons",
+          "dragonTriplet",
+          "dragonTriplet",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigThreeDragons",
+            5
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-drag-09",
+      "title": "A dragon pair alone scores nothing",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "456m 789m 234p CC",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-drag-10",
+      "title": "小三元 self-drawn and fully concealed",
+      "cite": "RULING HK8/HK12 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "CCC FFF 123m 456p PP"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "P"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallThreeDragons",
+          "dragonTriplet",
+          "dragonTriplet",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "smallThreeDragons",
+            3
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 32,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-drag-11",
+      "title": "大三元 self-drawn — over the cap on circumstances alone",
+      "cite": "RULING HK8/HK3 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "CCC FFF PPP 123m 55s"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigThreeDragons",
+          "dragonTriplet",
+          "dragonTriplet",
+          "dragonTriplet",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigThreeDragons",
+            5
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-drag-12",
+      "title": "大三元 under a thirteen-faan cap",
+      "cite": "RULING HK3 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「十三番例牌」",
+      "note": "9 faan, under the raised cap — nothing is clipped, so the composed 8 is visible in full.",
+      "hand": {
+        "concealed": "123m 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "PPP",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigThreeDragons",
+          "dragonTriplet",
+          "dragonTriplet",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigThreeDragons",
+            5
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-drag-13",
+      "title": "Two dragon triplets and a dragon pair, with the pair claimed as the win",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "Same hand as hk-drag-03 won on the eye instead. Hong Kong attaches no wait condition to anything.",
+      "hand": {
+        "concealed": "123m 456p PP",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "FFF",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "P"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallThreeDragons",
+          "dragonTriplet",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "smallThreeDragons",
+            3
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 0,
+          "winnerTotal": 32
+        }
+      }
+    }
+  ]
+}

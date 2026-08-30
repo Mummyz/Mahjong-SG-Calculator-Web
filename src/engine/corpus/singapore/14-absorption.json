@@ -295,8 +295,8 @@
     },
     {
       "id": "sg-absorb-007",
-      "title": "Robbing the Kong on a kong replacement suppresses only the last-tile point",
-      "cite": "TT SS-Winning on the Last Available Tile Note 1: the last tile drawn as a replacement is not Hai Di Lao Yue.",
+      "title": "A kong replacement suppresses the last-tile point but not the rest",
+      "cite": "TT SS-Winning on the Last Available Tile Note 1: the last tile drawn as a replacement is not Hai Di Lao Yue. RULING R17: the replacement is DRAWN, so this is a self-draw.",
       "hand": {
         "concealed": "CCC 123m 456p 789s 99m",
         "melds": [],
@@ -305,10 +305,9 @@
       "ctx": {
         "seat": "E",
         "prevailing": "E",
-        "win": "discard",
+        "win": "selfDraw",
         "winningTile": "1m",
         "flags": [
-          "robbingKong",
           "lastTile",
           "kongReplacement"
         ]
@@ -317,7 +316,7 @@
         "valid": true,
         "patterns": [
           "dragonTriplet",
-          "robbingKong",
+          "fullyConcealed",
           "kongReplacement"
         ],
         "fan": [
@@ -326,7 +325,7 @@
             1
           ],
           [
-            "robbingKong",
+            "fullyConcealed",
             1
           ],
           [
@@ -339,11 +338,64 @@
         "limitApplied": false,
         "base": 4,
         "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 8,
+          "winnerTotal": 24
+        }
+      },
+      "note": "This entry previously flagged the same win as both Robbing the Kong and a kong replacement. RULING R17 shows that hand cannot exist: TT makes the robbed kong's declarer the discarder, and TT's replacement tile is drawn from the wall. The suppression this entry was written to prove is unchanged and is tested here on a fixture that can occur at a table; the discard half moved to sg-absorb-007b."
+    },
+    {
+      "id": "sg-absorb-007b",
+      "title": "Robbing the Kong on the last tile — both points score",
+      "cite": "TT SS-Robbing the Kong, and SS-Winning on the Last Available Tile Note 1, whose only exclusion is a tile that arrived as a replacement.",
+      "hand": {
+        "concealed": "CCC 123m 456p 789s 99m",
+        "melds": [],
+        "bonus": []
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m",
+        "flags": [
+          "robbingKong",
+          "lastTile"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "dragonTriplet",
+          "robbingKong",
+          "lastTile"
+        ],
+        "fan": [
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "robbingKong",
+            1
+          ],
+          [
+            "lastTile",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
           "fromDiscarder": 8,
           "fromEachOther": 4,
           "winnerTotal": 16
         }
-      }
+      },
+      "note": "No replacement tile is involved, so Note 1's exclusion does not bite. Fully Concealed does not apply either: R1 needs a self-draw."
     }
   ]
 }

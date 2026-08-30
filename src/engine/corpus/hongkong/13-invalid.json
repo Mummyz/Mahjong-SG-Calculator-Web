@@ -1,0 +1,369 @@
+{
+  "description": "Hands the engine must REFUSE, and the exact reason it must give",
+  "entries": [
+    {
+      "id": "hk-bad-01",
+      "title": "A tile that is not in any set",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種",
+      "hand": {
+        "concealed": "333m 555p 777s 9X 9s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "unknownTile"
+      }
+    },
+    {
+      "id": "hk-bad-02",
+      "title": "A flower keyed into the hand instead of the flower tray",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「如果唔打花牌，噉洗牌前就抽起兩臺花先」",
+      "hand": {
+        "concealed": "333m 555p 777s F1 9s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "bonusTileInHand"
+      }
+    },
+    {
+      "id": "hk-bad-03",
+      "title": "The same flower claimed twice",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1",
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "duplicateBonusTile"
+      }
+    },
+    {
+      "id": "hk-bad-04",
+      "title": "An animal tile — Hong Kong Old Style has none",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「標準嘅香港蔴雀會使用上述144隻牌。」 · Family E English Wikipedia, Old Hong Kong \"In Singapore and Malaysia an extra set of bonus tiles of four animals are used.\"",
+      "note": "The core parser accepts animals because Singapore has them; the Hong Kong plugin must refuse them, or the 148-tile set leaks into a 144-tile game.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "cat"
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "tileNotInSet"
+      }
+    },
+    {
+      "id": "hk-bad-05",
+      "title": "All four animals",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family E English Wikipedia, Old Hong Kong",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "cat",
+          "rat",
+          "rooster",
+          "centipede"
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "tileNotInSet"
+      }
+    },
+    {
+      "id": "hk-bad-06",
+      "title": "A fifth copy of a tile",
+      "cite": "RULING HK1 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 144 tiles, four of each",
+      "hand": {
+        "concealed": "1111m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "tileCountExceeded"
+      }
+    },
+    {
+      "id": "hk-bad-07",
+      "title": "A chow that is not three consecutive tiles",
+      "cite": "RULING HK1 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "135m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "malformedMeld"
+      }
+    },
+    {
+      "id": "hk-bad-08",
+      "title": "A pung of three different tiles",
+      "cite": "RULING HK1 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "malformedMeld"
+      }
+    },
+    {
+      "id": "hk-bad-09",
+      "title": "Thirteen tiles is not a winning hand",
+      "cite": "RULING HK1 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "333m 555p 777s 9s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "wrongTileCount"
+      }
+    },
+    {
+      "id": "hk-bad-10",
+      "title": "Fifteen tiles with no kong to justify them",
+      "cite": "RULING HK1 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "333m 5555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "wrongTileCount"
+      }
+    },
+    {
+      "id": "hk-bad-11",
+      "title": "A winning tile the hand does not hold",
+      "cite": "RULING HK1 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "winningTileNotInHand"
+      }
+    },
+    {
+      "id": "hk-bad-12",
+      "title": "Fourteen legal tiles that form no hand",
+      "cite": "RULING HK1 · Family C 香港麻雀協會 official rules 「平糊 手牌有四個順子﹐沒有坎/槓。」 and the other patterns all assume four sets and an eye",
+      "hand": {
+        "concealed": "147m 258p 369s 123m EE"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "noValidDecomposition"
+      }
+    },
+    {
+      "id": "hk-bad-13",
+      "title": "七對子 Seven Pairs is not a winning hand in 清章",
+      "cite": "RULING HK11 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「以下牌型並唔係標準「清章」蔴雀所有」 · 「若只接受標準「清章」牌型，則不算有效的食糊牌型」",
+      "note": "Family C's official fan list omits it entirely and the other sources give three different values. HK11 leaves it out.",
+      "hand": {
+        "concealed": "11m 33m 55m 77m 99m 22p 44p"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "noValidDecomposition"
+      }
+    },
+    {
+      "id": "hk-bad-14",
+      "title": "十三么 missing one of the thirteen",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 十三么",
+      "note": "Two 1s and no 9s: not Thirteen Orphans, and not four sets and an eye either.",
+      "hand": {
+        "concealed": "19m 19p 11s ESWNCFPC"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "noValidDecomposition"
+      }
+    },
+    {
+      "id": "hk-bad-15",
+      "title": "A hand of fourteen honours that is not four sets and an eye",
+      "cite": "RULING HK1 · Family C 香港麻雀協會 official rules",
+      "note": "This is Seven Pairs in honours. Same ruling, different tiles.",
+      "hand": {
+        "concealed": "EESSWWNNCCFFPP"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "E"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "noValidDecomposition"
+      }
+    }
+  ]
+}

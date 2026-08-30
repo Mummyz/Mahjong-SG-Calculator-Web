@@ -1,0 +1,983 @@
+{
+  "description": "花幺 / 混么九, 清幺九 and 字一色 — the terminal and honour hands, including the two that are 例牌 and the one that is not",
+  "entries": [
+    {
+      "id": "hk-term-01",
+      "title": "花幺 Mixed Terminals — Family A's printed 4 faan, reached as 1 + 3",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「花幺本身計一番，再加對對糊三番，為方便計算直接寫成四番」 · Family C 香港麻雀協會 official rules 「花么 只有一、九、番子。加計對對糊。」",
+      "note": "This is the entry that proves HK8's compositional method: two families reach 4 by the same two parts.",
+      "hand": {
+        "concealed": "999m 111p 999p EE",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals",
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            1
+          ],
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-term-02",
+      "title": "花幺 with a dragon triplet on top",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "999p 111s CCC EE",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals",
+          "allTriplets",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            1
+          ],
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 0,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "hk-term-03",
+      "title": "A fully concealed 花幺 is necessarily 坎坎糊 as well",
+      "cite": "RULING HK8/HK9/HK21 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 花幺 · 坎坎糊 8 · Family C 香港麻雀協會 official rules",
+      "note": "混么九 is about which tiles are in the hand and 坎坎糊 about who they were claimed from, so both lines score. 12 raw, capped to 10.",
+      "hand": {
+        "concealed": "111m 999m 111p 999p EE"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "9p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals",
+          "fourConcealedTriplets",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            1
+          ],
+          [
+            "fourConcealedTriplets",
+            8
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 12,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-term-04",
+      "title": "清幺九 Pure Terminals — 例牌, ten faan",
+      "cite": "RULING HK8b/HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「清幺九（清老頭）：只有幺九牌的對對糊；例牌不另計其他牌型」 · Family C 香港麻雀協會 official rules 「清么九 手牌全由么九數牌組成。」",
+      "note": "例牌 suppresses 對對糊 and everything else in the shape group (HK10). 無花 is a bonus-tile line and survives.",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            10
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-term-05",
+      "title": "清幺九 keeps its printed ten faan when the cap is raised to thirteen",
+      "cite": "RULING HK3/HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「一般會採用八番例牌、十番例牌或者十三番例牌」",
+      "note": "Pricing 例牌 at a number rather than at the cap is what makes this row differ from hk-term-04.",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9m"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            10
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 11,
+        "limitApplied": false,
+        "base": 192,
+        "pay": {
+          "fromDiscarder": 192,
+          "fromEachOther": 0,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-term-06",
+      "title": "清幺九 clipped by an eight-faan cap",
+      "cite": "RULING HK3 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「八番例牌」",
+      "hand": {
+        "concealed": "999m 111p 999p 11s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1s"
+      },
+      "opts": {
+        "limit": 8
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            10
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 8,
+        "limitApplied": true,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 0,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "hk-term-07",
+      "title": "字一色 All Honours — 例牌, ten faan",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「===十番（例牌）=== *字一色（全字糊）」 · Family B mahjong.wikidot Hong Kong Old Style \"All Honors | 10\" · Family C 香港麻雀協會 official rules · Family E English Wikipedia, Old Hong Kong",
+      "note": "The seat wind, the prevailing wind and the dragon triplet are all suppressed by the 例牌 (HK10).",
+      "hand": {
+        "concealed": "SSS WWW CCC PP",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "W"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            10
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-term-08",
+      "title": "字一色 self-drawn — the circumstance faan still adds, then the cap clips",
+      "cite": "RULING HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例牌不另計其他牌型」 · RULING HK10",
+      "note": "12 raw → 10. Family A's table row 10: 出銃 128, 自摸 192.",
+      "hand": {
+        "concealed": "SSS WWW CCC PP",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            10
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 12,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-term-09",
+      "title": "字一色 self-drawn under a thirteen-faan cap — the stack becomes visible",
+      "cite": "RULING HK3/HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · RULING HK10",
+      "note": "12 faan → base 256. 例牌 do not stack with hand patterns, but they do stack with circumstances.",
+      "hand": {
+        "concealed": "SSS WWW CCC PP",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "S"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            10
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 12,
+        "totalTai": 12,
+        "limitApplied": false,
+        "base": 256,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 128,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-term-10",
+      "title": "One suited terminal demotes 字一色 to 花幺",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "South seat, East round. 花幺 is not 例牌, so everything composes on top of it — including 混一色, since the only suited tiles are characters.",
+      "hand": {
+        "concealed": "SSS WWW 111m PP",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals",
+          "allTriplets",
+          "halfFlush",
+          "seatWind",
+          "prevailingWind",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            1
+          ],
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-term-11",
+      "title": "One honour pair demotes 清幺九 to 花幺",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "999m 111p 999p PP",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "mixedTerminals",
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "mixedTerminals",
+            1
+          ],
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    },
+    {
+      "id": "hk-term-12",
+      "title": "A chow of terminals-and-twos is not 花幺",
+      "cite": "RULING HK8 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「花幺…只有一、九、番子」 · Family C 香港麻雀協會 official rules",
+      "note": "123m contains a 2, so the hand is neither terminal-only nor 對對糊 — nothing scores but 無花.",
+      "hand": {
+        "concealed": "999m 111p 999p EE",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9m"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 1
+      }
+    },
+    {
+      "id": "hk-term-13",
+      "title": "字一色 that is also four concealed triplets — 例牌 still wins the shape group",
+      "cite": "RULING HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例牌不另計其他牌型」",
+      "note": "坎坎糊 8 would score less than 字一色 10 in any case, but HK10 is what decides it.",
+      "hand": {
+        "concealed": "EEE SSS WWW CCC PP"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "C"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            10
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 13,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-term-14",
+      "title": "清幺九 with a kong",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "15 tiles for the one kong; a kong of terminals is still a terminal set.",
+      "hand": {
+        "concealed": "999m 111p 11s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "9999p",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "pureTerminals",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "pureTerminals",
+            10
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-term-suppress-13",
+      "title": "字一色 that is also 大三元, cap 13 — the 例牌 still prices it",
+      "cite": "RULING HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例牌不另計其他牌型」 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「打無限番…例牌亦都按普通番種計算番數（例如大四喜複計混一色對對糊或者字一色，加起嚟就超過十三番例牌）」 — the composed reading is confined to 無限番, which this engine never plays",
+      "note": "Composed, this hand is 對對糊 3 + 大三元 5 + 番子 1+1+1 + 門風 1 + 圈風 1 = 15. RULING HK10 suppresses every one of those: 字一色 prices the hand at 10, and the player is told they have 字一色. Reading HK10 as \"take the larger\" would pay this hand 384 instead of 128 at a thirteen-faan cap.",
+      "hand": {
+        "concealed": "FFF PPP EEE SS",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "F"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            10
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 11,
+        "limitApplied": false,
+        "base": 192,
+        "pay": {
+          "fromDiscarder": 192,
+          "fromEachOther": 0,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-term-suppress-12",
+      "title": "字一色 that is also 大三元, cap 12 — the 例牌 still prices it",
+      "cite": "RULING HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例牌不另計其他牌型」 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「打無限番…例牌亦都按普通番種計算番數（例如大四喜複計混一色對對糊或者字一色，加起嚟就超過十三番例牌）」 — the composed reading is confined to 無限番, which this engine never plays",
+      "note": "Composed, this hand is 對對糊 3 + 大三元 5 + 番子 1+1+1 + 門風 1 + 圈風 1 = 15. RULING HK10 suppresses every one of those: 字一色 prices the hand at 10, and the player is told they have 字一色. Reading HK10 as \"take the larger\" would pay this hand 384 instead of 128 at a thirteen-faan cap.",
+      "hand": {
+        "concealed": "FFF PPP EEE SS",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "P"
+      },
+      "opts": {
+        "limit": 12
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            10
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 11,
+        "limitApplied": false,
+        "base": 192,
+        "pay": {
+          "fromDiscarder": 192,
+          "fromEachOther": 0,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-term-suppress-11",
+      "title": "字一色 that is also 大三元, cap 11 — the 例牌 still prices it",
+      "cite": "RULING HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例牌不另計其他牌型」 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「打無限番…例牌亦都按普通番種計算番數（例如大四喜複計混一色對對糊或者字一色，加起嚟就超過十三番例牌）」 — the composed reading is confined to 無限番, which this engine never plays",
+      "note": "Composed, this hand is 對對糊 3 + 大三元 5 + 番子 1+1+1 + 門風 1 + 圈風 1 = 15. RULING HK10 suppresses every one of those: 字一色 prices the hand at 10, and the player is told they have 字一色. Reading HK10 as \"take the larger\" would pay this hand 384 instead of 128 at a thirteen-faan cap.",
+      "hand": {
+        "concealed": "FFF PPP EEE SS",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "E"
+      },
+      "opts": {
+        "limit": 11
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            10
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 11,
+        "limitApplied": false,
+        "base": 192,
+        "pay": {
+          "fromDiscarder": 192,
+          "fromEachOther": 0,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-term-suppress-10",
+      "title": "字一色 that is also 大三元 at the default cap",
+      "cite": "RULING HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例牌不另計其他牌型」",
+      "note": "At the default cap both readings clip to 10, so this entry pins the PATTERN: the result must name 字一色, not 對對糊 and 大三元.",
+      "hand": {
+        "concealed": "FFF PPP EEE SS",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "CCC",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "S"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            10
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-term-suppress-conc",
+      "title": "字一色, 大三元 and 坎坎糊 at once, self-drawn, cap 13",
+      "cite": "RULING HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例牌不另計其他牌型」",
+      "note": "Composed this reaches 坎坎糊 8 + 大三元 5 + 番子 3 + 雙番東 2 + 自摸 1 + 門前清 1 = 20. Both readings clip to 13, so the money is the same and only the named hand differs — which is exactly the case a scorer that maximises gets wrong without failing on cash.",
+      "hand": {
+        "concealed": "CCC FFF PPP EEE SS"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "S"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allHonours",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allHonours",
+            10
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 13,
+        "totalTai": 13,
+        "limitApplied": false,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 192,
+          "winnerTotal": 576
+        }
+      }
+    }
+  ]
+}

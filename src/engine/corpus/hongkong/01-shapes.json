@@ -1,0 +1,877 @@
+{
+  "description": "The shape group — 平糊 / 對對糊 / 坎坎糊 — which are mutually exclusive by definition, and the 3-faan minimum that governs them all",
+  "entries": [
+    {
+      "id": "hk-shape-01",
+      "title": "平糊 Common Hand — four chows and a pair",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「平糊：只有順子、沒有刻子的牌型」 · Family C 香港麻雀協會 official rules 「平糊 手牌有四個順子﹐沒有坎/槓。」",
+      "note": "1 faan on its own, so it cannot win at the default 3-faan minimum — see hk-shape-02.",
+      "hand": {
+        "concealed": "456m 789m 234p 55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-shape-02",
+      "title": "平糊 alone cannot win at the 3-faan minimum",
+      "cite": "RULING HK2/HK16 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「食糊最少要有三番」 · Family E English Wikipedia, Old Hong Kong bonus faan excluded from the minimum",
+      "note": "Total is 2 faan, but 無花 is flower-derived and does not count toward the minimum (HK16), so only 1 faan qualifies.",
+      "hand": {
+        "concealed": "456m 789m 234p 55s",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 2
+      }
+    },
+    {
+      "id": "hk-shape-03",
+      "title": "平糊 with a dragon pair as the eye — still 平糊",
+      "cite": "RULING HK14 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「只有順子、沒有刻子的牌型」 · Family C 香港麻雀協會 official rules 「手牌有四個順子﹐沒有坎/槓。」",
+      "note": "Hong Kong places no restriction on the pair. In Singapore R5 this pair would forfeit Ping Hu.",
+      "hand": {
+        "concealed": "456m 789m 234p CC",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-shape-04",
+      "title": "平糊 with the seat wind as the eye — still 平糊",
+      "cite": "RULING HK14 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "A pair is not a triplet, so the seat wind scores nothing here.",
+      "hand": {
+        "concealed": "456m 789m 234p SS",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "6m"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-shape-05",
+      "title": "對對糊 All Triplets, one meld exposed",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style \"All Pungs | 3\" · Family C 香港麻雀協會 official rules 「對對糊 手牌有四個坎/槓﹐沒有順子。」",
+      "note": "3 qualifying faan, so this is the smallest hand that wins outright at the default minimum.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-shape-06",
+      "title": "對對糊 self-drawn — 自摸 adds its own faan",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「自摸︰自己摸出食糊之牌可加一番。」 · Family C 香港麻雀協會 official rules 「自摸 食糊牌由自己摸牌所得。」",
+      "note": "4 faan → base 16, self-draw 8 from each. Family A's table row 4: 出銃 16, 自摸 24.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "7s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        }
+      }
+    },
+    {
+      "id": "hk-shape-07",
+      "title": "坎坎糊 Four Concealed Triplets, self-drawn",
+      "cite": "RULING HK9/HK21 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 坎坎糊 8 (filed under 其他非常用番種) · Family B mahjong.wikidot Hong Kong Old Style 坎坎糊 8, inside the Local Fan block B itself flags as contested: \"Some feel that leaving such ubiquitous patterns out of HKOS is anti-Mahjong\"",
+      "note": "坎坎糊 replaces 對對糊 rather than adding to it (HK9). 11 raw faan, capped to 10.",
+      "hand": {
+        "concealed": "111m 333m 555p 777s 99s"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "7s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fourConcealedTriplets",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "fourConcealedTriplets",
+            8
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-shape-08",
+      "title": "坎坎糊 won on a discard that completes the pair",
+      "cite": "RULING HK21 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 坎坎糊 8 · RULING HK21",
+      "note": "No Hong Kong source conditions 坎坎糊 on how the last tile arrived; HK21 requires only that no set was claimed.",
+      "hand": {
+        "concealed": "111m 333m 555p 777s 99s"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fourConcealedTriplets",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "fourConcealedTriplets",
+            8
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-shape-09",
+      "title": "One claimed pung demotes 坎坎糊 to 對對糊",
+      "cite": "RULING HK21 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 坎坎糊 8 · RULING HK21",
+      "note": "Same tiles as hk-shape-07/08, but the 111m pung was claimed from another player.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-shape-10",
+      "title": "對對糊 stacks with 混一色 and a dragon triplet",
+      "cite": "RULING HK8a/HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules · Family B mahjong.wikidot Hong Kong Old Style",
+      "note": "Ordinary patterns compose freely; only 例牌 suppress (HK10).",
+      "hand": {
+        "concealed": "333m 555m CCC EE",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "halfFlush",
+          "dragonTriplet",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "dragonTriplet",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 8,
+        "totalTai": 8,
+        "limitApplied": false,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 0,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "hk-shape-11",
+      "title": "平糊 stacks with 清一色",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 清一色 7 · Family B mahjong.wikidot Hong Kong Old Style \"Pure Flush | 7\" · Family C 香港麻雀協會 official rules · Family E English Wikipedia, Old Hong Kong",
+      "hand": {
+        "concealed": "456m 789m 234m 55m",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-shape-12",
+      "title": "雞糊 Chicken Hand — mixed shapes, mixed suits, nothing",
+      "cite": "RULING HK2 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「雞糊：單純四搭一對、無任何其他組合的牌型。現時一般不能單獨食糊」",
+      "hand": {
+        "concealed": "456m 789p 234s 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "8p"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 1
+      }
+    },
+    {
+      "id": "hk-shape-13",
+      "title": "雞糊 does win where the table has set no minimum",
+      "cite": "RULING HK2 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「雞糊…現時一般不能單獨食糊」 · Family B mahjong.wikidot Hong Kong Old Style baseline \"0-2\"",
+      "note": "Family A's table prints a row for 0 faan: 出銃 1. This is that row.",
+      "hand": {
+        "concealed": "456m 789p 234s 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "8p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 0,
+          "winnerTotal": 2
+        }
+      }
+    },
+    {
+      "id": "hk-shape-14",
+      "title": "A claimed pung and a concealed kong — 對對糊 only",
+      "cite": "RULING HK12/HK21 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「沒有上、碰、槓（包括暗槓）任何牌而食糊」 · Family C 香港麻雀協會 official rules 「（暗槓屬於明章）」",
+      "note": "15 tiles: 14 plus one for the kong. No 門前清 — a kong breaks it even concealed (HK12).",
+      "hand": {
+        "concealed": "555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          },
+          {
+            "t": "pong",
+            "tiles": "333m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "7s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        }
+      }
+    },
+    {
+      "id": "hk-shape-15",
+      "title": "A concealed kong still counts as a concealed triplet for 坎坎糊",
+      "cite": "RULING HK21 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 坎坎糊 8 · RULING HK21",
+      "note": "暗槓 is an 暗刻, so it qualifies for 坎坎糊 — but it still breaks 門前清 (HK12). The two rules genuinely differ and both are cited.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "fourConcealedTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "fourConcealedTriplets",
+            8
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 64,
+          "winnerTotal": 192
+        }
+      }
+    },
+    {
+      "id": "hk-shape-16",
+      "title": "A hand of chows and pungs mixed scores no shape faan",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "Not 平糊 (there is a pung), not 對對糊 (there are chows).",
+      "hand": {
+        "concealed": "456m 789m 234p 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 0,
+          "winnerTotal": 2
+        }
+      }
+    },
+    {
+      "id": "hk-shape-17",
+      "title": "Three pungs that are also three chows — the chow reading wins",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 平糊 「只有順子、沒有刻子的牌型」 · Family C 香港麻雀協會 official rules 「平糊 手牌有四個順子」",
+      "note": "Readable as 111m 222m 333m 456m + 99m, which scores 清一色 7 and no shape, or as 123m 123m 123m 456m + 99m, which is 平糊 as well. The engine has to try both and keep the second. 10 faan at the default cap.",
+      "hand": {
+        "concealed": "111m 222m 333m 456m 99m"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "4m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullFlush",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 10,
+        "totalTai": 10,
+        "limitApplied": false,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-shape-18",
+      "title": "Three chows that are also three pungs — the pung reading wins",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 對對糊 · Family C 香港麻雀協會 official rules 「對對糊 手牌有四個坎/槓﹐沒有順子。」",
+      "note": "Readable as 345m 345m 345m with the claimed 222m, which scores the flush alone, or as 333m 444m 555m, which adds 對對糊. 11 faan under a raised cap. The claimed pung is what keeps this out of 坎坎糊 — compare hk-shape-07.",
+      "hand": {
+        "concealed": "333m 444m 555m 99m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "222m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "fullFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "fullFlush",
+            7
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 11,
+        "totalTai": 11,
+        "limitApplied": false,
+        "base": 192,
+        "pay": {
+          "fromDiscarder": 192,
+          "fromEachOther": 0,
+          "winnerTotal": 192
+        }
+      }
+    }
+  ]
+}

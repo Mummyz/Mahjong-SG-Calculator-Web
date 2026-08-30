@@ -1,19 +1,24 @@
 import { useState } from 'preact/hooks'
-import { t } from '../../i18n'
+import { t, tv } from '../../i18n'
 import { formatMoney, formatStake } from '../format'
 
 import type { HandState } from './HandEntry'
-import { singapore } from '../../engine/variants/singapore'
+import type { WinSubmission } from '../../engine/session/table'
+import { VARIANTS, type VariantId } from '../../engine/variants'
 import {
   prevailingWind, scoreKeyedHand, seatWindOf, yourSeat, type TableState,
-} from '../../engine/variants/singapore/table'
+} from '../../engine/session/table'
 import type { Wind } from '../../engine/core/tiles'
-import type { ScoreResult, WinContext } from '../../engine/core/variant'
+import type { RuleOptions, ScoreResult, WinContext } from '../../engine/core/variant'
 
 const WIND_GLYPH: Record<Wind, string> = { E: '東', S: '南', W: '西', N: '北' }
 
-/** Canonical Chinese names. Content, like the characters on a tile face. */
-const CJK: Record<string, string> = {
+/**
+ * Canonical Chinese names. Content, like the characters on a tile face — and
+ * regional: Singapore writes 胡 where Hong Kong writes 糊, and several hands
+ * have different names entirely.
+ */
+const CJK_SG: Record<string, string> = {
   chickenHand: '雞胡', lesserSequence: '小平胡', sequenceHand: '平胡', triplets: '碰碰胡',
   halfFlush: '混一色', fullFlush: '清一色', fullFlushSequence: '清一色平胡',
   fullFlushTriplets: '清一色碰碰胡', fullFlushLesserSequence: '清一色小平胡',
@@ -26,62 +31,72 @@ const CJK: Record<string, string> = {
   fullyConcealed: '門清', robbingKong: '搶槓', lastTile: '海底撈月',
 }
 
-/** The keys that name a hand, as opposed to a bonus or a circumstance. */
-const HAND_PATTERNS = new Set(Object.keys(CJK).filter(
-  (k) => !['fullyConcealed', 'robbingKong', 'lastTile'].includes(k),
-))
+const CJK_HK: Record<string, string> = {
+  chickenHand: '雞糊', commonHand: '平糊', allTriplets: '對對糊',
+  fourConcealedTriplets: '坎坎糊', halfFlush: '混一色', fullFlush: '清一色',
+  mixedTerminals: '花幺', pureTerminals: '清幺九', allHonours: '字一色',
+  nineGates: '九子連環', eighteenArhats: '十八羅漢', thirteenOrphans: '十三么',
+  bigFourWinds: '大四喜', smallFourWinds: '小四喜',
+  bigThreeDragons: '大三元', smallThreeDragons: '小三元',
+  heavenly: '天糊', earthly: '地糊', humanly: '人糊',
+  sevenFlowers: '花糊', eightFlowers: '大花糊', kongOnKong: '連槓開花',
+  fullyConcealed: '門前清', robbingKong: '搶槓', lastTile: '海底撈月',
+  lastDiscard: '河底撈魚', kongReplacement: '槓上開花', selfDraw: '自摸',
+  noFlowers: '無花', dragonTriplet: '番子', seatWind: '門風', prevailingWind: '圈風',
+  seatFlower: '正花', seatSeason: '正花',
+  completeFlowerGroup: '一台花', completeSeasonGroup: '一台花',
+}
 
-export function Results({ table, stake, limit, hand, onEdit, onNext }: {
+/**
+ * Components that describe how the hand was won or what was in the flower
+ * tray, rather than naming the hand. Everything else is a hand name.
+ */
+const NOT_A_HAND = new Set([
+  'fullyConcealed', 'robbingKong', 'lastTile', 'lastDiscard', 'selfDraw',
+  'kongReplacement', 'flowerReplacement', 'noFlowers',
+  'dragonTriplet', 'seatWind', 'prevailingWind', 'seatPrevailingWind',
+  'seatFlower', 'seatSeason', 'completeFlowerGroup', 'completeSeasonGroup',
+  'animal', 'allAnimals',
+])
+
+/** Value sets: present, they mean the hand is not a bare 雞胡 after all. */
+const VALUE_SETS = ['dragonTriplet', 'seatWind', 'prevailingWind', 'seatPrevailingWind']
+
+export function Results({
+  variant, table, stake, limit, halfPayment, hand, submission, onEdit, onNext,
+}: {
+  variant: VariantId
   table: TableState
   stake: number
   limit: number
+  halfPayment: boolean
   hand: HandState
+  submission: WinSubmission
   onEdit: () => void
   onNext: () => void
 }) {
+  const plugin = VARIANTS[variant]
+  const CJK = variant === 'hongkong' ? CJK_HK : CJK_SG
   const nameOf = (i: number) => table.players[i] || t('table.playerN', { n: i + 1 })
   const [confirmNext, setConfirmNext] = useState(false)
-
-  const incomplete = hand.win === null
-    || (hand.win === 'discard' && hand.discarderIndex === null)
-    || hand.winningTile === null
 
   const ctx: WinContext = {
     seat: yourSeat(table),
     prevailing: prevailingWind(table),
-    win: hand.win ?? 'selfDraw',
-    winningTile: hand.winningTile ?? undefined,
-    flags: hand.flags,
-    pao: hand.pao,
+    win: submission.win,
+    winningTile: submission.winningTile,
+    flags: submission.flags as never,
+    pao: submission.pao,
   }
-  const opts = { limit }
+  const opts: Partial<RuleOptions> = { limit, halfPayment }
   // Everything below is read off the engine. The UI computes no score — it
   // only hands over every reading of the keyed hand and keeps the best.
   const { result }: { result: ScoreResult } = scoreKeyedHand(
-    { concealed: hand.concealed, melds: hand.melds, bonus: hand.bonus }, ctx, opts,
+    plugin, { concealed: hand.concealed, melds: hand.melds, bonus: hand.bonus }, ctx, opts,
   )
-  const pay = singapore.payments(result, ctx, opts)
-  const instant = singapore.instantPayouts!(hand.bonus, yourSeat(table))
+  const pay = plugin.payments(result, ctx, opts)
+  const instant = plugin.instantPayouts?.(hand.bonus, yourSeat(table)) ?? []
   const others = table.players.map((_, i) => i).filter((i) => i !== table.youIndex)
-
-  if (incomplete) {
-    return (
-      <div class="shell">
-        <div class="scroll">
-          <h1 class="title">{t('result.title')}</h1>
-          <div class="chit">
-            <p class="handname" style="color:var(--mj-ang-ink)">{t('result.notAWin')}</p>
-            <p style="margin:8px 0 0">{t('result.incomplete')}</p>
-          </div>
-        </div>
-        <div class="dock">
-          <button type="button" class="btn btn--primary btn--block" onClick={onEdit}>
-            {t('result.editHand')}
-          </button>
-        </div>
-      </div>
-    )
-  }
 
   if (!result.valid) {
     return (
@@ -91,7 +106,7 @@ export function Results({ table, stake, limit, hand, onEdit, onNext }: {
           <div class="chit">
             <p class="handname" style="color:var(--mj-ang-ink)">{t('result.notAWin')}</p>
             <p style="margin:8px 0 0">
-              {t(`reject.${result.reason}`, { min: singapore.defaults.minTai })}
+              {tv(variant, `reject.${result.reason}`, { min: plugin.defaults.minTai })}
             </p>
           </div>
         </div>
@@ -104,18 +119,23 @@ export function Results({ table, stake, limit, hand, onEdit, onNext }: {
     )
   }
 
-  const names = result.fan.map((f) => f.key).filter((k) => HAND_PATTERNS.has(k))
+  const names = result.fan.map((f) => f.key).filter((k) => !NOT_A_HAND.has(k))
   const seen = new Set<string>()
   const uniqueNames = names.filter((n) => (seen.has(n) ? false : (seen.add(n), true)))
 
-  // TT names the plain hand 雞胡: no scoring pattern, no value pong, carried
-  // only by bonus tiles. The engine emits no component for it, so the UI names
-  // it when nothing else did.
-  const VALUE_SETS = ['dragonTriplet', 'seatWind', 'prevailingWind', 'seatPrevailingWind']
+  // A plain hand — no scoring pattern, no value pong — is 雞胡 in both
+  // variants. The engine emits no component for it, so the UI names it when
+  // nothing else did.
   const shown = uniqueNames.length === 0
       && !result.fan.some((f) => VALUE_SETS.includes(f.key))
     ? ['chickenHand']
     : uniqueNames
+
+  const flowerHand = result.patterns.includes('sevenFlowers')
+    || result.patterns.includes('eightFlowers')
+  const thirteenNote = variant === 'singapore' && result.patterns.includes('thirteenWonders')
+  const paoNote = submission.pao && submission.win === 'discard'
+    && submission.discarderIndex !== null && !thirteenNote
 
   return (
     <div class="shell">
@@ -141,7 +161,7 @@ export function Results({ table, stake, limit, hand, onEdit, onNext }: {
               </div>
               {shown.map((k) => (
                 <p class="handname" key={k}>
-                  {t(`pattern.${k}`)}{' '}
+                  {tv(variant, `pattern.${k}`)}{' '}
                   <span class="handname__cjk" aria-hidden="true">{CJK[k]}</span>
                 </p>
               ))}
@@ -157,20 +177,29 @@ export function Results({ table, stake, limit, hand, onEdit, onNext }: {
               <span class="grouplabel__rule" />
             </div>
             <p class="capnote" style="margin:0 0 10px">
-              {t('result.terms', {
-                win: hand.win === 'selfDraw' ? t('win.selfDraw') : t('win.discard'),
+              {tv(variant, 'result.terms', {
+                win: submission.win === 'selfDraw' ? t('win.selfDraw') : t('win.discard'),
                 stake: formatStake(stake),
                 limit,
               })}
             </p>
-            {hand.pao && hand.win === 'discard' && hand.discarderIndex !== null
-              && !result.patterns.includes('thirteenWonders') && (
+            {variant === 'hongkong' && submission.win === 'discard' && !flowerHand && (
               <p class="capnote" style="margin:0 0 10px">
-                {t('result.paoNote', { wind: nameOf(hand.discarderIndex) })}
+                {halfPayment && !submission.pao
+                  ? t('result.paymentHalf')
+                  : t('result.paymentFull')}
               </p>
             )}
-            {result.patterns.includes('thirteenWonders') && (
+            {paoNote && (
+              <p class="capnote" style="margin:0 0 10px">
+                {t('result.paoNote', { wind: nameOf(submission.discarderIndex!) })}
+              </p>
+            )}
+            {thirteenNote && (
               <p class="capnote" style="margin:0 0 10px">{t('result.thirteenNote')}</p>
+            )}
+            {flowerHand && (
+              <p class="capnote" style="margin:0 0 10px">{t('result.flowerNote')}</p>
             )}
             <p class="collectline">
               <span class="collectline__k">{t('result.youCollect')}</span>
@@ -181,10 +210,11 @@ export function Results({ table, stake, limit, hand, onEdit, onNext }: {
             <table class="ledger">
               <tbody>
                 {others.map((i) => {
-                  const isDiscarder = hand.win === 'discard' && i === hand.discarderIndex
+                  const isDiscarder = pay.fromDiscarder !== null
+                    && submission.win === 'discard' && i === submission.discarderIndex
                   // Both numbers come straight off the engine's breakdown; the
-                  // pao settlement is already baked into them.
-                  const units = isDiscarder ? (pay.fromDiscarder ?? 0) : pay.fromEachOther
+                  // pao and payment-convention settlements are already in them.
+                  const units = isDiscarder ? pay.fromDiscarder! : pay.fromEachOther
                   const w = seatWindOf(table, i)
                   return (
                     <tr key={i}>
@@ -227,7 +257,7 @@ export function Results({ table, stake, limit, hand, onEdit, onNext }: {
               {result.fan.map((f, i) => (
                 <tr key={`${f.key}-${i}`}>
                   <td>
-                    {t(`pattern.${f.key}`)}
+                    {tv(variant, `pattern.${f.key}`)}
                     {CJK[f.key] && (
                       <span class="handname__cjk" aria-hidden="true"> {CJK[f.key]}</span>
                     )}

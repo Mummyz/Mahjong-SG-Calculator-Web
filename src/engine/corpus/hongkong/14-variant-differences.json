@@ -1,0 +1,508 @@
+{
+  "description": "Hands whose Hong Kong reading differs from the Singapore reading of the same tiles. These exist so that a change to one variant cannot quietly move the other",
+  "entries": [
+    {
+      "id": "hk-diff-01",
+      "title": "自摸 is a faan in Hong Kong and is not one in Singapore",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「自摸︰自己摸出食糊之牌可加一番。」 · RULING R1 (Singapore: self-draw scores no tai)",
+      "note": "Singapore R1 puts self-draw entirely in the payment structure. Hong Kong scores it and also pays 1.5x. Both sources are explicit; the variants simply differ.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        }
+      }
+    },
+    {
+      "id": "hk-diff-02",
+      "title": "門前清 on a discard — Singapore's 门清 would score nothing here",
+      "cite": "RULING HK12 · Family C 香港麻雀協會 official rules 「門前清 食糊時所有手牌皆為暗手」 · RULING R1 (Singapore: 门清 requires a self-draw)",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55p"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 0,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "hk-diff-03",
+      "title": "A concealed kong breaks 門前清 — in Singapore it would not",
+      "cite": "RULING HK12 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「（包括暗槓）」 · Family C 香港麻雀協會 official rules 「（暗槓屬於明章）」",
+      "note": "Not 平糊 either, because of the kong. The whole hand is worth 無花 alone.",
+      "hand": {
+        "concealed": "456m 789m 234p 55p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "1111m",
+            "open": false
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "2p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 1,
+        "totalTai": 1,
+        "limitApplied": false,
+        "base": 2,
+        "pay": {
+          "fromDiscarder": 2,
+          "fromEachOther": 0,
+          "winnerTotal": 2
+        }
+      }
+    },
+    {
+      "id": "hk-diff-04",
+      "title": "補花 pays nothing in Hong Kong and one tai in Singapore",
+      "cite": "RULING HK15 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「補花後不算」",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p",
+        "flags": [
+          "flowerReplacement"
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        }
+      }
+    },
+    {
+      "id": "hk-diff-05",
+      "title": "無花 exists in Hong Kong and has no Singapore equivalent",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「無花：沒有花牌。」 · Family B mahjong.wikidot Hong Kong Old Style \"No Flowers/Seasons | 1\"",
+      "note": "The same hand with a single stray flower scores one faan less — see hk-bonus-04.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7s"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-diff-06",
+      "title": "平糊 on a one-sided wait with a dragon eye, which Singapore R5 refuses",
+      "cite": "RULING HK14 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「只有順子、沒有刻子的牌型」 · Family C 香港麻雀協會 official rules · RULING R5 (Singapore: two-sided wait and a plain eye)",
+      "note": "Won on the eye, and the eye is a dragon. Hong Kong attaches neither condition.",
+      "hand": {
+        "concealed": "456m 789m 234p CC",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-diff-07",
+      "title": "The dealer is paid exactly like everybody else",
+      "cite": "RULING HK5 · Family B mahjong.wikidot Hong Kong Old Style \"Dealer Bonus | None\", \"Dealer Curse | None\" · Family D 「要付雙倍的不是莊家，而改為由放銃者取代」",
+      "note": "Identical money to hk-kong-01, which is the same hand in the South seat. Family E describes a dealer multiplier; HK5 explains why that is the Chinese Classical ancestor.",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 4,
+        "totalTai": 4,
+        "limitApplied": false,
+        "base": 16,
+        "pay": {
+          "fromDiscarder": 16,
+          "fromEachOther": 0,
+          "winnerTotal": 16
+        }
+      }
+    },
+    {
+      "id": "hk-diff-08",
+      "title": "The dealer self-drawing is paid exactly like everybody else",
+      "cite": "RULING HK5 · Family B mahjong.wikidot Hong Kong Old Style · Family C 香港麻雀協會 official rules (no dealer clause anywhere in 得分授受法)",
+      "hand": {
+        "concealed": "333m 555p 777s 99s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "111m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "selfDraw",
+        "winningTile": "5p"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "allTriplets",
+          "selfDraw",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "allTriplets",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        }
+      }
+    },
+    {
+      "id": "hk-diff-09",
+      "title": "十三么 is paid by the ordinary discard rule, not as a self-draw",
+      "cite": "RULING HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · RULING R12 (Singapore: Thirteen Wonders is paid as a self-draw either way)",
+      "note": "No Hong Kong source gives 十三么 a special settlement. Singapore's R12 does, and the owner ratified it — for Singapore only.",
+      "hand": {
+        "concealed": "19m 19p 19s ESWNCFPC"
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "C"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "thirteenOrphans",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "thirteenOrphans",
+            13
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 15,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 384,
+          "fromEachOther": 0,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-diff-10",
+      "title": "混一色 is three faan in Hong Kong and two in Singapore",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style \"Half Flush | 3\" · Family C 香港麻雀協會 official rules · Family E English Wikipedia, Old Hong Kong",
+      "note": "清一色 differs too: 7 here, 4 there. The two fan tables are unrelated documents.",
+      "hand": {
+        "concealed": "456m 789m 234m EE",
+        "melds": [
+          {
+            "t": "chow",
+            "tiles": "123m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "8m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "commonHand",
+          "halfFlush",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "commonHand",
+            1
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 5,
+        "totalTai": 5,
+        "limitApplied": false,
+        "base": 24,
+        "pay": {
+          "fromDiscarder": 24,
+          "fromEachOther": 0,
+          "winnerTotal": 24
+        }
+      }
+    }
+  ]
+}

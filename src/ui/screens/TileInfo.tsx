@@ -1,8 +1,9 @@
 import { t } from '../../i18n'
 import { Tile, BonusTile } from '../components/Tile'
-import { singapore } from '../../engine/variants/singapore'
+import { VARIANTS, type VariantId } from '../../engine/variants'
 import type { BonusId, TileId, Wind } from '../../engine/core/tiles'
 
+/** Column count and corner stamp per group. Groups a variant lacks are skipped. */
 const LAYOUT: { key: string; cols: 4 | 5; stamp?: string }[] = [
   { key: 'characters', cols: 5, stamp: '萬' },
   { key: 'dots', cols: 5, stamp: '筒' },
@@ -14,22 +15,24 @@ const LAYOUT: { key: string; cols: 4 | 5; stamp?: string }[] = [
   { key: 'animals', cols: 4 },
 ]
 
-export function TileInfo({ seat, fromHand, onBack, onContinue }: {
+export function TileInfo({ variant, seat, fromHand, onBack, onContinue }: {
+  variant: VariantId
   seat: Wind
   /** Opened from a hand in progress, so both dock actions return to it. */
   fromHand?: boolean
   onBack: () => void
   onContinue: () => void
 }) {
-  const groups = singapore.tileSet.groups
+  const plugin = VARIANTS[variant]
+  const groups = plugin.tileSet.groups
   return (
     <div class="shell">
       <div class="scroll">
         <h1 class="title">{t('tileinfo.title')}</h1>
         <p class="sub">
           {t('tileinfo.subtitle', {
-            variant: t('variant.singapore.name'),
-            count: singapore.tileSet.total,
+            variant: t(`variant.${variant}.name`),
+            count: plugin.tileSet.total,
           })}
         </p>
 
@@ -68,13 +71,17 @@ export function TileInfo({ seat, fromHand, onBack, onContinue }: {
 
         <div class="slip" style="margin-top:16px">
           <p class="caps" style="margin:0 0 6px">{t('tileinfo.jokers.title')}</p>
-          <p style="margin:0">{t('tileinfo.jokers.body')}</p>
+          <p style="margin:0">
+            {variant === 'hongkong'
+              ? t('tileinfo.jokers.hongkong')
+              : t('tileinfo.jokers.singapore')}
+          </p>
         </div>
 
         <div class="grouplabel" style="margin-top:16px">
           <span class="caps">{t('tileinfo.total')}</span>
           <span class="grouplabel__rule" />
-          <span class="grouplabel__n">{singapore.tileSet.total}</span>
+          <span class="grouplabel__n">{plugin.tileSet.total}</span>
         </div>
       </div>
 

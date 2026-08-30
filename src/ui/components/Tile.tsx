@@ -44,8 +44,6 @@ interface TileProps {
   count?: number
   /** Visually picked out — used both for a meld in progress and the winner. */
   selected?: boolean
-  /** The tile that completed the hand. Names itself so. */
-  wonOn?: boolean
   /** Part of the meld currently being declared. */
   taken?: boolean
   mini?: boolean
@@ -57,7 +55,7 @@ interface TileProps {
 }
 
 export function Tile({
-  id, onClick, count = 0, selected, wonOn, taken, mini, disabled, removes, dead,
+  id, onClick, count = 0, selected, taken, mini, disabled, removes, dead,
 }: TileProps) {
   const suit = suitOf(id)
   const exhausted = count >= 4 || dead === true
@@ -66,13 +64,11 @@ export function Tile({
     ? t('tile.notNowName', { tile: tileName(id) })
     : taken
       ? t('tile.takenName', { tile: tileName(id) })
-      : wonOn
-        ? t('hand.wonOnName', { tile: tileName(id) })
-        : removes
-          ? t('hand.removeTile', { tile: tileName(id) })
-          : exhausted
-            ? t('tile.exhaustedName', { tile: tileName(id) })
-            : tileName(id)
+      : removes && onClick
+        ? t('hand.removeTile', { tile: tileName(id) })
+        : exhausted
+          ? t('tile.exhaustedName', { tile: tileName(id) })
+          : tileName(id)
   // A tile nobody can tap is a picture of a tile, not a control: no tab stop,
   // no pressed state to mis-announce.
   const Wrapper = onClick ? 'button' : 'span'
@@ -86,8 +82,9 @@ export function Tile({
       data-h={suit ? undefined : id}
       data-exhausted={exhausted ? 'true' : undefined}
       data-exhausted-label={dead ? '' : exhausted ? '×4' : undefined}
+      data-taken={taken ? 'true' : undefined}
       aria-pressed={onClick && !removes
-        ? (!exhausted && (selected || wonOn || taken || count > 0) ? 'true' : 'false')
+        ? (!exhausted && (selected || taken || count > 0) ? 'true' : 'false')
         : undefined}
       aria-disabled={onClick && (exhausted || disabled) ? 'true' : undefined}
       aria-label={label}
@@ -119,6 +116,10 @@ interface BonusTileProps {
   onClick?: (id: BonusId) => void
 }
 
+/** Held has to survive losing the button: aria-pressed goes with it. */
+const label = (held: boolean, name: string): string =>
+  (held ? t('tile.heldName', { tile: name }) : name)
+
 export function BonusTile({ id, seat, held, onClick }: BonusTileProps) {
   const owner = BONUS_SEAT[id]
   const Wrapper = onClick ? 'button' : 'span'
@@ -127,10 +128,11 @@ export function BonusTile({ id, seat, held, onClick }: BonusTileProps) {
       type={onClick ? 'button' : undefined}
       role={onClick ? undefined : 'img'}
       class="tile tile--bonus"
+      data-held={held ? 'true' : undefined}
       aria-pressed={onClick ? (held ? 'true' : 'false') : undefined}
-      aria-label={owner === seat
+      aria-label={label(held === true, owner === seat
         ? t('tile.ownBonusName', { tile: t(`tile.bonus.${id}`) })
-        : t(`tile.bonus.${id}`)}
+        : t(`tile.bonus.${id}`))}
       onClick={onClick ? () => onClick(id) : undefined}
     >
       {owner && (

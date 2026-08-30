@@ -1,0 +1,822 @@
+{
+  "description": "門風 / 圈風 and the four-wind hands. Contains the two entries that reproduce Family A's printed 小四喜 figures exactly",
+  "entries": [
+    {
+      "id": "hk-wind-01",
+      "title": "門風 Seat wind triplet",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style \"Seat Wind | 1\" · Family C 香港麻雀協會 official rules · Family E English Wikipedia, Old Hong Kong",
+      "note": "South seat, East round.",
+      "hand": {
+        "concealed": "123m 456m 789p 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatWind",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-wind-02",
+      "title": "圈風 Prevailing wind triplet",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family B mahjong.wikidot Hong Kong Old Style \"Round Wind | 1\" · Family C 香港麻雀協會 official rules · Family E English Wikipedia, Old Hong Kong",
+      "hand": {
+        "concealed": "123m 456m 789p 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "prevailingWind",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 2,
+        "totalTai": 2,
+        "limitApplied": false,
+        "base": 4,
+        "pay": {
+          "fromDiscarder": 4,
+          "fromEachOther": 0,
+          "winnerTotal": 4
+        }
+      }
+    },
+    {
+      "id": "hk-wind-03",
+      "title": "雙番東 — one triplet that is both seat and prevailing wind scores twice",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「若門風與圈風重疊時計兩番…俗稱的「雙番東」」 · Family C 香港麻雀協會 official rules 「門風及圈風重疊時計兩番。」",
+      "hand": {
+        "concealed": "123m 456m 789p 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "7p"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatWind",
+          "prevailingWind",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 0,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "hk-wind-04",
+      "title": "A wind triplet that is neither seat nor prevailing scores nothing",
+      "cite": "RULING HK8a · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "123m 456m 789p 55s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "9p"
+      },
+      "expect": {
+        "valid": false,
+        "reason": "belowMinimum",
+        "rawTai": 1
+      }
+    },
+    {
+      "id": "hk-wind-05",
+      "title": "小四喜 Small Winds — Family A's printed 6, reached as 3 + 混一色 3",
+      "cite": "RULING HK9 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「小四喜本身單計三番，必然至少伴隨混一色或對對糊任何一種，兩者均為加三番；為方便計算直接寫成六番」 · Family E English Wikipedia, Old Hong Kong \"Little winds… || 6\"",
+      "note": "North seat in the North round, so the paired wind carries no 門風/圈風 faan, and a flower that is not this seat's keeps 無花 off the sheet. What is left is exactly Family A's 6.",
+      "hand": {
+        "concealed": "123m NN",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "discard",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallFourWinds",
+          "halfFlush"
+        ],
+        "fan": [
+          [
+            "smallFourWinds",
+            3
+          ],
+          [
+            "halfFlush",
+            3
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 0,
+          "winnerTotal": 32
+        }
+      }
+    },
+    {
+      "id": "hk-wind-06",
+      "title": "小四喜 — Family A's 「最少有九番」, reached as 3 + 混一色 3 + 對對糊 3",
+      "cite": "RULING HK9 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「小四喜…最少有九番」",
+      "note": "The same construction as hk-wind-05 with the odd chow made a pung — of 5s rather than terminals, so the hand does not also become 混么九. A flat 6-faan 小四喜 could not reach 9 here; the composed reading does, which is why HK8 composes.",
+      "hand": {
+        "concealed": "555m NN",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          }
+        ],
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallFourWinds",
+          "halfFlush",
+          "allTriplets"
+        ],
+        "fan": [
+          [
+            "smallFourWinds",
+            3
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "allTriplets",
+            3
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-wind-07",
+      "title": "小四喜 in a round where two of the wind triplets are the player's own",
+      "cite": "RULING HK8a/HK9 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "note": "South seat, East round: both of those triplets are on the table, so both wind lines score.",
+      "hand": {
+        "concealed": "123m NN",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "3m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallFourWinds",
+          "halfFlush",
+          "seatWind",
+          "prevailingWind",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "smallFourWinds",
+            3
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": 96,
+          "fromEachOther": 0,
+          "winnerTotal": 96
+        }
+      }
+    },
+    {
+      "id": "hk-wind-08",
+      "title": "大四喜 Great Winds — 例牌, thirteen faan, clipped by the default cap",
+      "cite": "RULING HK9/HK8b · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 大四喜 例牌 13 · RULING HK9",
+      "note": "Raw 14, capped to 10. Family B scores this hand 15; HK9 takes Family A's 13.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-wind-09",
+      "title": "大四喜 under a thirteen-faan cap",
+      "cite": "RULING HK3/HK9 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「十三番例牌」",
+      "note": "14 raw, 13 after the cap: base 384, the top row of Family A's table.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 13
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 13,
+        "limitApplied": true,
+        "base": 384,
+        "pay": {
+          "fromDiscarder": 384,
+          "fromEachOther": 0,
+          "winnerTotal": 384
+        }
+      }
+    },
+    {
+      "id": "hk-wind-10",
+      "title": "大四喜 under an eight-faan cap",
+      "cite": "RULING HK3 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「八番例牌」",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "NNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "opts": {
+        "limit": 8
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 8,
+        "limitApplied": true,
+        "base": 64,
+        "pay": {
+          "fromDiscarder": 64,
+          "fromEachOther": 0,
+          "winnerTotal": 64
+        }
+      }
+    },
+    {
+      "id": "hk-wind-11",
+      "title": "大四喜 suppresses 對對糊, 混一色 and both wind lines",
+      "cite": "RULING HK10 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 「例牌不另計其他牌型」",
+      "note": "15 tiles for the wind kong. This hand is also 對對糊 and 混一色 and holds both wind lines; under composition it would be 13+3+3+1+1, and 例牌 makes it 13.",
+      "hand": {
+        "concealed": "55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          },
+          {
+            "t": "kong",
+            "tiles": "NNNN",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "bigFourWinds",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "bigFourWinds",
+            13
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 14,
+        "totalTai": 10,
+        "limitApplied": true,
+        "base": 128,
+        "pay": {
+          "fromDiscarder": 128,
+          "fromEachOther": 0,
+          "winnerTotal": 128
+        }
+      }
+    },
+    {
+      "id": "hk-wind-12",
+      "title": "A wind kong scores the wind line just as a pung does",
+      "cite": "RULING HK8a · Family C 香港麻雀協會 official rules 「門風及圈風重疊時計兩番。」",
+      "hand": {
+        "concealed": "123m 456m 789p 55s",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "EEEE",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "1m"
+      },
+      "opts": {
+        "minTai": 0
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "seatWind",
+          "prevailingWind",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 3,
+        "totalTai": 3,
+        "limitApplied": false,
+        "base": 8,
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 0,
+          "winnerTotal": 8
+        }
+      }
+    },
+    {
+      "id": "hk-wind-13",
+      "title": "小四喜 self-drawn and fully concealed",
+      "cite": "RULING HK9/HK12 · Family A 香港蔴雀食糊牌型 / 香港麻雀常用番種 · Family C 香港麻雀協會 official rules",
+      "hand": {
+        "concealed": "EEE SSS WWW 123m NN"
+      },
+      "ctx": {
+        "seat": "N",
+        "prevailing": "N",
+        "win": "selfDraw",
+        "winningTile": "2m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "smallFourWinds",
+          "halfFlush",
+          "selfDraw",
+          "fullyConcealed",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "smallFourWinds",
+            3
+          ],
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "selfDraw",
+            1
+          ],
+          [
+            "fullyConcealed",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 9,
+        "totalTai": 9,
+        "limitApplied": false,
+        "base": 96,
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 48,
+          "winnerTotal": 144
+        }
+      }
+    },
+    {
+      "id": "hk-wind-14",
+      "title": "Three wind triplets with a non-wind eye is not 小四喜",
+      "cite": "RULING HK8a · Family C 香港麻雀協會 official rules 「小四喜 有三個坎⁄槓的風牌﹐再加上一對風牌做眼。」",
+      "note": "The eye is 5m, not the fourth wind, so only the ordinary wind lines score.",
+      "hand": {
+        "concealed": "123m 55m",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "EEE",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "SSS",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "WWW",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "S",
+        "prevailing": "E",
+        "win": "discard",
+        "winningTile": "5m"
+      },
+      "expect": {
+        "valid": true,
+        "patterns": [
+          "halfFlush",
+          "seatWind",
+          "prevailingWind",
+          "noFlowers"
+        ],
+        "fan": [
+          [
+            "halfFlush",
+            3
+          ],
+          [
+            "seatWind",
+            1
+          ],
+          [
+            "prevailingWind",
+            1
+          ],
+          [
+            "noFlowers",
+            1
+          ]
+        ],
+        "rawTai": 6,
+        "totalTai": 6,
+        "limitApplied": false,
+        "base": 32,
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 0,
+          "winnerTotal": 32
+        }
+      }
+    }
+  ]
+}
