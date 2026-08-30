@@ -16,9 +16,12 @@ which is the evidence this file decides on:
 | **D** | Alan Kwan Shiu Ho, 中庸麻雀史觀 第七章 — a named author deriving how 舊章 came out of Chinese Classical. Decisive on payment and the dealer. |
 | **E** | English Wikipedia, the sections explicitly headed *Old Hong Kong*. |
 
-**Rulings marked 🚩 need the owner's ratification**, like Singapore's R12 and
-R16. They are places where the sources genuinely split and somebody has to
-choose.
+**Rulings marked ✅ were ratified by the owner on 2026-08-30**, on the advice of
+their mahjong expert, after Run 3 put them forward. They were the places where
+the sources genuinely split and somebody had to choose; the owner's decision is
+now the citation, and changing one of them requires the owner, not a source.
+
+No Hong Kong ruling is outstanding.
 
 ---
 
@@ -45,19 +48,22 @@ have at least the minimum *faan* value agreed in advance (often 3)."
 「「三番起和」及所謂「全銃」流行了起來…不知道其實是近年的演變。」 — mainstream, but recent.
 Mainstream is what a calculator should default to.
 
-## HK3 — 🚩 The cap is ten faan by default, configurable
+## HK3 — ✅ The cap is ten faan by default, configurable
 
 **Ruling:** default **10**, settable.
 
 `C`, the only official body, sets 10 (「以10番為上限」). `B`: "Most players set a
 maximum Fan limit. 10 is common." `A` names three: 「一般會採用八番例牌、十番例牌或者十三番例牌」.
 
-**Flagged.** 8 and 13 are equally attested. Ten is the official body's answer
-and the modal one, so it is the default; a table that plays 8 or 13 sets it.
-The cap matters more here than in Singapore, because HK7's limit hands are
-priced at 13 and are therefore clipped by it.
+8 and 13 are equally attested. Ten is the official body's answer and the modal
+one, so it is the default; a table that plays 8 or 13 sets it. The cap matters
+more here than in Singapore, because HK8b's limit hands are priced at 13 and are
+therefore clipped by it.
 
-## HK4 — 🚩 Full payment (全銃制) by default, half payment configurable
+**RATIFIED BY THE OWNER, 2026-08-30**, on their mahjong expert's advice: ten is the default and 8 and 13 stay
+settable.
+
+## HK4 — ✅ Full payment (全銃制) by default, half payment configurable
 
 **Ruling:** on a **discard**, the discarder pays the winner's whole score and
 the other two pay nothing. On a **self-draw**, each of the three pays half that
@@ -82,10 +88,13 @@ import: 「舊章本來是採用「出銃么二制」的，但近年受了日本
 `A`'s only table is headed 「分數計算（全銃制）」, and `C`, the official body,
 offers only full payment: 「得分授受法 1.全銃：食出銃時由出銃者包付所有分數。」
 
-**Flagged.** Full payment is the default because it is what the published
-tables and the official rulebook use; half payment ships as a setting because
-`D` and `A` say it is the older one. The sources genuinely split, which is
-exactly the condition for making something configurable rather than choosing.
+Full payment is the default because it is what the published tables and the
+official rulebook use; half payment ships as a setting because `D` and `A` say
+it is the older one. The sources genuinely split, which is exactly the condition
+for making something configurable rather than choosing.
+
+**RATIFIED BY THE OWNER, 2026-08-30**, on their mahjong expert's advice: full
+payment is the default and half payment stays a setting.
 
 ## HK5 — There is no dealer multiplier
 
@@ -109,7 +118,7 @@ This is a real difference from Singapore, and the biggest single structural one.
 **Ruling:** unanimous across `A`, `B`, `C`, `E`. `B`: "If East wins the Hand,
 the Seat Winds do not rotate. East gets to be Dealer again."
 
-## HK7 — 🚩 The dealer keeps the deal on a washout
+## HK7 — ✅ The dealer keeps the deal on a washout
 
 **Ruling:** the dealer keeps the deal, matching Singapore's R16.
 
@@ -118,8 +127,11 @@ Genuinely split, and split *within* single sources. Keeps: `A` 「如果冇任�
 `C`'s own 輪莊 clause says the opposite. `A` gives both, calling the pass a
 time-saving shortcut.
 
-**Flagged.** Chosen to match the Singapore behaviour the owner already
-ratified in R16, so one table module serves both variants.
+Chosen to match the Singapore behaviour the owner already ratified in R16, so
+one table module serves both variants.
+
+**RATIFIED BY THE OWNER, 2026-08-30**, on their mahjong expert's advice: the dealer holds the deal
+on a washout, in Hong Kong as in Singapore.
 
 ---
 
@@ -245,7 +257,7 @@ At the default cap of 10 the five 13-faan hands all show 10, which is what a
 table playing the HKMA cap sees. Pricing them at 13 rather than "the cap"
 means raising the cap to 13 produces the right answer instead of the same one.
 
-## HK9 — 🚩 The six conflicted hands, decided
+## HK9 — ✅ The six conflicted hands, decided
 
 Every one of these is `A` against `B`. `C` flattens limit hands to its own cap
 (「例牌一律算10番」), so `C`'s 10 is a cap artifact and **not** a third vote.
@@ -259,10 +271,13 @@ Every one of these is `A` against `B`. `C` flattens limit hands to its own cap
 | 天糊 / 地糊 | 13 例牌 | 10 | **13** | Split 2–2. `A` warns 「「天糊」同「地糊」等奇牌，一定要事先說明例牌番數」 — agree before play; the cap setting is where a table does that. |
 | 坎坎糊 | 8 | 8 (in a block `B` itself flags as contested) | **8** | Both families agree on 8. It replaces 對對糊 rather than adding to it — 8 is quoted as the hand's value, and every 坎坎糊 is trivially a 對對糊. |
 
-**Flagged as a group.** None of these has a fact behind it. `A` footnotes an
-explicit spread on nearly every large hand — 清一色 「六至十番」, 大三元 「五至八番甚至例牌」, 坎坎糊 「五至八番甚至例牌」, 花么九 「三至六番」 — and `B` says the
+None of these has a fact behind it. `A` footnotes an explicit spread on nearly
+every large hand — 清一色 「六至十番」, 大三元 「五至八番甚至例牌」, 坎坎糊 「五至八番甚至例牌」, 花么九 「三至六番」 — and `B` says the
 quiet part out loud: "Perhaps the NEW18 standard is in fact not standardized at
 all." Any single Hong Kong fan table is an editorial choice, and this is ours.
+
+**RATIFIED BY THE OWNER, 2026-08-30**, on their mahjong expert's advice: all six values as chosen — 小四喜 3 as a component, 大四喜 13,
+十八羅漢 13, 九子連環 10, 天糊 / 地糊 13, 坎坎糊 8.
 
 ## HK10 — 例牌 do not stack with ordinary patterns
 
@@ -314,16 +329,18 @@ Two differences from Singapore worth stating plainly, because they will look
 like bugs otherwise: Singapore's 门清 **requires** a self-draw and **tolerates**
 a concealed kong; Hong Kong's 門前清 requires neither and tolerates neither.
 
-## HK13 — 🚩 門前清 scores even when flowers are in play
+## HK13 — ✅ 門前清 scores even when flowers are in play
 
 **Ruling:** it scores. `A` adds a caveat that it is not counted in flower play
 (「如果有打花牌就不計門前清這個番種」); `C` scores it with no such caveat; `B` omits
 the hand from its Old Style list entirely.
 
-**Flagged, and it is the weakest ruling in this file.** `A`'s caveat and `B`'s
-omission point the same direction. Chosen to follow `C`, the official body, and
-to avoid a rule with a hidden exception — but a table that plays `A`'s way is
-not wrong.
+This was the weakest ruling in the file when it was put forward: `A`'s caveat
+and `B`'s omission point the same direction, and it was chosen to follow `C`,
+the official body, and to avoid a rule with a hidden exception.
+
+**RATIFIED BY THE OWNER, 2026-08-30**, on their mahjong expert's advice: the concealed hand scores whether or not flowers are in play, per the official
+body. No longer provisional.
 
 ## HK14 — 平糊 has no pair restriction and no wait restriction
 

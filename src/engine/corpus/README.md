@@ -114,3 +114,34 @@ split. Every other file's payment triple was expanded from those same published
 rules by the authoring helper. If that expansion were wrong, file 09 fails.
 The engine implements the curve independently, and
 `hongkong.corpus.test.ts` checks `basePoints()` against the typed-out column.
+
+---
+
+## Layout (prediction, Run 4)
+
+`predict/` holds one file, 26 entries, and it works differently from the two
+scoring corpora because prediction is a SEARCH, not a rule.
+
+Each entry asserts **structure** — which state the panel should be in, how far
+from home the hand is, and which hands must or must not be on offer — and those
+were written by hand from the tiles. On top of that,
+`predict.corpus.test.ts` applies **invariants to every candidate of every
+entry**, and those are the ones that matter:
+
+| Invariant | What it stops |
+|---|---|
+| Every fan figure is re-derived from the variant's own `score()` | A suggestion worth less than it claims |
+| No suggestion uses a fifth copy of any tile | A hand that cannot be built |
+| No suggestion names a tile the variant does not play | An animal on a Hong Kong table |
+| The declared melds and flower tray come back untouched | A plan that quietly discards a claimed set |
+| Every suggestion is exactly the hand size the variant asks for | Kong arithmetic going wrong |
+| The stated distance equals the tiles asked for | "Three away" that needs four tiles |
+| Every discard names a tile actually held | Being told to throw away something you do not have |
+| No two suggestions are the same hand | Four rows that say one thing |
+
+The design rule the module is built around is that **the predictor proposes and
+the scorer certifies**. There is no fan table in `src/engine/predict/`, and
+there must never be one: every candidate is a complete, legal hand that has
+been through the variant's own `score()`, and the number reported is the number
+that scorer returned. A fan claim is a rules claim, so entries that assert a
+specific value cite the ruling behind it.

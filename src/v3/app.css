@@ -1,0 +1,617 @@
+@import './tokens.css';
+
+/* ============================================================================
+   Mahjongyuk v3 — the screen furniture.
+
+   THE DEPTH LAW, and it is a closed list. RAISED — a 4px hard coloured lip
+   and 3px of press travel — belongs to exactly four things: the tile, the
+   primary button, the fan medal, the wordmark tile. Everything else is either
+   FLAT (a card with a hairline) or CARVED IN (an inset well). Any raised
+   element outside that list is a bug.
+
+   The retired look's grout gaps, 2px radii, hairline borders and tracked-out
+   uppercase labels are all gone. The uppercase in particular: it was the
+   strongest "document" tell, and Bahasa Indonesia runs 20–30% longer, so a
+   tracked-out uppercase label does not fit a 360px button.
+   ========================================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--mj-ground-2);
+  color: var(--mj-ink);
+  font: 400 0.9375rem/1.55 var(--f-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The gradient is painted on the SHELL. `.shell` covers the viewport with an
+   opaque ground, so a gradient on `body` would never be seen. */
+.shell {
+  max-width: var(--col);
+  margin: 0 auto;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--mj-ground) 0%, var(--mj-ground-2) 58%)
+              var(--mj-ground-2);
+}
+
+/* min-height:0 is load-bearing: without it this flex child grows instead of
+   scrolling, the document scrolls instead, and the tabs slide away with it.
+   overflow-x:clip is the companion — overflow-y:auto computes overflow-x to
+   auto, which is how a rotated wordmark tile becomes a horizontal scrollbar. */
+.scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: clip;
+  overscroll-behavior: contain;
+  padding: 0 var(--pad) var(--pad);
+}
+
+/* ── tile grids. The extra 4px of row gap IS the lip; without it lips
+      collide with the tile below. Column width at 360px: n=5 → 59.2,
+      n=4 → 76. Both clear the 44px floor; n=7 does not, and does not exist. */
+.grid { display: grid; gap: var(--gap-row) var(--gap); }
+.grid--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* ── cards: flat, hairlined, in BOTH themes. A white card on the mint ground
+      is 1.24:1, and a 6%-alpha shadow is not structure on a phone at low
+      brightness — so the hairline ships everywhere. ───────────────────── */
+.card, .slip, .chit {
+  background: var(--mj-card);
+  /* A background without a colour is a dark-theme bug waiting: the game card
+     headings rendered in UA black at 1.42:1 on the dark card. */
+  color: var(--mj-ink);
+  border-radius: var(--r-card);
+  padding: var(--sp-4);
+  border: 1px solid var(--mj-line);
+  box-shadow: 0 1px 2px var(--mj-shadow-soft), 0 8px 20px -12px var(--mj-shadow);
+}
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .slip,
+:root[data-theme="dark"] .chit { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .card,
+  :root:not([data-theme="light"]) .slip,
+  :root:not([data-theme="light"]) .chit { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06); }
+}
+/* CARVED IN. The inset shadow alone composited to 1.01–1.07:1 in dark, so
+   every well in the app was invisible; the hairline is what makes "carved"
+   a boundary rather than a hope. */
+.well, .tray, .tray__group, .totalband {
+  box-shadow: inset 0 0 0 1px var(--mj-line), inset 0 2px 6px var(--mj-shadow-soft);
+}
+.well { background: var(--mj-felt); border-radius: var(--r-well); padding: 10px; }
+
+/* ── type ─────────────────────────────────────────────────────────────── */
+.title { font: 500 1.5rem/1.2 var(--f-display); letter-spacing: 0;
+         text-transform: none; margin: 20px 0 4px; text-wrap: balance; }
+.sub { color: var(--mj-muted); margin: 0 0 16px; max-width: 42ch; font-size: 0.875rem; }
+.caps { font: 500 0.9375rem/1.2 var(--f-display); letter-spacing: 0;
+        text-transform: none; color: var(--mj-ink); }
+.grouplabel { display: flex; align-items: center; gap: 10px; margin: 16px 0 8px;
+              min-height: 24px; }
+.grouplabel__rule { flex: 1; }
+.grouplabel__n, .pillcount {
+  font: 500 0.8125rem/1 var(--f-body); color: var(--mj-muted);
+  font-variant-numeric: tabular-nums;
+  background: var(--mj-felt); border-radius: var(--r-pill); padding: 6px 10px;
+}
+
+/* ── buttons: pills. The mandarin fill is only 1.74:1 against the mint
+      ground; its 4px lip is 3.40:1, so the BOUNDARY clears the 3:1 non-text
+      bar via the lip. That is why the lip is a colour and not a blur. ──── */
+.btn {
+  min-height: 52px; border-radius: var(--r-pill); padding: 0 22px;
+  font: 500 1rem/1 var(--f-display); text-transform: none; letter-spacing: 0;
+  border: 0; cursor: pointer; display: inline-flex; align-items: center;
+  justify-content: center; gap: 8px; background: var(--mj-card); color: var(--mj-ink);
+  box-shadow: 0 2px 0 var(--mj-line), 0 6px 14px -10px var(--mj-shadow);
+}
+.btn--block { width: 100%; }
+.btn--primary {
+  background: var(--mj-mandarin); color: var(--mj-on-mandarin);
+  box-shadow: 0 4px 0 var(--mj-mandarin-lip), 0 10px 18px -8px rgb(184 103 10 / 0.5);
+}
+.btn--primary:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--mj-mandarin-lip); }
+.btn--ghost { background: var(--mj-card); color: var(--mj-ink); }
+.btn:disabled {
+  background: var(--mj-disabled-fill); color: var(--mj-disabled);
+  /* Lose the lift, keep a boundary: the fill alone is 1.06:1 on the ground. */
+  box-shadow: inset 0 0 0 1px var(--mj-line); cursor: not-allowed; transform: none;
+}
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid var(--mj-focus); outline-offset: 3px;
+}
+
+/* ── the landing: a real front door ──────────────────────────────────── */
+/* clip rather than hidden, with a margin, so a focus ring on the language
+   toggle is not shaved off at the hero's edge. */
+/* 26dvh, not 30: the Indonesian front door runs longer at every level — the
+   tagline, the heading and both blurbs — and at 30dvh the second card's
+   bottom fell 22px past the fold on the reference screen. */
+.hero { position: relative; overflow: clip; overflow-clip-margin: 6px; padding-top: 34px;
+        min-height: clamp(160px, 26dvh, 220px); }
+.hero__wall { position: absolute; top: -34px; left: -6px; right: -6px;
+              display: flex; gap: 6px; pointer-events: none; z-index: 0; }
+.hero__wall > i {
+  flex: 0 0 44px; height: 56px; border-radius: var(--r-tile);
+  background: linear-gradient(160deg, var(--mj-back), var(--mj-back-2));
+  box-shadow: 0 4px 0 var(--mj-back-lip), 0 8px 12px -6px var(--mj-shadow);
+}
+.hero__inner { position: relative; z-index: 1; padding-top: 34px; }
+.hero__invite { margin: 6px 0 0; font: 500 1.0625rem/1.35 var(--f-display);
+                color: var(--mj-ink); }
+.wm { margin: 0; }
+.wm__svg { width: 100%; max-width: 300px; height: auto; display: block; overflow: visible; }
+
+.gamecard { display: flex; flex-direction: column; gap: 10px; width: 100%;
+            text-align: left; cursor: pointer; margin-top: 14px; }
+/* The depth law forbids a card a lip, so the press is carved in instead. */
+.gamecard:active {
+  box-shadow: inset 0 0 0 1px var(--mj-line), inset 0 2px 6px var(--mj-shadow-soft);
+}
+.gamecard__top { display: flex; align-items: center; gap: 12px; }
+.gamecard__name { flex: 1; font: 600 1.375rem/1.15 var(--f-display); margin: 0;
+                  text-wrap: balance; }
+.gamecard__n {
+  flex: 0 0 56px; width: 56px; height: 56px; border-radius: var(--r-pill);
+  display: grid; place-items: center; background: var(--mj-mandarin);
+  color: var(--mj-on-mandarin); font: 600 1.5rem/1 var(--f-display);
+  font-variant-numeric: tabular-nums;
+}
+/* Two lines in every locale: the Indonesian blurb runs longer and pushed the
+   second card past the fold. The clamp lives on an INNER span because a flex
+   item's display is blockified, which silently turned -webkit-box into
+   flow-root and clipped a line in half instead of ending it. */
+.gamecard__blurb { margin: 0; font-size: 0.875rem; color: var(--mj-muted); }
+.gamecard__blurb > span {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.gamecard__foot { display: flex; align-items: flex-end; gap: 8px; }
+/* flex-end, so the landscape bonus tile keeps its 5:4 instead of being
+   stretched to the height of the portrait ones, and the row lines up on the
+   tiles' lips — which is how they sit on a table anyway. */
+.gamecard__tiles { display: flex; gap: var(--gap); flex: 1; align-items: flex-end; }
+.gamecard__tiles .tile { width: 52px; }
+.gamecard__go {
+  flex: 0 0 auto; min-height: 44px; padding: 0 18px; border-radius: var(--r-pill);
+  background: var(--mj-mandarin); color: var(--mj-on-mandarin);
+  font: 500 0.9375rem/1 var(--f-display); display: grid; place-items: center;
+}
+/* Two cards and a hero do not fit a 640pt screen; below that it scrolls. */
+@media (max-height: 680px) {
+  .hero { min-height: 150px; padding-top: 26px; }
+  .hero__wall > i { height: 46px; }
+  .wm__svg { max-width: 250px; }
+  .hero__invite { display: none; }
+}
+
+/* ── language ─────────────────────────────────────────────────────────── */
+.langtoggle {
+  display: inline-flex; gap: 2px; padding: 3px; margin: 0;
+  background: var(--mj-felt); border: 1px solid var(--mj-line);
+  border-radius: var(--r-pill);
+}
+.langtoggle__opt {
+  min-height: 44px; min-width: 44px; padding: 0 14px; cursor: pointer; border: 0;
+  border-radius: var(--r-pill); background: none; color: var(--mj-muted);
+  font: 500 0.8125rem/1 var(--f-display);
+}
+.langtoggle__opt[aria-checked="true"] {
+  background: var(--mj-mandarin); color: var(--mj-on-mandarin);
+}
+.hero__lang { position: absolute; top: 6px; right: 0; z-index: 2; }
+
+/* ── status pills, replacing the solid signboard band ─────────────────── */
+.signboard { display: flex; align-items: stretch; gap: 6px;
+             padding: 10px var(--pad) 0; }
+.signboard__seg {
+  flex: 1; min-width: 0; min-height: 44px; display: flex; flex-direction: column;
+  justify-content: center; gap: 1px; padding: 4px 10px; border: 0;
+  border-radius: var(--r-field); background: var(--mj-card); color: var(--mj-ink);
+  text-align: left; cursor: pointer;
+  box-shadow: 0 1px 2px var(--mj-shadow-soft);
+}
+.signboard__k { font: 400 0.6875rem/1 var(--f-body); color: var(--mj-muted);
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.signboard__v { font: 500 0.875rem/1.1 var(--f-display);
+                font-variant-numeric: tabular-nums; white-space: nowrap;
+                overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.signboard__info {
+  flex: 0 0 44px; width: 44px; min-height: 44px; display: grid; place-items: center;
+  border: 0; border-radius: var(--r-pill); background: var(--mj-card);
+  color: var(--mj-ink); cursor: pointer; font: 500 1.125rem/1 var(--f-display);
+  box-shadow: 0 1px 2px var(--mj-shadow-soft);
+}
+
+/* ── seats. The dealer gets a ring AND a letter; never the ring alone. ── */
+.seats { display: flex; gap: 6px; padding: 10px var(--pad) 0; }
+.seat { flex: 1; min-width: 0; display: flex; flex-direction: column;
+        align-items: center; gap: 3px; }
+.seat__avatar {
+  width: 32px; height: 32px; border-radius: var(--r-pill); display: grid;
+  place-items: center; font: 700 0.8125rem/1 var(--f-cjk);
+  background: var(--mj-seat-e); color: var(--mj-on-seat);
+}
+.seat[data-wind="S"] .seat__avatar { background: var(--mj-seat-s); }
+.seat[data-wind="W"] .seat__avatar { background: var(--mj-seat-w); }
+.seat[data-wind="N"] .seat__avatar { background: var(--mj-seat-n); }
+.seat[data-dealer="true"] .seat__avatar { box-shadow: 0 0 0 2px var(--mj-mandarin); }
+.seat__name { font-size: 0.6875rem; color: var(--mj-muted); max-width: 100%;
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The lip tokens are boundary colours, audited to the 3:1 NON-TEXT bar. Used
+   as text they measured 3.40:1 (this label) and 3.82:1 (the tray's add
+   affordance) — both below AA. The mandarin ring on the avatar is what carries
+   the emphasis; the word only has to be readable. */
+.seat__deal { font-size: 0.625rem; color: var(--mj-ink); font-weight: 600; }
+
+/* ── the suit picker: a segmented control ────────────────────────────── */
+.tabs {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px;
+  margin: 10px var(--pad) 0; padding: 4px;
+  background: var(--mj-felt); border-radius: var(--r-pill);
+}
+.tab {
+  min-height: 48px; border: 0; border-radius: var(--r-pill); background: none;
+  color: var(--mj-muted); cursor: pointer; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1px; padding: 0 2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--mj-card); color: var(--mj-ink); font-weight: 600;
+  box-shadow: 0 2px 5px var(--mj-shadow-soft);
+}
+.tab__cjk { font: 700 0.9375rem/1 var(--f-cjk); }
+.tab__cap { font: 500 0.625rem/1 var(--f-body); letter-spacing: 0;
+            text-transform: none; }
+
+/* ── the tray is a rack: carved-in felt with popped-out tiles in it ───── */
+.trayhead { display: flex; align-items: center; gap: 10px; margin: 16px 0 8px;
+            min-height: 32px; }
+.trayhead__n { font: 500 0.875rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.trayhead__sp { flex: 1; }
+.linkbtn {
+  min-height: 44px; padding: 0 14px; border: 0; border-radius: var(--r-pill);
+  background: var(--mj-card); color: var(--mj-ink); cursor: pointer;
+  font: 500 0.8125rem/1 var(--f-display);
+  box-shadow: 0 1px 2px var(--mj-shadow-soft);
+}
+.linkbtn:disabled { background: var(--mj-disabled-fill); color: var(--mj-disabled);
+                    box-shadow: none; cursor: not-allowed; }
+.tray {
+  display: flex; flex-wrap: wrap; gap: var(--gap-row) var(--gap);
+  background: var(--mj-felt); border-radius: var(--r-well); padding: 10px;
+  min-height: 74px;
+  /* Both axes: without align-items the loose tiles stretched to the height of
+     whatever meld shared their line, so the same tile drew at 44, 48 and 74. */
+  align-content: flex-start; align-items: flex-start;
+}
+.tray__one { display: flex; align-items: flex-start; }
+.tray__group {
+  display: flex; flex-direction: column; gap: 4px; padding: 6px;
+  border: 0; border-radius: var(--r-field); cursor: default;
+  background: var(--mj-felt); color: var(--mj-ink);
+}
+/* Face-up versus in-hand is FILL plus BOUNDARY, not raised versus recessed:
+   the plinth was a raised element outside the depth law's closed list of
+   four, and the concealed well was 1.00:1 against the rack it sat in. */
+.tray__group--exposed {
+  background: var(--mj-card); color: var(--mj-ink); cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--mj-line), 0 1px 2px var(--mj-shadow-soft);
+}
+.tray__group--exposed .tile { filter: none; }
+.tray__tiles { display: flex; gap: 4px; }
+/* 40px is fine for a meld's own tiles, which are pictures. The concealed-kong
+   group's tiles are buttons and must keep the 44px floor. */
+.tray__group--exposed .tray__tiles > .tile { width: 40px; }
+.tray__tag { font: 500 0.625rem/1 var(--f-body); color: var(--mj-muted);
+             text-align: center; letter-spacing: 0; text-transform: none; }
+.tray__tag--auto { color: var(--mj-ink); font-weight: 600; }
+.chipnote { margin: 8px 0 0; padding: 10px 12px; border-radius: var(--r-field);
+            background: var(--mj-card); color: var(--mj-ink);
+            border: 1px solid var(--mj-line); font-size: 0.8125rem; }
+.bonusheld {
+  width: 100%; margin-top: 10px; min-height: 48px; display: flex;
+  align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 12px; border: 0;
+  border-radius: var(--r-field); background: var(--mj-card); color: var(--mj-ink);
+  cursor: pointer; text-align: left; box-shadow: 0 1px 2px var(--mj-shadow-soft);
+}
+.bonusheld__x { font-size: 0.8125rem; background: var(--mj-felt);
+                border-radius: var(--r-pill); padding: 4px 10px; }
+.bonusheld__none { font-size: 0.8125rem; color: var(--mj-muted); flex: 1; }
+.bonusheld__go { margin-left: auto; font: 500 0.8125rem/1 var(--f-display);
+                 color: var(--mj-ink); }
+
+/* ── declaring a meld ────────────────────────────────────────────────── */
+.declarerow { display: grid; grid-template-columns: repeat(3, 1fr);
+              gap: 8px; margin-top: 12px; scroll-margin-bottom: 16px; }
+.declarerow > .btn { grid-column: 1 / -1; }
+.declareopt {
+  min-height: 64px; border: 1px solid var(--mj-line); border-radius: var(--r-field);
+  background: var(--mj-card); color: var(--mj-ink); cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; padding: 8px 4px;
+}
+.declareopt:disabled { background: var(--mj-disabled-fill); color: var(--mj-disabled);
+                       border-color: transparent; cursor: not-allowed; }
+.declareopt__k { font: 500 0.9375rem/1 var(--f-display); letter-spacing: 0;
+                 text-transform: none; }
+.declareopt__s { font: 400 0.6875rem/1.2 var(--f-body); color: var(--mj-muted);
+                 text-align: center; }
+.shell[data-focus] .tabs .tab[disabled] { opacity: 0.4; }
+.shell[data-focus] .bonusgrid { opacity: 0.4; }
+
+/* ── the dock. A flex sibling of .scroll, not an overlay — so no backdrop
+      filter; the content dissolves into the ground instead. ───────────── */
+.dock {
+  position: sticky; bottom: 0; z-index: 5; border: 0;
+  background: linear-gradient(180deg, transparent 0, var(--mj-ground-2) 22%,
+              var(--mj-ground-2) 100%);
+  padding: 12px var(--pad) calc(12px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 8px;
+}
+.dock__row { display: flex; gap: 8px; }
+.dock__row .btn--block { flex: 1; }
+/* Reserved height, so the buttons never move under a thumb already reaching. */
+.docknote { margin: 0; min-height: 40px; display: flex; align-items: center;
+            gap: 10px; font-size: 0.8125rem; color: var(--mj-muted); }
+.docknote[data-empty] { visibility: hidden; }
+
+/* ── forms ────────────────────────────────────────────────────────────── */
+.field { margin: 16px 0; }
+.field__label { display: block; font: 500 0.9375rem/1.3 var(--f-display);
+                margin-bottom: 8px; }
+.field__hint { display: block; margin-top: 8px; font-size: 0.8125rem;
+               color: var(--mj-muted); }
+.input {
+  width: 100%; min-height: 52px; padding: 0 14px; border-radius: var(--r-field);
+  border: 1px solid var(--mj-line); background: var(--mj-card); color: var(--mj-ink);
+  font: 400 1rem/1.2 var(--f-body); /* 16px minimum: below it iOS zooms the form */
+}
+.input:focus { border-color: var(--mj-mandarin); outline: 3px solid var(--mj-focus);
+               outline-offset: 2px; }
+.input::placeholder { color: var(--mj-muted); opacity: 1; }
+.namerow { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.namerow__wind {
+  flex: 0 0 40px; width: 40px; height: 40px; border-radius: var(--r-pill);
+  display: grid; place-items: center; font: 700 1rem/1 var(--f-cjk);
+  background: var(--mj-seat-e); color: var(--mj-on-seat);
+}
+.namerow__you { flex: 0 0 auto; font: 500 0.75rem/1 var(--f-display);
+                padding: 8px 12px; border-radius: var(--r-pill);
+                background: var(--mj-jade); color: var(--mj-on-jade); }
+.chiprow, .windrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip, .windchip {
+  min-height: 48px; min-width: 48px; padding: 0 16px; border: 1px solid var(--mj-line);
+  border-radius: var(--r-pill); background: var(--mj-card); color: var(--mj-ink);
+  cursor: pointer; font: 500 0.9375rem/1 var(--f-display);
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.windchip { flex-direction: column; gap: 2px; flex: 1; }
+.chip[aria-checked="true"], .windchip[aria-checked="true"] {
+  background: var(--mj-jade); color: var(--mj-on-jade); border-color: var(--mj-jade);
+}
+.windchip__cjk { font: 700 1rem/1 var(--f-cjk); }
+.windchip__cap { font: 400 0.6875rem/1 var(--f-body); }
+.chipnote, .field__hint { text-wrap: pretty; }
+
+/* ── sheets ───────────────────────────────────────────────────────────── */
+.sheet__scrim { position: fixed; inset: 0; z-index: 20; display: flex;
+                align-items: flex-end; justify-content: center;
+                background: var(--mj-scrim); }
+.sheet {
+  width: 100%; max-width: var(--col); max-height: 86dvh; overflow-y: auto;
+  background: var(--mj-card); color: var(--mj-ink); border: 0;
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  padding: 16px var(--pad) calc(16px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 14px;
+}
+.sheet::before {
+  content: ""; align-self: center; width: 36px; height: 5px; flex: 0 0 5px;
+  border-radius: var(--r-pill); background: var(--mj-line);
+}
+.sheet__title { margin: 0; font: 500 1.125rem/1.25 var(--f-display);
+                letter-spacing: 0; text-transform: none; }
+.sheet__body { font-size: 0.9375rem; line-height: 1.55; }
+.sheet__body p { margin: 0; }
+.menulist { display: flex; flex-direction: column; gap: 8px; }
+.menuitem {
+  min-height: 60px; text-align: left; cursor: pointer; padding: 12px 14px;
+  border: 1px solid var(--mj-line); border-radius: var(--r-field);
+  background: var(--mj-card); color: var(--mj-ink);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.menuitem--inert { flex-direction: row; align-items: center;
+                   justify-content: space-between; gap: 10px; cursor: default; }
+.menuitem--danger { color: var(--mj-pay); }
+.menuitem__k { font: 500 0.9375rem/1.2 var(--f-display); }
+.menuitem__s { font-size: 0.8125rem; color: var(--mj-muted); }
+
+/* The wizard's exits are pinned: step 2 is taller than the 86dvh cap the
+   moment a win method is picked, and both exits used to fall off the screen. */
+.sheet .dock__row {
+  display: flex; gap: 8px; position: sticky; z-index: 1;
+  bottom: calc(-16px - env(safe-area-inset-bottom));
+  margin-top: auto; padding: 10px 0 calc(16px + env(safe-area-inset-bottom));
+  background: var(--mj-card); color: var(--mj-ink);
+  box-shadow: 0 -1px 0 var(--mj-line);
+}
+.wizard__step { margin: 0; font: 400 0.75rem/1 var(--f-body); color: var(--mj-muted); }
+.wizard__flags { display: flex; flex-direction: column; gap: 8px; }
+.wizard__melds { display: flex; flex-wrap: wrap; gap: 8px; }
+/* A rail, not a 7-column grid: at 360px seven columns computes to 40px,
+   below the 44px floor, and a third row would overflow the sheet. */
+.tilerail { display: flex; gap: var(--gap); overflow-x: auto; padding-bottom: 6px;
+            scroll-snap-type: x mandatory; }
+.tilerail .tile { flex: 0 0 56px; width: 56px; scroll-snap-align: start; }
+.wingrid { display: flex; flex-direction: column; gap: 8px; }
+.wingrid__opt {
+  min-height: 52px; padding: 0 16px; border: 1px solid var(--mj-line);
+  border-radius: var(--r-field); background: var(--mj-card); color: var(--mj-ink);
+  cursor: pointer; font: 500 0.9375rem/1 var(--f-display); text-align: left;
+  display: flex; align-items: center;
+}
+.wingrid__opt[aria-checked="true"] { background: var(--mj-jade);
+  color: var(--mj-on-jade); border-color: var(--mj-jade); }
+.unusual { display: flex; gap: 8px; align-items: stretch; }
+.unusual__pick {
+  flex: 1; min-height: 56px; padding: 8px 14px; border: 1px solid var(--mj-line);
+  border-radius: var(--r-field); background: var(--mj-card); color: var(--mj-ink);
+  cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 2px;
+}
+.unusual__pick[aria-pressed="true"] { background: var(--mj-jade);
+  color: var(--mj-on-jade); border-color: var(--mj-jade); }
+.unusual__name { font: 500 0.9375rem/1.2 var(--f-display); }
+.unusual__sub { font-size: 0.75rem; opacity: 0.85; }
+.unusual__why {
+  flex: 0 0 48px; width: 48px; border: 1px solid var(--mj-line);
+  border-radius: var(--r-pill); background: var(--mj-card); color: var(--mj-ink);
+  cursor: pointer; font: 500 1rem/1 var(--f-display);
+}
+
+/* ── results ──────────────────────────────────────────────────────────── */
+.resulthead { display: flex; align-items: center; gap: 14px; margin: 16px 0 6px; }
+.fanmedal {
+  flex: 0 0 112px; width: 112px; height: 112px; border-radius: 32px;
+  display: grid; place-items: center; align-content: center; gap: 0;
+  background: linear-gradient(150deg, var(--mj-mandarin-hi), var(--mj-mandarin));
+  color: var(--mj-on-mandarin);
+  box-shadow: 0 6px 0 var(--mj-mandarin-lip), 0 16px 26px -12px rgb(184 103 10 / 0.55);
+}
+.fan { font: 600 3.25rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.fan__unit { font: 500 0.75rem/1 var(--f-body); }
+.handname { margin: 6px 0 0; font: 500 1.25rem/1.25 var(--f-display); }
+.handname__cjk { font-family: var(--f-cjk); font-size: 0.8125rem;
+                 color: var(--mj-muted); font-weight: 700; }
+.capnote { margin: 0 0 10px; font-size: 0.8125rem; color: var(--mj-muted); }
+.breakdown, .ledger { width: 100%; border-collapse: collapse; }
+.breakdown td { padding: 10px 0; border-top: 1px solid var(--mj-line); font-size: 0.875rem; }
+.breakdown tr:first-child td { border-top: 0; }
+.breakdown td:last-child { text-align: right; font: 800 0.9375rem/1 var(--f-body);
+                           font-variant-numeric: tabular-nums; }
+.ledger td { padding: 12px 0; border-top: 1px solid var(--mj-line); }
+.ledger tr:first-child td { border-top: 0; }
+.ledger__amt { text-align: right; font: 800 1.5rem/1.1 var(--f-body);
+               font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ledger__amt.collect { color: var(--mj-collect); }
+.ledger__amt.pay { color: var(--mj-pay); }
+.ledger__amt.zero { color: var(--mj-disabled); }
+.seatcell { display: flex; align-items: center; gap: 10px; }
+.seatcell__name { font: 600 0.9375rem/1.2 var(--f-body); }
+.seatcell__verb { font-size: 0.75rem; color: var(--mj-muted); }
+/* The ledger's seat glyph is a REAL wind tile: the app's own material, in the
+   payment output, with no cartoon anywhere near it. */
+.seatcell .tile { flex: 0 0 34px; width: 34px; min-height: 0; aspect-ratio: 34 / 42; }
+.totalband {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 72px; padding: 0 16px; margin-top: 12px;
+  background: var(--mj-felt); border-radius: var(--r-well);
+}
+.totalband__k { font: 500 0.9375rem/1.2 var(--f-display); }
+.totalband__v { font: 600 2.125rem/1 var(--f-display); color: var(--mj-collect);
+                font-variant-numeric: tabular-nums; }
+.collectline { display: none; }
+
+/* ── what could this become? ─────────────────────────────────────────── */
+.predict { margin-top: 14px; }
+.predict__head {
+  position: sticky; top: 0; z-index: 4;
+  width: 100%; min-height: 56px; display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; cursor: pointer; text-align: left; border: 1px solid var(--mj-line);
+  border-radius: var(--r-card); background: var(--mj-card); color: var(--mj-ink);
+}
+.predict__title { flex: 1; font: 500 1rem/1.25 var(--f-display); }
+.predict__toggle { flex: 0 0 auto; font: 400 0.8125rem/1 var(--f-body);
+                   color: var(--mj-muted); }
+.predict__chev { flex: 0 0 auto; width: 20px; height: 20px; }
+.predict__head[aria-expanded="true"] .predict__chev { transform: rotate(180deg); }
+.predict__body { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.predict__note { margin: 0; font-size: 0.875rem; }
+/* The SVG must not shrink: as a flex item it was squashed to 30x28, smaller
+   than the header bird this direction deliberately killed. */
+.predict__cuit { display: flex; align-items: center; gap: 12px; }
+.predict__cuit .cuit { flex: 0 0 auto; width: 56px; height: 56px; }
+.predict__hints { margin: 0; padding: 0; list-style: none; display: flex;
+                  gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; }
+.predict__hints > li {
+  flex: 0 0 168px; scroll-snap-align: start; padding: 12px 14px;
+  border-radius: 16px; background: var(--mj-felt); font-size: 0.8125rem;
+  box-shadow: inset 0 0 0 1px var(--mj-line);
+}
+.cand { display: flex; flex-direction: column; gap: 8px; }
+.cand__head { display: flex; align-items: flex-start; gap: 10px; }
+.cand__name { margin: 0; flex: 1; font: 500 0.9375rem/1.25 var(--f-display);
+              text-wrap: balance; }
+.cand__meta { margin: 0; display: flex; flex-direction: column; align-items: flex-end;
+              gap: 2px; flex: 0 0 auto; }
+.cand__away { font: 500 0.8125rem/1 var(--f-display);
+              font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cand__fan { font: 500 0.75rem/1 var(--f-body); background: var(--mj-mandarin);
+             color: var(--mj-on-mandarin); border-radius: var(--r-pill);
+             padding: 5px 10px; white-space: nowrap; }
+.cand__label { margin: 0; font: 400 0.75rem/1 var(--f-body); color: var(--mj-muted); }
+/* Tiles stand in felt here as they do in the tray: on bare card the solid
+   tile face measured 1.00:1, so a tile you HOLD was less visible than a ghost
+   of one you do not. */
+.cand__tiles {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start;
+  background: var(--mj-felt); border-radius: var(--r-field); padding: 8px;
+  box-shadow: inset 0 0 0 1px var(--mj-line);
+}
+.cand__tiles .tile { width: 34px; }
+.cand__tiles--drop .tile { width: 30px; }
+.predict__count {
+  flex: 0 0 auto; font: 500 0.75rem/1 var(--f-body); color: var(--mj-muted);
+  background: var(--mj-felt); border-radius: var(--r-pill); padding: 6px 10px;
+  font-variant-numeric: tabular-nums;
+}
+.hint { display: flex; flex-direction: column; gap: 8px; }
+.hint__name { margin: 0; font: 500 0.875rem/1.2 var(--f-display); }
+.hint__tiles { display: flex; gap: 6px; align-items: flex-start; }
+.hint__tiles .tile { width: 30px; }
+.hint__why { margin: 0; font-size: 0.75rem; color: var(--mj-muted); }
+
+/* ── motion. Everything that MOVES is guarded; everything that is STATE is
+      not. The 3px press travel is state: it is the only thing that tells a
+      thumb it hit a physical object. ──────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .btn, .gamecard { transition: transform var(--press), box-shadow var(--press); }
+  .predict__chev { transition: transform 160ms ease; }
+  .tab { transition: background 140ms ease; }
+  .fanmedal { animation: medalpop 320ms cubic-bezier(.2,.9,.3,1.1) 1; }
+  .cuit { animation: bob 2.4s ease-in-out infinite; }
+  .cuit__eyes--open { animation: blink 5.2s step-end infinite; }
+  .sheet { animation: sheetup 180ms ease-out 1; }
+}
+@keyframes medalpop { from { transform: scale(.92); } to { transform: scale(1); } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes blink { 0%, 97% { opacity: 1; } 98%, 99% { opacity: 0; } }
+@keyframes sheetup { from { transform: translateY(12px); opacity: 0; }
+                     to { transform: translateY(0); opacity: 1; } }
+
+/* Cuit's moods. Nothing here carries meaning: he is always aria-hidden and
+   never the only thing carrying a state. */
+.cuit .cuit__eyes--happy, .cuit .cuit__think { display: none; }
+.cuit[data-mood="cheer"] .cuit__eyes--open { display: none; }
+.cuit[data-mood="cheer"] .cuit__eyes--happy { display: block; }
+.cuit[data-mood="think"] .cuit__think { display: block; }
+
+.placeholder { display: none; }
+.masthead { display: none; }
+.pushdown { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+.cand__caveat { margin: 0; font-size: 0.75rem; color: var(--mj-muted); text-wrap: pretty; }

@@ -1,0 +1,217 @@
+═══ DOM ═══
+`src/ui/components/Tile.tsx` keeps its structure. TWO additions only:
+
+1. New prop `needed?: boolean` → emits `data-needed="true"` and takes the
+   accessible name `t('tile.neededName', { tile: tileName(id) })`. Without
+   this a screen reader hears the same name for "you have it" and "you still
+   need it" on the one screen whose job is telling you what you are missing.
+   Add key `tile.neededName` to `src/i18n/en.json`.
+2. `.tile { isolation: isolate }` and `.tile__count { z-index: 2 }` — the
+   badge now overhangs an `overflow: visible` tile.
+
+`--tile-lip` is set purely in CSS from the existing `data-suit` / `data-h`
+attributes. No new DOM for the lip.
+
+═══ GEOMETRY ═══
+.tile { position:relative; aspect-ratio:4/5; min-height:48px; border:0;
+        padding:0; border-radius:var(--r-tile); overflow:visible;
+        isolation:isolate; cursor:pointer; background:none;
+        transition: transform var(--press), box-shadow var(--press); }
+.tile--mini { aspect-ratio:1/1; width:44px; border-radius:var(--r-mini); }
+.tile--bonus { aspect-ratio:5/4; }
+
+GRID INVARIANT — a review lint, not a habit:
+        (360 − 2·16 − (n−1)·8) / n ≥ 44
+  n=5 → 59.2 ✓ (suits)   n=4 → 76 ✓ (honours, bonus)   n=7 → 40.0 ✗
+Every tile grid uses `gap: var(--gap-row) var(--gap)` — 12px rows, 8px
+columns. The extra 4px of row gap is the lip; without it lips collide with
+the tile below. `.tray__group` padding goes 2px → 6px for the same reason.
+
+═══ FACE ═══
+.tile { background: linear-gradient(180deg, var(--mj-tile-hi) 0%,
+                                            var(--mj-tile-face) 78%); }
+.tile--bonus { background: linear-gradient(180deg, var(--mj-bonus-hi) 0%,
+                                                   var(--mj-bonus-face) 78%); }
+
+═══ GLOSS — one layer, never two ═══
+.tile::before { content:""; position:absolute; inset:2px 2px auto; height:38%;
+  border-radius:10px 10px 16px 16px / 10px 10px 26px 26px;
+  background: linear-gradient(180deg, var(--mj-gloss), transparent);
+  pointer-events:none; z-index:0; }
+.tile--mini::before { display:none; }   /* gloss is a full-size affordance;
+  below 48px it only lifts the face under the suit mark and costs contrast.
+  Also removes a paint layer from every tray tile. */
+
+Dark `--mj-gloss` is .06, not .10. At .10 the dark face lifts to #43534E and
+萬 falls to 3.74:1 — a live AA failure in the winning pitch. At .06 the face
+lifts to #36443E and the worst suit clears 4.71:1.
+
+═══ THICKNESS + SHADOW — the whole direction is these two lines ═══
+box-shadow: 0 4px 0 0 var(--tile-lip), 0 9px 14px -6px var(--mj-shadow);
+.tile--mini  → 0 3px 0 0 var(--tile-lip), 0 6px 10px -5px var(--mj-shadow);
+.tile:active:not([data-exhausted]) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--tile-lip), 0 3px 6px -4px var(--mj-shadow); }
+
+EXACTLY ONE blurred shadow per tile. The lip is a 0-blur shadow and costs
+nothing. This recipe is forbidden outside the tile, the primary button, the
+fan medal and the wordmark tile.
+
+LIPS — saturated, never tinted. A pale lip is the failure the owner already
+rejected once ("reads as a soft underline, not thickness").
+.tile[data-suit="m"] { --tile-lip: var(--mj-lip-m);   --suit: var(--mj-suit-m); }
+.tile[data-suit="p"] { --tile-lip: var(--mj-lip-p);   --suit: var(--mj-suit-p); }
+.tile[data-suit="s"] { --tile-lip: var(--mj-lip-s);   --suit: var(--mj-suit-s); }
+.tile--honour        { --tile-lip: var(--mj-lip-wind); }
+.tile[data-h="C"]    { --tile-lip: var(--mj-lip-m); }
+.tile[data-h="F"]    { --tile-lip: var(--mj-lip-s); }
+.tile--bonus         { --tile-lip: var(--mj-bonus-lip); }
+Every lip clears 3:1 against BOTH its own face and the page ground, so the
+tile always has an edge and always has a silhouette.
+
+═══ THE THREE ENCODINGS ═══
+(1) RANK NUMERAL — .tile__rank
+    position:absolute; left:0; right:0; top:9%; text-align:center;
+    font: 500 var(--rank-size,30px)/1 var(--f-display);
+    font-variant-numeric: tabular-nums; color: var(--mj-tile-ink);
+    .tile--mini .tile__rank { top:2px; left:5px; right:auto; text-align:left;
+                              --rank-size:19px; }
+
+(2) COLOURED CJK MARK — .tile__mark, directly under the numeral, clear of
+    the gloss band on full-size tiles.
+    position:absolute; left:0; right:0; top:53%; text-align:center;
+    font: 700 17px/1 var(--f-cjk); color: var(--suit);
+    .tile--mini .tile__mark { top:3px; right:4px; left:auto; font-size:11px; }
+
+(3) THE RULE — restyled so the SHAPE RHYMES WITH THE SUIT. It stops being an
+    arbitrary solid/dotted/dashed lookup and becomes a mnemonic, so the
+    redundant encoding teaches instead of merely disambiguating.
+    .tile__rule { position:absolute; left:22%; right:22%; bottom:9%;
+                  height:5px; border:0; color: var(--suit); }
+    [data-suit="m"] 萬 → ONE SOLID BAR (a brush stroke):
+        background: currentColor; border-radius:3px;
+    [data-suit="p"] 筒 → THREE DOTS (coins):
+        background-image: radial-gradient(circle at 50% 50%,
+                          currentColor 0 44%, transparent 46%);
+        background-size: 33.334% 100%; background-repeat: repeat-x;
+    [data-suit="s"] 索 → THREE DASHES (sticks):
+        background-image: linear-gradient(90deg,
+                          currentColor 0 64%, transparent 64%);
+        background-size: 33.334% 100%; background-repeat: repeat-x;
+    .tile--mini .tile__rule { left:14%; right:14%; bottom:6px; height:4px; }
+    → 7px dots at 44px, still three distinct shapes.
+
+The border-bottom construction in tile.css:41-44 is deleted. `height:0` and
+`border-bottom` cannot draw dots at 3px; this can.
+
+═══ HONOURS ═══
+.tile--honour .tile__glyph { position:absolute; inset:8% 0 30%;
+  display:grid; place-items:center; font:700 34px/1 var(--f-cjk);
+  color: var(--mj-tile-ink); }
+[data-h="C"] .tile__glyph { color: var(--mj-suit-m); }
+[data-h="F"] .tile__glyph { color: var(--mj-suit-s); }
+白 keeps today's correct construction — the glyph hidden, the frame drawn:
+[data-h="P"] .tile__glyph { visibility:hidden; }
+[data-h="P"]::after { content:""; position:absolute; inset:24% 22% 30%;
+  border-radius:6px; box-shadow: inset 0 0 0 3px var(--mj-suit-s); }
+.tile__cap { position:absolute; left:0; right:0; bottom:8%; text-align:center;
+  font: 500 11px/1 var(--f-display); letter-spacing:0; text-transform:none;
+  color: var(--mj-tile-cap); }   /* sentence case — uppercase is dead */
+.tile--mini .tile__cap { display:none; }
+
+═══ BONUS TILES — a different class of object, on sight ═══
+Landscape 5/4, peach face in light / warm brown in dark, gold lip. A peach
+tile in a tray of white ones reads instantly as "set aside", which is true:
+bonus tiles are never part of the 14. Glyph 25px in --mj-bonus-ink, cap 9px
+in --mj-bonus-cap with `overflow-wrap:anywhere`.
+
+.tile__seat becomes a PILL: position:absolute; top:4px; left:4px; height:20px;
+  padding:0 7px; border-radius:var(--r-pill); display:grid; place-items:center;
+  font:500 11px/1 var(--f-display); color: var(--mj-on-seat);
+  background: var(--mj-seat-e | -s | -w | -n) via [data-seat].
+YOUR OWN flower: fill swaps to var(--mj-jade), text to var(--mj-on-jade),
+  plus box-shadow: 0 0 0 2px var(--mj-tile-ink).
+Ownership is carried by fill AND ring — never by colour alone.
+
+═══ STATES — state lives in the LIP, the RING and the LIFT.  Never the face.
+    (The one exception is a tile that is physically turned over.)         ═══
+
+SELECTED / HELD  ( aria-pressed="true" | data-held="true" )
+  --tile-lip: var(--mj-jade-lip);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 3px var(--mj-jade),
+              0 6px 0 0 var(--mj-jade-lip),
+              0 14px 20px -8px var(--mj-shadow);
+  The face, the rank, the mark and the rule are UNTOUCHED. All three suit
+  encodings survive selection — the defect in tile.css:99-108, fixed by
+  construction rather than by patch.
+  COUNT BADGE .tile__count — 22px circle, top:-6px; right:-6px; z-index:2;
+  background: var(--mj-ink); color: var(--mj-card);
+  font: 500 12px/22px var(--f-display); box-shadow: 0 2px 4px var(--mj-shadow).
+  A sticker, not an inlay.
+
+TAKEN  ( data-taken="true" — in the meld being declared )
+  --tile-lip: var(--mj-mandarin-lip);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 3px var(--mj-mandarin),
+              inset 0 0 0 3px var(--mj-mandarin),
+              0 6px 0 0 var(--mj-mandarin-lip),
+              0 14px 20px -8px var(--mj-shadow);
+  A DOUBLE ring — outer and inner — so taken differs from selected by SHAPE
+  as well as hue, and a tile that is both held and taken is unambiguous. The
+  face is again untouched. Replaces the solid ink block, which had no legible
+  dark-theme equivalent.
+
+EXHAUSTED / DEAD  ( data-exhausted="true" )  — the tile turns over.
+  background: linear-gradient(160deg, var(--mj-back), var(--mj-back-2));
+  --tile-lip: var(--mj-back-lip);
+  All face children `visibility:hidden`.
+  The decorative inset frame uses ::before, NOT ::after — ::after is already
+  double-booked by the 白 frame and the ×4 label, and the gloss is meaningless
+  on a tile lying face down:
+  [data-exhausted="true"]::before { inset:16% 14%; height:auto;
+    border-radius:8px; background:none;
+    box-shadow: inset 0 0 0 2px rgb(255 255 255 / .22); }
+  [data-exhausted="true"]::after { content: attr(data-exhausted-label);
+    position:absolute; inset:0; display:grid; place-items:center;
+    box-shadow:none; visibility:visible;
+    font: 500 17px/1 var(--f-display); color: var(--mj-on-back); }  /* 4.58:1 */
+  cursor:not-allowed; no press transform.
+  THIS BLOCK MUST COME AFTER the [data-h="P"] block in the stylesheet — the
+  two ::after rules have identical specificity and source order decides.
+
+GHOST  ( data-needed="true" — a tile you still need, prediction panel )
+  Full-strength face, FULL-STRENGTH contents. No opacity anywhere: at 55%
+  the coloured mark and the rule both fall below AA and two of the three
+  mandated encodings die on the one screen built to name tiles.
+  background:none; box-shadow:none; transform:none;
+  outline: 2px dashed var(--mj-slot-edge); outline-offset:-2px;
+  ::before { display:none }  /* no gloss on something you do not hold */
+  plus a 14px "+" in var(--mj-collect) at bottom:4px; right:5px.
+  ABSENCE OF WEIGHT, not absence of ink. Solid = you have it. Ghost = you
+  need it. That one contrast is the whole visual grammar of prediction, and
+  it is spoken as well as drawn via t('tile.neededName').
+
+EMPTY TRAY SLOT  .slot
+  aspect-ratio:1/1; width:44px; border-radius:var(--r-mini);
+  background: var(--mj-slot); border:0;
+  box-shadow: inset 0 0 0 2px var(--mj-slot-edge);
+  A solid 2px ring at 3.55:1 on felt (light) / 4.27:1 (dark) — a real 3:1
+  boundary, because the empty slot is how a player sees how many tiles they
+  still owe. The 1px dashed --mj-rule at 1.10:1 is deleted.
+
+FOCUS
+  .tile:focus-visible { outline: 3px solid var(--mj-focus); outline-offset:3px; }
+
+═══ THE MINI VARIANT IN THE TRAY ═══
+44×44, radius 10, no gloss, 3px lip. Rank top-left 19px, coloured mark
+top-right 11px, rule across the bottom at 4px with the pattern widened so the
+筒 dots stay ~7px. All three encodings present at tray size, in every state,
+in both themes. `.tray__tiles > .tile` stays at 40px and keeps specificity
+over `.tile--mini`, as it does today.
+
+═══ THE STAMP CELL ═══
+.stampcell stops being an ink block: background: var(--mj-felt);
+border-radius: var(--r-tile); box-shadow: inset 0 2px 6px var(--mj-shadow-soft);
+glyph in --mj-ink, ×36 in --mj-muted (4.61:1). A carved-in chip among raised
+tiles — the depth law doing the labelling.

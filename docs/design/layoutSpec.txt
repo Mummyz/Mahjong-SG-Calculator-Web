@@ -1,0 +1,233 @@
+═══ 1. THE GROUND — and the fix that makes it visible at all ═══
+`.shell` currently paints an opaque `var(--mj-ground)` across the whole
+viewport, so a gradient on `body` would never render. The gradient goes ON
+THE SHELL:
+
+  body  { background: var(--mj-ground-2); color: var(--mj-ink);
+          font: 400 0.9375rem/1.55 var(--f-body); margin:0; }
+  .shell{ max-width: var(--col); margin:0 auto; height:100dvh;
+          display:flex; flex-direction:column;
+          background: linear-gradient(180deg, var(--mj-ground) 0%,
+                                              var(--mj-ground-2) 58%)
+                      var(--mj-ground-2); }
+  .scroll { flex:1; min-height:0; overflow-y:auto; overflow-x:clip;
+            overscroll-behavior:contain; padding: 0 var(--pad) var(--pad); }
+
+`height:100dvh` + `min-height:0` on `.scroll` stay exactly as they are — the
+existing comment says they are load-bearing for the sticky suit tabs, and
+they are. `overflow-x: clip` is the one addition: `overflow-y:auto` computes
+overflow-x to `auto`, which is how a rotated wordmark tile becomes a
+horizontal scrollbar. This app's cardinal sin, closed with one declaration.
+
+There is NO decorative blob. The 300px peach radial is deleted — it is the
+single most template-shaped element in the direction, and positioned at
+`right:-80px` it was also the thing creating the horizontal scroll.
+
+═══ 2. DEPTH — a closed exception list ═══
+RAISED (4px hard coloured lip + 3px press travel): the tile, `.btn--primary`,
+the fan medal, the wordmark tile. FOUR THINGS. Nothing else, ever.
+FLAT: every card.
+  .card { background: var(--mj-card); border-radius: var(--r-card);
+          padding: var(--sp-4); border: 1px solid var(--mj-line);
+          box-shadow: 0 1px 2px var(--mj-shadow-soft),
+                      0 8px 20px -12px var(--mj-shadow); }
+  Dark: keep the hairline, add `inset 0 1px 0 rgb(255 255 255/.06)`, drop the
+  drop shadow.
+  THE HAIRLINE SHIPS IN BOTH THEMES. White card on mint ground is 1.24:1;
+  a 6%-alpha shadow is not structure on a phone at low brightness. The
+  hairline is 2.17:1 on card and 1.98:1 on ground — visible, not heavy.
+  `.slip` and `.chit` both become `.card`.
+CARVED IN (inset, never raised): the hand rack, the segmented-control track,
+  the stamp cell, the results total band, the empty tray slot.
+  box-shadow: inset 0 2px 6px var(--mj-shadow-soft);
+
+Every `border: 1px solid var(--mj-rule)` in app.css is deleted except the
+card hairline. `--mj-r: 2px`, `--mj-gutter: 3px` and `.grid`'s
+`background: var(--mj-grout)` + padding are deleted outright.
+
+═══ 3. BUTTONS ═══
+  .btn { min-height:52px; border-radius:var(--r-pill); padding:0 22px;
+         font: 500 1rem/1 var(--f-display); text-transform:none;
+         letter-spacing:0; border:0; cursor:pointer;
+         display:inline-flex; align-items:center; justify-content:center; }
+  .btn--primary { background: var(--mj-mandarin); color: var(--mj-on-mandarin);
+    box-shadow: 0 4px 0 var(--mj-mandarin-lip),
+                0 10px 18px -8px rgb(184 103 10 / .5); }
+  .btn--primary:active { transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--mj-mandarin-lip); }
+  The mandarin fill is only 1.74:1 against the mint ground; its 4px lip is
+  3.40:1, so the button's boundary clears the 3:1 non-text bar via the lip.
+  That is why the lip is a colour and not a blur.
+  .btn--ghost   { background: var(--mj-card); color: var(--mj-ink);
+    box-shadow: 0 2px 0 var(--mj-line), 0 6px 14px -10px var(--mj-shadow); }
+  .btn:disabled { background: var(--mj-disabled-fill);
+    color: var(--mj-disabled); box-shadow:none; }  /* 4.68 light, 5.28 dark */
+  :where(button,a,input,select,textarea):focus-visible {
+    outline: 3px solid var(--mj-focus); outline-offset: 3px; }
+
+═══ 4. LANDING / GAME PICKER — a real front door ═══
+THE WALL. The hero opens on an actual mahjong wall: a clipped row of tile
+BACKS peeking down from the top edge, drawn with the real tile recipe.
+  .hero { position:relative; overflow:hidden; padding-top:34px;
+          min-height: clamp(180px, 30dvh, 250px); }
+  .hero__wall { position:absolute; top:-34px; left:-6px; right:-6px;
+                display:flex; gap:6px; pointer-events:none; z-index:0; }
+  .hero__wall > i { flex:0 0 44px; height:56px; border-radius:var(--r-tile);
+    background: linear-gradient(160deg, var(--mj-back), var(--mj-back-2));
+    box-shadow: 0 4px 0 var(--mj-back-lip), 0 8px 12px -6px var(--mj-shadow); }
+  Eight of them, aria-hidden, clipped by the hero so ~26px of each shows.
+  Product-derived, chunky, playful, zero image files, no horizontal scroll —
+  and it is why this landing cannot be mistaken for a wellness template.
+
+Above the wall in z-order: the LANGUAGE TOGGLE, top-right, a 44px `--mj-card`
+segmented pill (EN | ID), `role="radiogroup"`, keys `lang.en` / `lang.id`,
+selected segment mandarin fill + `--mj-on-mandarin`.
+Then the wordmark lockup, `t('app.tagline')` at 15px `--mj-muted`, and one
+host line `t('app.invite')` in Fredoka 500 17px.
+
+GAME CARDS fill the bottom two-thirds. Each is one `.card`, the whole card
+the tap target, laid out as three rows:
+  row 1 — variant name, Fredoka 600 22px, plus the tile count in a 56px
+          mandarin circle (Fredoka 600 24px on `--mj-on-mandarin`)
+  row 2 — blurb, 14px `--mj-muted`
+  row 3 — THREE REAL TILES at 52px wide, side by side, gap 8, NO rotation and
+          NO overlap, each keeping its caption; then a mandarin "Play" pill
+          right-aligned.  Singapore shows 貓 / 5筒 / 春; Hong Kong shows
+          東 / 5筒 / 3索.  The art teaches animals-vs-none, and because
+          nothing is buried it actually teaches it.
+          3×52 + 2×8 = 172px; the pill ~76px; card inner width at 360 is
+          296px.  Fits.
+SHORT-SCREEN FALLBACK, and it is required — 34dvh of hero plus two cards does
+not fit a 640pt screen:
+  @media (max-height: 680px) { .hero { min-height:150px; padding-top:26px }
+    .hero__wall > i { height:46px } .wm__svg { max-width:250px }
+    .hero__invite { display:none } }
+Below that the landing simply scrolls. No dock is needed on this screen.
+
+═══ 5. TILE-SET CHECK ═══
+One `.card` per group. Header row: group name in Fredoka 500 16px left, a
+felt count pill ("9 × 4 = 36", tabular) right. No hairline rule, no grout —
+the tiles' own lips do the separating. Grid `gap: var(--gap-row) var(--gap)`.
+Cuit at 56px, `data-mood="idle"`, above the first card with one line of copy.
+
+═══ 6. TABLE SETUP ═══
+One card. Each name row: a 40px round seat token filled with that seat's
+pastel, the wind CJK in `--mj-on-seat` (11.8–13.2:1); a 52px pill input
+(`--r-field`, `--mj-card`, 1px `--mj-line`, `font-size:16px` minimum so iOS
+does not zoom the form), focus swaps the border to `--mj-mandarin` and adds
+the ring; a jade "You" pill. Stake and limit as segmented pills. The HK
+half-payment option is a card-width toggle row with its explanation beneath
+in 13px `--mj-muted`.
+
+═══ 7. HAND ENTRY ═══
+STATUS BAR — the solid jade signboard band is gone. Four `--mj-card` pills on
+the ground, 40px tall, an 11px `--mj-muted` key over a Fredoka 500 14px
+value. The ⋯ becomes a 44px circular card button.
+SEATS — four 32px pastel avatars with names in 11px. The dealer gets a 2px
+mandarin ring AND a "D" letter. Never the ring alone.
+SUIT TABS — a segmented control: `--mj-felt` track, `border-radius:999px;
+padding:4px; display:grid; grid-template-columns:repeat(5,1fr); gap:2px`,
+segments 48px, selected segment a `--mj-card` thumb with
+`box-shadow: 0 2px 5px var(--mj-shadow-soft)` and weight 600.
+PICKER — 5-column grid, `gap: var(--gap-row) var(--gap)`, straight on the
+ground. 59.2 × 74px at 360.
+THE TRAY IS A RACK — `background: var(--mj-felt); border-radius:var(--r-well);
+padding:10px; box-shadow: inset 0 2px 6px var(--mj-shadow-soft)`. Carved-in
+felt with popped-out tiles standing in it. This single contrast is the most
+game-like moment in the app.
+MELDS — depth says face-up vs in-hand, replacing the ink block that has no
+legible dark-theme equivalent:
+  concealed → RECESSED sub-well: `--mj-felt`, inset shadow, padding 6px
+  exposed   → RAISED plinth: `--mj-card`, `box-shadow: 0 3px 0 var(--mj-line),
+              0 6px 12px -8px var(--mj-shadow)`, padding 6px
+  `.tray__group--exposed .tile { filter: none }` — the saturate/brightness
+  hack is deleted; the plinth carries the meaning now.
+FOCUS MODE — keeps today's opacity dimming, tightened to `.40`.
+
+═══ 8. PREDICTION PANEL — "What could this become?" ═══
+A card with a 56px disclosure header: title in Fredoka 500 16px, a felt count
+pill, a chevron rotating 180° over 160ms. NO MASCOT IN THIS HEADER. This is
+the app's highest-frequency small surface and a 28px bird there is a mint
+smudge; the owner's floor is 40px and this header carries no bird at all.
+ENOUGH TILES — candidate rows: hand name (Fredoka 500 15px) with its CJK
+beneath at 12px `--mj-muted`, a mandarin fan pill right, and under it a run
+of 34px GHOST TILES = the tiles still needed. Full-strength ink, dashed ring,
+no opacity, each with `t('tile.neededName')`.
+TOO FEW TILES — Cuit at 56px `data-mood="think"` in the BODY, one line of
+copy, and a `scroll-snap-type: x mandatory` rail of ARCHETYPE cards (150px,
+radius 16, name + three ghost tiles + a one-line shape hint). NO NUMBER
+APPEARS ANYWHERE IN THE ARCHETYPE STATE — that is how "do not guess wildly"
+becomes a layout rule rather than a promise.
+
+═══ 9. DOCK ═══
+Sticky bottom, a flex sibling of `.scroll` — so NO `backdrop-filter`: it is
+not an overlay and there is nothing behind it to blur. Instead the content
+dissolves into the ground:
+  .dock { position:sticky; bottom:0; z-index:5; border:0;
+    background: linear-gradient(180deg, transparent 0,
+                var(--mj-ground-2) 22%, var(--mj-ground-2) 100%);
+    padding: 12px var(--pad) calc(12px + env(safe-area-inset-bottom));
+    display:flex; flex-direction:column; gap:8px; }
+No top border. Primary pill full-width at 52px; the ghost secondary sizes to
+its own words. `.docknote` keeps its reserved 40px height so the buttons
+never move under a thumb that is already reaching.
+
+═══ 10. SUBMIT SHEET ═══
+`border-radius: var(--r-sheet) var(--r-sheet) 0 0`, `--mj-card` fill, a 36×5px
+`--mj-line` grab handle, scrim `var(--mj-scrim)`. Step indicator = two dots,
+active one a 20px mandarin pill.
+`.grid--7` IS DELETED. At the new 16px padding and 8px gaps it computes to
+40.0px, below the 44px floor. The winning-tile picker becomes a horizontal
+rail: `display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:8px`
+with `flex: 0 0 56px` tiles. One row, so it also does not add height to a
+sheet whose step 2 already overflows 86dvh at 360×780.
+The sticky `.sheet .dock__row` is kept EXACTLY as engineered — it is
+load-bearing and this direction only restyles its buttons.
+
+═══ 11. RESULTS — the payout screen gets its moment ═══
+THE FAN MEDAL — 112px rounded square, radius 32,
+  background: linear-gradient(150deg, var(--mj-mandarin-hi), var(--mj-mandarin));
+  box-shadow: 0 6px 0 var(--mj-mandarin-lip),
+              0 16px 26px -12px rgb(184 103 10 / .55);
+  number in Fredoka 600 52px on `--mj-on-mandarin` (8.11:1), "Fan" beneath at
+  12px. Cuit at 64px `data-mood="cheer"` beside it. Hand name under in
+  Fredoka 500 20px, CJK 13px `--mj-muted`. The 和 chop is deleted.
+BREAKDOWN CARD — rows separated by 1px `--mj-line`, name left 14px, "+N"
+  right in Plus Jakarta 800 15px tabular.
+INSTANT PAYOUTS — their own card ABOVE the ledger, with the bonus tile drawn
+  at 40px beside each line. The tile is the label.
+THE LEDGER — grown-up, and no bird anywhere near it. But it speaks the app's
+  own vocabulary, which is what stops it being the one screen that still
+  looks like the old design in a rounded box:
+  · The seat glyph is promoted from a flat chip to a REAL WIND TILE drawn at
+    34×42 with the full tile recipe — face, lip, shadow. The app's material,
+    in the ledger, with no cartoon.
+  · Row: tile + name in Plus Jakarta 600 15px with the verb beneath in 12px
+    `--mj-muted`; amount right-aligned in Plus Jakarta 800 24px tabular-nums.
+  · SIGN AND COLOUR ARE COMPUTED RELATIVE TO THE READER'S SEAT, not to the
+    payer. Money arriving at you: "+", `--mj-collect`. Money leaving you:
+    "−", `--mj-pay`. A transfer between two other players: neutral
+    `--mj-ink` with "→". On a night you won, the screen is green, because
+    you won. The current code renders every other player's row as
+    `formatMoney(-units)` with class `pay`, which paints a winning night red.
+  · Zero rows go `--mj-disabled` and unsigned. The verb is always spelled
+    out, so direction of money is never colour-only.
+  · The `<table>`/`<tr>`/`<td>` structure STAYS. If rows become flex divs
+    they keep `role="table" / "row" / "cell"`. This is the payment output of
+    a product whose entire value is payment correctness.
+TOTAL BAND — full-width `--mj-felt`, radius 18, 72px tall, carved in; label
+  left, figure right in Fredoka 600 34px `--mj-collect` (5.23:1 on felt).
+
+═══ 12. i18n KEYS TO ADD (src/i18n/en.json) ═══
+  tile.neededName · app.invite · lang.en · lang.id · predict.title ·
+  predict.needMore · predict.archetype.* · result.instant.title
+No user-visible string is hardcoded. "Mahjongyuk" is a brand name and is
+exempt, but the `<h1>`'s accessible name still comes from `t('app.name')`,
+so the coverage test stays green.
+
+═══ 13. THE ONE-LINE REVIEW LINT ═══
+Any raised element that is not the tile, `.btn--primary`, `.fanmedal` or
+`.wm__tile` is a bug. Any colour drawn on a tile face that is not
+`--mj-tile-ink`, `--mj-tile-cap`, `--mj-bonus-*`, `--mj-suit-*` or
+`--mj-on-back` is a bug. Any tile grid where
+`(360 − 32 − (n−1)·8)/n < 44` is a bug.

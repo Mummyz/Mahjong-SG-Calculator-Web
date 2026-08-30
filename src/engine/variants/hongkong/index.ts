@@ -16,6 +16,12 @@ export const hongkong: VariantPlugin = {
   id: 'hongkong',
   tileSet: HONGKONG_TILE_SET,
   defaults: HONGKONG_DEFAULTS,
+  // RULING HK15 — 「補花後不算」. A flower replacement scores nothing here, so
+  // asking about it would be asking a question with no consequence.
+  flags: [
+    'robbingKong', 'lastTile', 'kongReplacement',
+    'heavenly', 'earthly', 'humanly', 'kongOnKong',
+  ],
   handSize,
   score(hand: HandInput, ctx: WinContext, opts?: Partial<RuleOptions>): ScoreResult {
     return score(hand, ctx, opts)

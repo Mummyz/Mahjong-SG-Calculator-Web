@@ -306,6 +306,7 @@ The Hong Kong rulings live in their own file, [`RULING-LOG-HK.md`](./RULING-LOG-
 They are kept separate because almost none of them interact with the Singapore
 ones: the two variants share a tile parser and a table module, and nothing else.
 
-Five HK rulings are flagged for the owner, the same way R12 and R16 were:
-**HK3** (10-faan cap), **HK4** (full vs half payment), **HK7** (washout),
-**HK9** (the six conflicted hand values), **HK13** (門前清 in flower play).
+All five Hong Kong rulings that were put to the owner — **HK3** (10-faan cap),
+**HK4** (full vs half payment), **HK7** (washout), **HK9** (the six conflicted
+hand values) and **HK13** (門前清 in flower play) — were **ratified on
+2026-08-30** on their mahjong expert's advice. Nothing Hong Kong is outstanding.

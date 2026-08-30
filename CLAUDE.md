@@ -66,6 +66,31 @@ This applies to: labels, buttons, errors, empty states, tooltips, aria-labels,
 number/tile descriptions, and anything else a human reads. Brand names
 ("Mahjongyuk") are not translatable strings.
 
+### BRAND DNA (binding on all user-facing text)
+
+**Mahjongyuk = "Mahjong, yuk!"** — Indonesian for *let's play mahjong*. The
+name is an **invitation**, and that is the whole brand. It is not a utility
+name; it is somebody pulling out a chair for you.
+
+**Voice: playful, welcoming, confident.** We are the friend at the table who
+is good at the maths and cheerful about it. Never fussy, never lecturing,
+never apologetic. Short sentences. Warm, not cute for its own sake.
+
+**Tagline: "Enjoy the mahjong. Leave the counting to us."** Owner's line,
+2026-08-30. Two beats: the invitation, then the promise. It is the masthead on
+the front door and it sets the register for everything else.
+
+**In Bahasa Indonesia the "yuk" must land natively** — the name IS Indonesian,
+so the Indonesian build is the one where the joke is not a joke. The Language
+Critic owns where "yuk" goes (the masthead and the play call-to-action at
+minimum) and it must read as an invitation a real person would say, not as a
+translation of an English invitation.
+
+**What this rules out:** heritage/museum register, corporate hedging
+("please note that…"), exclamation-mark spam, and any copy that makes the
+player feel tested. The owner rejected the heritage look in Run 4 for being
+too old; the words must not put it back.
+
 ### PRODUCT GLOSSARY (binding on all user-facing text)
 
 | Concept | User-facing term | Never say |
@@ -159,9 +184,14 @@ citation, never by a failing test.**
 
 - Proper **formal Bahasa Indonesia**, **KBBI-standard**
 - **Zero English mixing where an Indonesian word exists**
-- **First deliverable when i18n lands: a mahjong glossary** deciding which game
-  terms stay untranslated (e.g. whether "fan", "pong", "kong" are borrowed or
-  translated). Once decided, the glossary is **enforced on every string**.
+- The glossary landed in Run 4: **`docs/GLOSSARY-ID.md`**, and it is binding.
+  Exactly five words stay in their original form — **Mahjongyuk, fan, pong,
+  kong, chow** — on one test: *a word stays only when it is a thing you SAY at
+  the table or a unit of the game*. Everything a player merely reads is
+  Indonesian.
+- Enforced by `src/i18n/coverage.test.ts`: every key translated, no extra keys,
+  placeholders identical, CJK untouched, no English outside the five, and the
+  brand's *yuk* present on the Indonesian front door.
 
 ---
 
@@ -174,25 +204,30 @@ citation, never by a failing test.**
 | **Run 2** | ✅ Mobile UI v2 — variant select, tile info, tile picker, hand display |
 | **Run 2B** | ✅ Hand-entry redesign — rolling table, guided declare, named seats |
 | **Run 3** | ✅ Submit wizard, Hong Kong Old Style engine certified, both variants live |
-| **Run 4** | Prediction (partial hands → candidate wins + tiles needed) |
-| **Run 5** | i18n EN + ID |
+| **Run 4** | ✅ Prediction, Bahasa Indonesia, and the v3 brand — preview at `/v3/` |
+| **Run 5** | Owner review of `/v3/`, then promote to root |
 
 ---
 
 ## REPO LAYOUT
 
 ```
-app/index.html            v2 Vite entry (builds to /app/ until Run 2)
-index.html                legacy v1, kept at root as a Pages fallback
+index.html                `/` — the Run 3 app. FROZEN in Run 4; its UI is src/ui/
+v3/index.html             `/v3/` — the Run 4 preview. Its UI is src/v3/
+app/index.html            `/app/` — the plain engine harness
 public/CNAME              mahjongyuk.com — copied into every build
 public/v1/index.html      the permanent /v1/ calculator (hash-pinned)
 src/engine/core/          tiles, hand parser, set decomposition
 src/engine/variants/      singapore/, hongkong/, and the registry both are in
 src/engine/session/       the table: seats, rotation, declaring, submitting
 src/engine/corpus/        golden test corpus — see its README
+src/engine/predict/       prediction: distance to win, candidates, tiles needed
 docs/sources/             archived rule sources + the ruling log
-src/ui/                   Preact components (Run 2)
-src/i18n/                 en.json + t(); id.json lands in Run 5
+src/ui/                   Preact components for `/` — Run 3, frozen
+src/v3/                   Preact components for `/v3/` — Run 4
+src/i18n/                 en.json, id.json, t()/tv(), the locale switch
+docs/GLOSSARY-ID.md       the binding Indonesian glossary
+docs/design/              the v3 build specification, from the Run 4 judge panel
 src/test/                 cross-cutting guards
 .github/workflows/        deploy.yml — push to main → test → build → Pages
 ```

@@ -61,7 +61,19 @@ jobs:
           test -f dist/app/index.html \
             || { echo "::error::the /app/ engine harness is missing"; exit 1; }
 
-          echo "CNAME ok; /v1/ byte-identical; root ships ${BUNDLE}; /app/ present"
+          # Run 4 ships to /v3/ only. The preview must exist and must load a
+          # bundle of its own; the root above must keep loading its own.
+          test -f dist/v3/index.html \
+            || { echo "::error::the /v3/ preview is missing"; exit 1; }
+          V3=$(grep -o 'src="/assets/[^"]*\.js"' dist/v3/index.html | head -1 | sed 's|src="||;s|"||')
+          [ -n "$V3" ] \
+            || { echo "::error::the /v3/ page references no JS bundle"; exit 1; }
+          test -f "dist${V3}" \
+            || { echo "::error::the /v3/ page references ${V3}, which is not in the build"; exit 1; }
+          [ "$V3" != "$BUNDLE" ] \
+            || { echo "::error::/v3/ and the root are serving the same bundle"; exit 1; }
+
+          echo "CNAME ok; /v1/ byte-identical; root ships ${BUNDLE}; /v3/ ships ${V3}; /app/ present"
 
       - uses: actions/configure-pages@v6
 

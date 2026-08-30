@@ -12,6 +12,7 @@ import { readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import en from './en.json'
+import { LOCALE_NAMES } from './index'
 
 // Both corpora, because both variants ship. Between them they are the
 // exhaustive list of what the engine can emit.
@@ -43,12 +44,15 @@ for (const f of files) {
 
 const keys = new Set(Object.keys(en))
 
-const uiDir = fileURLToPath(new URL('../ui/', import.meta.url))
+// Both app surfaces: src/ui/ is the frozen Run 3 app still served at `/`, and
+// src/v3/ is the Run 4 preview at `/v3/`. A string is live if EITHER renders it.
 const walk = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? walk(`${dir}${e.name}/`) : [`${dir}${e.name}`],
   )
-const uiFiles = walk(uiDir).filter((f) => /\.tsx?$/.test(f) && !f.endsWith('.test.ts'))
+const uiFiles = ['../ui/', '../v3/']
+  .flatMap((d) => walk(fileURLToPath(new URL(d, import.meta.url))))
+  .filter((f) => /\.tsx?$/.test(f) && !f.endsWith('.test.ts'))
 
 describe('i18n coverage', () => {
   it('names every hand pattern the engine can produce', () => {
@@ -111,13 +115,18 @@ describe('i18n coverage', () => {
       ...WINDS.flatMap((w) => [`wind.${w}`, `wind.${w}.short`]),
       ...['m', 'p', 's'].map((x) => `tile.suit.${x}`),
       ...['C', 'F', 'P'].flatMap((x) => [`tile.name.${x}`, `tile.name.${x}.short`]),
-      ...BONUS.map((b) => `tile.bonus.${b}`),
+      ...BONUS.flatMap((b) => [`tile.bonus.${b}`, `tile.bonus.${b}.short`]),
       ...FLAGS.map((f) => `flag.${f}`),
       ...GROUPS.map((g) => `tileinfo.group.${g}`),
       // Rendered through tv() or a variant id, not a literal.
       'tileinfo.jokers.singapore', 'tileinfo.jokers.hongkong',
       'table.payment.full', 'table.payment.half',
       ...['singapore', 'hongkong'].flatMap((v) => [`variant.${v}.name`, `variant.${v}.blurb`]),
+      // The prediction panel's sparse-hand nudges, keyed by what the tiles lean towards.
+      ...['flush:m', 'flush:p', 'flush:s', 'honours', 'allPong', 'terminals']
+        .flatMap((h) => [`predict.hint.${h}`, `predict.hint.${h}.name`]),
+      // The language switch names each language in its own language.
+      'lang.en', 'lang.id',
       ...['characters', 'dots', 'bamboo', 'honours', 'bonus'].map((x) => `hand.tab.${x}`),
       ...['Chow', 'Pong', 'Kong'].flatMap((k) => [
         `hand.declare${k}`, `hand.declare${k}Sub`, `hand.tag${k}`,
@@ -182,5 +191,98 @@ describe('i18n coverage', () => {
         `${k} leaves Singapore with no string for ${base}`,
       ).toBe(true)
     }
+  })
+})
+
+// ─────────────────────────────────────────────────────────────────────
+// The Indonesian bundle. The glossary in docs/GLOSSARY-ID.md is binding,
+// and these are the parts of it a machine can hold.
+// ─────────────────────────────────────────────────────────────────────
+import id from './id.json'
+
+const idKeys = new Set(Object.keys(id as Record<string, string>))
+const idOf = id as Record<string, string>
+const enOf = en as Record<string, string>
+
+/** The five words the glossary allows to stay as they are, and no others. */
+const BORROWED = ['Mahjongyuk', 'fan', 'pong', 'kong', 'chow']
+
+describe('Bahasa Indonesia', () => {
+  it('translates every key the English bundle has', () => {
+    const missing = [...keys].filter((k) => !idKeys.has(k)).sort()
+    expect(missing, `no Indonesian for ${missing.length} keys`).toEqual([])
+  })
+
+  it('has no key the English bundle does not', () => {
+    const extra = [...idKeys].filter((k) => !keys.has(k)).sort()
+    expect(extra, 'Indonesian keys with no English source').toEqual([])
+  })
+
+  it('is never left blank', () => {
+    const blank = [...idKeys].filter((k) => !idOf[k]!.trim()).sort()
+    expect(blank).toEqual([])
+  })
+
+  it('carries every placeholder across, exactly', () => {
+    // A dropped {name} is a sentence with a hole in it; a renamed one is a
+    // sentence that prints "{nama}" at a mahjong table.
+    const wrong: string[] = []
+    for (const k of idKeys) {
+      const want = [...(enOf[k] ?? '').matchAll(/\{(\w+)\}/g)].map((m) => m[1]!).sort()
+      const got = [...idOf[k]!.matchAll(/\{(\w+)\}/g)].map((m) => m[1]!).sort()
+      if (want.join(',') !== got.join(',')) wrong.push(`${k}: [${want}] vs [${got}]`)
+    }
+    expect(wrong, 'placeholders that do not match').toEqual([])
+  })
+
+  it('leaves the marks carved on a tile alone', () => {
+    // CJK inside a string is content — what is physically on the tile — and is
+    // identical in both locales.
+    const cjk = (s: string) => [...s].filter((c) => /[㐀-鿿]/.test(c)).join('')
+    const wrong: string[] = []
+    for (const k of idKeys) {
+      if (cjk(enOf[k] ?? '') !== cjk(idOf[k]!)) wrong.push(k)
+    }
+    expect(wrong, 'CJK changed in translation').toEqual([])
+  })
+
+  it('borrows only the five words the glossary allows', () => {
+    // A crude but effective net: an ASCII word of four letters or more that
+    // appears in the English string and survives unchanged into the Indonesian
+    // one is either a borrowing or a miss.
+    const allowed = new Set(BORROWED.map((w) => w.toLowerCase()))
+    // Placeholder NAMES are not words — they are identifiers, and a separate
+    // test above requires them to survive unrenamed. Strip them first.
+    const words = (s: string) =>
+      (s.replace(/\{\w+\}/g, ' ').toLowerCase().match(/[a-z]{4,}/g) ?? [])
+    // Proper nouns, and words that are KBBI headwords in Indonesian in their
+    // own right — absorbed loanwords, not English mixing. A player writing
+    // Indonesian writes "menu", "bonus" and "minimum".
+    const SHARED = new Set([
+      'mahjong', 'hong', 'kong', 'singapura', 'singapore', 'total', 'player',
+      'timur', 'selatan', 'barat', 'utara', 'english', 'bahasa', 'indonesia',
+      'menu', 'bonus', 'minimum', 'joker', 'poin', 'meja',
+    ])
+    const offenders: string[] = []
+    for (const k of idKeys) {
+      const enWords = new Set(words(enOf[k] ?? ''))
+      for (const w of words(idOf[k]!)) {
+        if (allowed.has(w) || SHARED.has(w)) continue
+        if (enWords.has(w)) offenders.push(`${k}: "${w}"`)
+      }
+    }
+    expect(offenders, 'English left in the Indonesian bundle').toEqual([])
+  })
+
+  it('keeps the brand and its invitation', () => {
+    expect(idOf['app.name']).toBe('Mahjongyuk')
+    // The name IS the invitation, so the Indonesian front door has to say it.
+    const front = `${idOf['app.tagline'] ?? ''} ${idOf['variant.play'] ?? ''} ${idOf['variant.title'] ?? ''}`
+    expect(front.toLowerCase(), 'the Indonesian front door has lost its "yuk"').toContain('yuk')
+  })
+
+  it('names the languages in their own language', () => {
+    expect(LOCALE_NAMES.en).toBe('English')
+    expect(LOCALE_NAMES.id).toBe('Bahasa Indonesia')
   })
 })

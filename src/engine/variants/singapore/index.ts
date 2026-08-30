@@ -18,6 +18,11 @@ export const singapore: VariantPlugin = {
   id: 'singapore',
   tileSet: SINGAPORE_TILE_SET,
   defaults: SINGAPORE_DEFAULTS,
+  // Every circumstance TT prices. R17 governs which of them can co-occur.
+  flags: [
+    'robbingKong', 'lastTile', 'kongReplacement', 'flowerReplacement',
+    'heavenly', 'earthly', 'humanly', 'kongOnKong',
+  ],
   handSize,
   score(hand: HandInput, ctx: WinContext, opts?: Partial<RuleOptions>): ScoreResult {
     return score(hand, ctx, opts)

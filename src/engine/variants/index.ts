@@ -19,3 +19,4 @@ export const isVariantId = (x: unknown): x is VariantId =>
   typeof x === 'string' && (VARIANT_IDS as readonly string[]).includes(x)
 
 export { singapore, hongkong }
+export * from './inventory'

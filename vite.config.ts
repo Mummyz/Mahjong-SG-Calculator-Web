@@ -13,8 +13,12 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        // `/` — the v2 mobile app. Took over the root in Run 2.
+        // `/` — the Run 3 app. FROZEN this run: Run 4 ships to /v3/ only, so
+        // the root keeps serving exactly what the owner left it serving.
+        // Its UI lives in src/ui/ and nothing in Run 4 touches it.
         main: fromRoot('index.html'),
+        // `/v3/` — the Run 4 preview. Its UI lives in src/v3/.
+        v3: fromRoot('v3/index.html'),
         // `/app/` — the plain Run 1 engine harness, kept for driving the
         // engine by hand. Not the product.
         harness: fromRoot('app/index.html'),

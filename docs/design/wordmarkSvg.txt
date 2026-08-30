@@ -1,0 +1,109 @@
+<!-- Landing hero lockup.  One <h1>, one accessible name, everything else
+     aria-hidden so a screen reader hears "Mahjongyuk" exactly once.
+     Self-contained: no external assets, no image files, currentColor and
+     tokens only.  Renders at 300×96 CSS px; on a 360px screen the shell's
+     16px padding leaves 328px, so it fits with room. -->
+
+<h1 class="wm" aria-label="Mahjongyuk">
+  <svg class="wm__svg" viewBox="0 0 300 96" width="300" height="96"
+       xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"
+       style="width:100%;max-width:300px;height:auto;display:block;overflow:visible">
+    <defs>
+      <linearGradient id="wmFace" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0"   stop-color="var(--mj-mandarin-hi)"/>
+        <stop offset="1"   stop-color="var(--mj-mandarin)"/>
+      </linearGradient>
+      <linearGradient id="wmGloss" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/>
+        <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+
+    <!-- "mahjong": lowercase, always.  Fredoka 600 at 42px; if the webfont
+         never arrives the fallback stack renders it and the mark still reads
+         as a word butted against a tile. -->
+    <text x="0" y="70" font-family="Fredoka, 'Trebuchet MS', ui-rounded, system-ui, sans-serif"
+          font-size="42" font-weight="600" letter-spacing="-0.6"
+          fill="var(--mj-ink)">mahjong</text>
+
+    <!-- THE YUK TILE — the invitation, landing on the table.
+         Obeys the app's physical law exactly: hard 4px lip (drawn as a
+         second rect offset +6 at this scale), one gloss layer, no second. -->
+    <g transform="rotate(-7 220 52)">
+      <rect x="187" y="26" width="66" height="64" rx="17" fill="var(--mj-mandarin-lip)"/>
+      <rect x="187" y="20" width="66" height="64" rx="17" fill="url(#wmFace)"/>
+      <rect x="190" y="23" width="60" height="26" rx="13" fill="url(#wmGloss)"/>
+      <text x="193" y="61" font-family="Fredoka, 'Trebuchet MS', ui-rounded, system-ui, sans-serif"
+            font-size="24" font-weight="600" fill="var(--mj-on-mandarin)">yuk</text>
+      <!-- The exclamation mark is drawn, not typed: a bar over a RING.
+           Read as type it is "!".  Read as a tile it is 一筒, the one-dot
+           coin.  Both at 8.11:1 on the mandarin face. -->
+      <rect x="236" y="35" width="6.5" height="16" rx="3.2" fill="var(--mj-on-mandarin)"/>
+      <circle cx="239.2" cy="59" r="4.6" fill="none"
+              stroke="var(--mj-on-mandarin)" stroke-width="2.8"/>
+    </g>
+
+    <!-- CUIT, perched on the tile's top-left corner, counter-tilted +6° so
+         he leans against the tile's −7°.  46px rendered — above the 40px
+         floor the owner set.  Primitives only. -->
+    <g class="cuit" data-mood="idle" transform="translate(163,-14) scale(.72) rotate(6 32 32)">
+      <!-- tail: three fanned strokes, the same three dashes as the 索 rule -->
+      <g stroke="#3FBF97" stroke-width="4" stroke-linecap="round" fill="none">
+        <path d="M15 34 L4 39"/>
+        <path d="M15 38 L3 45"/>
+        <path d="M16 42 L5 51"/>
+      </g>
+      <ellipse cx="34" cy="38" rx="20" ry="18" fill="#8FE3C2"/>
+      <ellipse cx="34" cy="46" rx="12.5" ry="9.5" fill="#E8FBF2"/>
+      <ellipse cx="51" cy="39" rx="5.5" ry="8" fill="#3FBF97" transform="rotate(16 51 39)"/>
+      <circle cx="23" cy="37" r="3.2" fill="#FFB08A" opacity=".5"/>
+      <circle cx="45" cy="37" r="3.2" fill="#FFB08A" opacity=".5"/>
+      <path d="M31 20 q3 -8 8 -4" stroke="#3FBF97" stroke-width="3"
+            stroke-linecap="round" fill="none"/>
+      <!-- beak: a small diamond BETWEEN the eyes.  Eyes end at y=33.3, beak
+           starts at y=35 — 1.7px of clearance, so nothing overlaps. -->
+      <path d="M34 35 L38 38.5 L34 42 L30 38.5 Z" fill="#FB9A26"/>
+      <g class="cuit__eyes cuit__eyes--open">
+        <circle cx="27" cy="30" r="3.3" fill="#12211C"/>
+        <circle cx="41" cy="30" r="3.3" fill="#12211C"/>
+        <circle cx="25.9" cy="28.9" r="1.1" fill="#FFFFFF"/>
+        <circle cx="39.9" cy="28.9" r="1.1" fill="#FFFFFF"/>
+      </g>
+      <g class="cuit__eyes cuit__eyes--happy">
+        <path d="M23.7 31 q3.3 -4.4 6.6 0" stroke="#12211C" stroke-width="3"
+              stroke-linecap="round" fill="none"/>
+        <path d="M37.7 31 q3.3 -4.4 6.6 0" stroke="#12211C" stroke-width="3"
+              stroke-linecap="round" fill="none"/>
+      </g>
+      <g class="cuit__think">
+        <circle cx="56" cy="16" r="2.2" fill="#3FBF97"/>
+        <circle cx="62" cy="10" r="1.5" fill="#3FBF97"/>
+      </g>
+    </g>
+  </svg>
+</h1>
+
+<style>
+/* Mood switching.  Nothing here carries meaning; Cuit is always
+   aria-hidden and is never the sole content of a state. */
+.cuit .cuit__eyes--happy,
+.cuit .cuit__think            { display: none; }
+.cuit[data-mood="cheer"] .cuit__eyes--open  { display: none; }
+.cuit[data-mood="cheer"] .cuit__eyes--happy { display: block; }
+.cuit[data-mood="think"] .cuit__think       { display: block; }
+.cuit[data-mood="think"]                    { transform-box: fill-box;
+                                              transform-origin: 50% 80%; }
+</style>
+
+<!-- COMPACT MARK (inner-screen header, favicon, share image): the yuk tile
+     ALONE at 40px, radius 11, 4px lip, unrotated — no bird, no word.  It
+     survives at 40px because it is a shape and a colour, not a piece of
+     text, and the bar-and-ring still reads as both "!" and 一筒. -->
+
+<!-- MONOCHROME: "mahjong" in currentColor, the tile face in the page ground,
+     lip and letters in currentColor.  The mark survives with no colour. -->
+
+<!-- FALLBACK: if Google Fonts never answers, the letters render in
+     Trebuchet MS / ui-rounded and every other part of the mark — the tile,
+     the lip, the gloss, the exclamation, Cuit — is vector.  The identity
+     never depends on the network. -->

@@ -1,0 +1,42 @@
+Everything that MOVES lives inside `@media (prefers-reduced-motion: no-preference)`.
+Everything that is a STATE stays in all cases.
+
+THE STATE (never removed):
+  · The 3px press travel on the four raised objects. `transform: translateY(3px)`
+    plus the collapsed lip is instantaneous feedback, not animation — removing
+    it removes the only thing that tells a thumb it hit a physical object.
+    Its 90ms transition is flattened under reduced motion; the transform is not.
+  · The disclosure chevron's rotated end-state.
+  · Every ring, lip, fill and ghost outline.
+
+THE MOTION (all inside the no-preference guard):
+  · PRESS — `transition: transform 90ms cubic-bezier(.2,.8,.3,1),
+    box-shadow 90ms cubic-bezier(.2,.8,.3,1)` on `.tile`, `.btn`, `.card--game`.
+  · DISCLOSURE — the prediction panel chevron, `transform: rotate(180deg)`
+    over 160ms ease; the body height is not animated (no layout thrash).
+  · FAN MEDAL POP — one `scale(.92) → scale(1)` over 320ms
+    cubic-bezier(.2,.9,.3,1.1), once, on mount. The only entrance animation
+    in the app.
+  · CUIT'S BOB — `translateY(0 → -3px → 0)` over 2.4s ease-in-out infinite,
+    plus a `scaleY(1 → .1 → 1)` blink on `.cuit__eyes--open` for 120ms every
+    5.2s. Landing and empty states only; never on the results screen, where
+    the medal pop is already moving.
+  · SUIT TAB THUMB — the segmented-control thumb slides on `transform` over
+    140ms. Never on `left`/`width`.
+  · SHEET — slides up from `translateY(12px)` with opacity over 180ms.
+
+EXPLICITLY NOT ANIMATED, anywhere:
+  · The page gradient. The hero wall. Tile grid entrances — a 34-tile stagger
+    on TileInfo is exactly the kind of blurred-shadow scroll work that drops
+    frames on the mid-range Android hardware this ships to in Indonesia.
+  · Anything using `filter`, `backdrop-filter` or animated `box-shadow` blur.
+
+THE GLOBAL GUARD — keep the existing block in app.css, unchanged:
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important; } }
+Under reduce, Cuit is still, the medal is simply there at full size, the
+chevron is simply rotated, and the tile still goes down when you press it.

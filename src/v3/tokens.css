@@ -1,0 +1,256 @@
+/* ============================================================================
+   Mahjongyuk v3 — design tokens.  Replaces src/ui/tokens.css entirely.
+
+   THREE-STATE THEMING, no exceptions.  Every COLOUR is born on bare :root.
+   The dark blocks only REDEFINE names that already exist.  Geometry, spacing
+   and font stacks are theme-invariant and live on :root alone.
+
+   Every ratio in the comments was computed, not estimated.
+   ========================================================================= */
+
+:root {
+  /* The UA palette is part of the theme too: without this the form-control
+     placeholder rendered Chrome's light-mode grey in BOTH themes, at 3.22:1
+     on the dark input. */
+  color-scheme: light dark;
+
+  /* ── SURFACES ─────────────────────────────────────────────────────────
+     The page is a gradient: peach-cream at the top where you read, mint at
+     the bottom where your thumb is.  Functional: the mandarin dock button
+     lands on mint, at maximum hue separation from its own fill.            */
+  --mj-ground:        #FFEEDC;  /* top stop.  ink 14.17:1, muted 5.36:1     */
+  --mj-ground-2:      #D6ECE0;  /* bottom stop. ink 12.96:1, muted 4.91:1   */
+  --mj-card:          #FFFFFF;  /* ink 16.08:1, muted 6.08:1                */
+  --mj-felt:          #CDE6DA;  /* the inset well. ink 12.19, muted 4.61    */
+  --mj-slot:          #BFDFD0;  /* empty tray slot fill.  NEVER carries text*/
+  --mj-slot-edge:     #5E7A6E;  /* 3.55:1 on felt — a real 3:1 boundary     */
+  --mj-line:          #98B7A8;  /* hairline. 2.17:1 on card, 1.98 on ground */
+
+  /* ── INK ──────────────────────────────────────────────────────────── */
+  --mj-ink:           #16241F;
+  --mj-muted:         #55665F;
+  --mj-disabled:      #5B6D67;  /* 4.68:1 on --mj-disabled-fill            */
+  --mj-disabled-fill: #E6EFEA;
+
+  /* ── THE TILE.  Pinned per theme and audited against the FACE, never
+        inherited from --mj-ink.  This is the token group that killed two
+        losing directions.                                                 */
+  --mj-tile-hi:       #FFFFFF;  /* face gradient top stop                  */
+  --mj-tile-face:     #EFF4F0;  /* face gradient bottom stop               */
+  --mj-tile-ink:      #16241F;  /* rank numeral, wind glyph. 14.44:1       */
+  --mj-tile-cap:      #4A5A54;  /* Latin caption. 6.55:1                   */
+  --mj-gloss:         rgb(255 255 255 / 0.82);
+
+  /* ── THE TILE BACK.  A physical object: the SAME hex in both themes.
+        3.96:1 against the light mint ground, 3.29:1 against the dark
+        ground, so a dead tile has a silhouette in either room.            */
+  --mj-back:          #12805F;
+  --mj-back-2:        #0F7A59;  /* the DARK end of the back's gradient, and
+                                   it has to clear 3:1 against BOTH grounds:
+                                   3.04:1 dark, 4.29:1 light. #0C5E46 gave
+                                   2.08:1 in dark, so a face-down tile had no
+                                   silhouette at the end the eye reaches for. */
+  --mj-back-lip:      #073F31;
+  --mj-on-back:       #EAFBF3;  /* ×4 stamp. 4.58:1 — system worst case    */
+
+  /* ── BONUS TILES: a different class of object, its own audited inks.    */
+  --mj-bonus-hi:      #FFF7EA;
+  --mj-bonus-face:    #FFEAD0;
+  --mj-bonus-ink:     #16241F;  /* 13.73:1                                 */
+  --mj-bonus-cap:     #5A4A33;  /* 7.28:1                                  */
+  --mj-bonus-lip:     #A96F14;  /* 3.4:1 vs its own face                   */
+
+  /* ── MANDARIN: THE primary action colour.  Bright fills take ink.       */
+  --mj-mandarin:      #FB9A26;
+  --mj-mandarin-hi:   #FFC46A;
+  --mj-mandarin-lip:  #B8670A;  /* 3.40:1 on --mj-ground-2: the silhouette */
+  --mj-on-mandarin:   #2B1400;  /* 8.11:1                                  */
+
+  /* ── JADE: selection only.  The brightened survivor of heritage jade.   */
+  --mj-jade:          #2FC79A;
+  --mj-jade-hi:       #4FE0B4;
+  --mj-jade-lip:      #0E8E6A;  /* 3.32:1 on --mj-ground-2                 */
+  --mj-on-jade:       #04241A;  /* 7.67:1 on jade, 9.94:1 on jade-hi       */
+
+  /* ── SUITS: the coloured CJK mark and the rule.  On the tile face.      */
+  --mj-suit-m:        #B31C22;  /* 萬  6.08:1 on face, 6.76:1 on face-hi   */
+  --mj-suit-p:        #1A46C4;  /* 筒  6.94:1                              */
+  --mj-suit-s:        #06674A;  /* 索  6.19:1                              */
+
+  /* ── LIPS: saturated, not tinted.  Each ≥3:1 against BOTH the tile face
+        and the page ground, so thickness reads and the tile has an edge.  */
+  --mj-lip-m:         #A5171D;  /* 6.89 vs face, 6.18 vs ground-2          */
+  --mj-lip-p:         #163C9E;  /* 8.68 / 7.79                             */
+  --mj-lip-s:         #04543D;  /* 8.06 / 7.23                             */
+  --mj-lip-wind:      #3C4E47;  /* 7.95 / 7.14                             */
+
+  /* ── MONEY.  Same hexes as m/s by design, separate names so they can
+        diverge.  Never the only carrier: sign and verb are always shown.  */
+  --mj-collect:       #06674A;  /* 6.89 on card, 5.23 on felt              */
+  --mj-pay:           #B31C22;  /* 6.76 on card, 5.13 on felt              */
+
+  /* ── SEAT PASTELS.  Letter is always --mj-on-seat: 11.83–13.15:1.       */
+  --mj-seat-e:        #FFD9B8;
+  --mj-seat-s:        #BFEFDA;
+  --mj-seat-w:        #CBD9FF;
+  --mj-seat-n:        #E3D2FF;
+  --mj-on-seat:       #12211C;
+
+  /* ── DEPTH & FOCUS ────────────────────────────────────────────────── */
+  --mj-shadow:        rgb(22 36 31 / 0.28);
+  --mj-shadow-soft:   rgb(22 36 31 / 0.12);
+  --mj-focus:         #16241F;  /* 12.96:1 on ground-2, 16.08 on card      */
+  --mj-scrim:         rgb(10 26 21 / 0.55);
+
+  /* ── GEOMETRY (theme-invariant) ───────────────────────────────────── */
+  --pad:      16px;
+  --gap:      8px;    /* column gap in every tile grid                     */
+  --gap-row:  12px;   /* row gap = --gap + the 4px lip.  Non-negotiable.   */
+  --col:      440px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-6: 24px; --sp-8: 32px;
+  --r-tile: 12px; --r-mini: 10px; --r-card: 20px; --r-field: 14px;
+  --r-well: 18px; --r-sheet: 28px; --r-pill: 999px;
+  --press: 90ms cubic-bezier(.2,.8,.3,1);
+
+  /* ── TYPE (theme-invariant).  Five webfont faces, one stylesheet.
+        CJK is a system stack and is NEVER webfont-loaded.                 */
+  --f-display: "Fredoka", "Trebuchet MS", ui-rounded, system-ui, sans-serif;
+  --f-body:    "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-cjk:     "PingFang TC", "Hiragino Sans", "Heiti TC",
+               "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --mj-ground:        #13241E;  /* ink 14.29:1, muted 7.73:1             */
+    --mj-ground-2:      #0C1815;  /* ink 16.03:1, muted 8.68:1             */
+    --mj-card:          #1A2B25;  /* ink 13.10:1, muted 7.09:1             */
+    --mj-felt:          #0F1F1A;  /* ink 15.07:1, muted 8.15:1             */
+    --mj-slot:          #16261F;
+    --mj-slot-edge:     #6B8579;  /* 4.27:1 on dark felt                   */
+    --mj-line:          #3C554A;  /* 1.83:1 on card, 2.24:1 on ground-2    */
+
+    --mj-ink:           #EAF3EE;
+    --mj-muted:         #A3B8B0;
+    --mj-disabled:      #93A6A1;  /* 5.28:1 — was 4.33:1, a real failure   */
+    --mj-disabled-fill: #223229;
+
+    --mj-tile-hi:       #293832;
+    --mj-tile-face:     #202E29;
+    --mj-tile-ink:      #EAF3EE;  /* 12.50 on face, 9.04 under gloss       */
+    --mj-tile-cap:      #C3D2CB;  /* 9.03 on face, 6.53 under gloss        */
+    --mj-gloss:         rgb(255 255 255 / 0.06); /* .06, not .10: at .10 萬
+                                     drops to 3.74:1 under the gloss band  */
+
+    --mj-back:          #12805F;  /* physical object — unchanged           */
+    --mj-back-2:        #0F7A59;
+    --mj-back-lip:      #073F31;
+    --mj-on-back:       #EAFBF3;
+
+    --mj-bonus-hi:      #3D3220;
+    --mj-bonus-face:    #33291A;
+    --mj-bonus-ink:     #F5EEE2;  /* 12.36 on face, 9.06 under gloss       */
+    --mj-bonus-cap:     #D6C8AF;  /* 8.65 / 6.34                           */
+    --mj-bonus-lip:     #BE8B3E;  /* 4.68:1 vs its own face                */
+
+    --mj-mandarin:      #FFAE45;
+    --mj-mandarin-hi:   #FFC97E;
+    --mj-mandarin-lip:  #C46A00;  /* 4.16:1 on ground                      */
+    --mj-on-mandarin:   #2B1400;  /* 9.47:1                                */
+
+    --mj-jade:          #3FDCA8;
+    --mj-jade-hi:       #54E7B4;
+    --mj-jade-lip:      #1E9B74;  /* 4.62:1 on ground                      */
+    --mj-on-jade:       #04241A;  /* 9.44:1 / 10.58:1                      */
+
+    --mj-suit-m:        #FF9095;  /* 6.52 on face, 4.71 under gloss        */
+    --mj-suit-p:        #9FBAFF;  /* 7.37 / 5.33                           */
+    --mj-suit-s:        #4FE0AE;  /* 8.49 / 6.14                           */
+
+    --mj-lip-m:         #C25055;  /* 3.08 vs face, 3.52 vs ground          */
+    --mj-lip-p:         #5A79CE;  /* 3.41 / 3.90                           */
+    --mj-lip-s:         #1E9A72;  /* 3.99 / 4.56                           */
+    --mj-lip-wind:      #6A8177;  /* 3.38 / 3.86                           */
+
+    --mj-collect:       #4FE0AE;  /* 8.90 on card, 10.24 on felt           */
+    --mj-pay:           #FF9095;  /* 6.83 on card,  7.86 on felt           */
+
+    --mj-seat-e:        #E8B486;  /* on-seat 8.97:1                        */
+    --mj-seat-s:        #8FD9BC;  /* 10.17:1                               */
+    --mj-seat-w:        #A9BDF0;  /* 8.91:1                                */
+    --mj-seat-n:        #C4ADEB;  /* 8.35:1                                */
+    --mj-on-seat:       #12211C;
+
+    --mj-shadow:        rgb(0 0 0 / 0.55);
+    --mj-shadow-soft:   rgb(0 0 0 / 0.35);
+    --mj-focus:         #FFAE45;  /* 8.77:1 on ground, 8.04:1 on card      */
+    --mj-scrim:         rgb(0 0 0 / 0.66);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --mj-ground:        #13241E;
+  --mj-ground-2:      #0C1815;
+  --mj-card:          #1A2B25;
+  --mj-felt:          #0F1F1A;
+  --mj-slot:          #16261F;
+  --mj-slot-edge:     #6B8579;
+  --mj-line:          #3C554A;
+
+  --mj-ink:           #EAF3EE;
+  --mj-muted:         #A3B8B0;
+  --mj-disabled:      #93A6A1;
+  --mj-disabled-fill: #223229;
+
+  --mj-tile-hi:       #293832;
+  --mj-tile-face:     #202E29;
+  --mj-tile-ink:      #EAF3EE;
+  --mj-tile-cap:      #C3D2CB;
+  --mj-gloss:         rgb(255 255 255 / 0.06);
+
+  --mj-back:          #12805F;
+  --mj-back-2:        #0F7A59;
+  --mj-back-lip:      #073F31;
+  --mj-on-back:       #EAFBF3;
+
+  --mj-bonus-hi:      #3D3220;
+  --mj-bonus-face:    #33291A;
+  --mj-bonus-ink:     #F5EEE2;
+  --mj-bonus-cap:     #D6C8AF;
+  --mj-bonus-lip:     #BE8B3E;
+
+  --mj-mandarin:      #FFAE45;
+  --mj-mandarin-hi:   #FFC97E;
+  --mj-mandarin-lip:  #C46A00;
+  --mj-on-mandarin:   #2B1400;
+
+  --mj-jade:          #3FDCA8;
+  --mj-jade-hi:       #54E7B4;
+  --mj-jade-lip:      #1E9B74;
+  --mj-on-jade:       #04241A;
+
+  --mj-suit-m:        #FF9095;
+  --mj-suit-p:        #9FBAFF;
+  --mj-suit-s:        #4FE0AE;
+
+  --mj-lip-m:         #C25055;
+  --mj-lip-p:         #5A79CE;
+  --mj-lip-s:         #1E9A72;
+  --mj-lip-wind:      #6A8177;
+
+  --mj-collect:       #4FE0AE;
+  --mj-pay:           #FF9095;
+
+  --mj-seat-e:        #E8B486;
+  --mj-seat-s:        #8FD9BC;
+  --mj-seat-w:        #A9BDF0;
+  --mj-seat-n:        #C4ADEB;
+  --mj-on-seat:       #12211C;
+
+  --mj-shadow:        rgb(0 0 0 / 0.55);
+  --mj-shadow-soft:   rgb(0 0 0 / 0.35);
+  --mj-focus:         #FFAE45;
+  --mj-scrim:         rgb(0 0 0 / 0.66);
+}

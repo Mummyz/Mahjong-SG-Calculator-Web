@@ -110,6 +110,12 @@ export interface VariantPlugin {
   readonly id: string
   readonly tileSet: TileSetSpec
   readonly defaults: RuleOptions
+  /**
+   * The win circumstances this variant scores. A flag outside this list is
+   * never offered to the player and never scores — Hong Kong pays nothing for
+   * a flower replacement (RULING HK15), so it does not appear here.
+   */
+  readonly flags: readonly WinFlag[]
   handSize(kongCount: number): number
   score(hand: HandInput, ctx: WinContext, opts?: Partial<RuleOptions>): ScoreResult
   payments(score: ScoreResult, ctx: WinContext, opts?: Partial<RuleOptions>): PaymentBreakdown | null

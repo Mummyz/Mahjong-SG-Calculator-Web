@@ -1,0 +1,864 @@
+{
+  "description": "Prediction — distance to a win, and the hands a partial tray can still become.",
+  "entries": [
+    {
+      "id": "pred-state-001",
+      "title": "An empty tray predicts nothing",
+      "cite": "The panel has nothing to work from; saying anything would be inventing a plan.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": ""
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "empty",
+        "keyed": 0,
+        "target": 14,
+        "candidates": 0
+      }
+    },
+    {
+      "id": "pred-state-002",
+      "title": "Four tiles is too few to name a plan",
+      "cite": "SPARSE_BELOW — under five tiles a hand is compatible with almost every shape in the game.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1p 2p 3p 5p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "sparse",
+        "keyed": 4,
+        "target": 14,
+        "candidates": 0,
+        "hintsInclude": [
+          "flush:p"
+        ]
+      }
+    },
+    {
+      "id": "pred-state-003",
+      "title": "Five tiles is enough to start naming hands",
+      "cite": "SPARSE_BELOW is five: at five tiles the shapes have begun to separate.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1p 2p 3p 5p 7p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 5,
+        "target": 14,
+        "minCandidates": 2
+      }
+    },
+    {
+      "id": "pred-state-004",
+      "title": "A finished hand has nothing left to predict",
+      "cite": "Prediction is about what is missing. Nothing is.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 55p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "complete",
+        "keyed": 14,
+        "target": 14,
+        "candidates": 0
+      }
+    },
+    {
+      "id": "pred-state-005",
+      "title": "An empty tray on a Hong Kong table behaves the same",
+      "cite": "Variant-independent: the state machine is about how much is keyed.",
+      "variant": "hongkong",
+      "hand": {
+        "concealed": ""
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "empty",
+        "keyed": 0,
+        "target": 14,
+        "candidates": 0
+      }
+    },
+    {
+      "id": "pred-sg-001",
+      "title": "Three tiles short of a Full Flush, and it says which three",
+      "cite": "TT — the archived Tabletopia Singapore ruleset §Full Flush (清一色): 'four points'. RULING R3 prices the flush; R4a is what stops Pure Green stacking on top of it.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "123p 456p 789p 5p 5p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 11,
+        "target": 14,
+        "nearestAway": 3,
+        "includes": [
+          {
+            "signature": "fullFlush",
+            "away": 3,
+            "fan": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-sg-002",
+      "title": "Two dragon pungs and a dragon pair are three tiles from Three Great Scholars",
+      "cite": "TT — the archived Tabletopia Singapore ruleset §Three Great Scholars (大三元): 'this criterion is often awarded the limit'. RULING R8b — a limit award prices the whole hand.",
+      "variant": "singapore",
+      "note": "The third dragon completes 大三元 and the odd chow finishes the hand.",
+      "hand": {
+        "concealed": "CCC FFF PP 123m"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 11,
+        "target": 14,
+        "nearestAway": 3,
+        "includes": [
+          {
+            "signature": "bigThreeDragons",
+            "away": 3,
+            "fan": 5,
+            "needed": "1m 4m P"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-sg-003",
+      "title": "A hand of terminals and honours is offered Thirteen Wonders",
+      "cite": "TT — the archived Tabletopia Singapore ruleset §Thirteen Wonders (十三幺): awarded the limit. RULING R12 is about how it is PAID, not what it scores.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1m 9m 1p 9p 1s 9s E S W"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 9,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "thirteenWonders",
+            "fan": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-sg-004",
+      "title": "A claimed meld leaves three sets to find, not four",
+      "cite": "The concealed target is 14 minus the tiles already on the table.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1p 2p 3p 4p 5p 5p 5p 6p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "C C C",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 8,
+        "target": 11,
+        "nearestAway": 3
+      }
+    },
+    {
+      "id": "pred-sg-005",
+      "title": "An exposed kong makes the concealed hand one tile longer",
+      "cite": "RULING R14 and src/engine/core/hand.ts — a winning hand is 14 tiles plus one for every kong, because a kong is four tiles doing the work of three.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1p 2p 3p 4p 5p 6p 7p",
+        "melds": [
+          {
+            "t": "kong",
+            "tiles": "C C C C",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 7,
+        "target": 11
+      },
+      "note": "Eleven concealed tiles plus a four-tile kong is fifteen on the table, which is fourteen plus one for the kong."
+    },
+    {
+      "id": "pred-sg-006",
+      "title": "Never asks for a fifth copy of a tile",
+      "cite": "Four of each tile exist. A suggestion that needs a fifth is not a suggestion.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1m 1m 1m 1m 2m 3m 4m 5m"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 8,
+        "target": 14
+      }
+    },
+    {
+      "id": "pred-sg-007",
+      "title": "Never asks for a tile the melds have used up",
+      "cite": "Three copies of 9m are on the table; only one can ever come back.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "9m 1p 2p 3p 4p 5p 6p 7p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "9m 9m 9m",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 8,
+        "target": 11,
+        "maxCopiesOf": {
+          "9m": 4
+        }
+      }
+    },
+    {
+      "id": "pred-sg-008",
+      "title": "A sequence hand is only worth its four tai on the right wait",
+      "cite": "TT — the archived Tabletopia Singapore ruleset §Sequence Hand (平胡): 'four points'. RULING R5 — the wait must be two-sided or wider on a discard, and an all-chow hand that forfeits it scores nothing at all.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1m 2m 3m 4m 5m 6m 7p 8p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 8,
+        "target": 14,
+        "nearestAway": 6,
+        "conditionalFan": true
+      },
+      "note": "This is the entry that would have caught the winning-tile defect: the plain sequence hand pays 4 on some finishes and is not a legal win on others, so the panel must quote a range, not a number."
+    },
+    {
+      "id": "pred-sg-009",
+      "title": "Nine Gates is offered to a one-suit hand that has the shape for it",
+      "cite": "TT — the archived Tabletopia Singapore ruleset §Nine Gates (九蓮寶燈): awarded the limit.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1m 1m 1m 2m 3m 4m 5m 9m 9m 9m"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 10,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "nineGates",
+            "fan": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-hk-001",
+      "title": "One tile from 坎坎糊, and it says which",
+      "cite": "RULING-LOG-HK.md HK9/HK21 — 坎坎糊 8, and HK21: every set a pung or kong with none of them claimed. HK8a 門前清 1, 無花 1.",
+      "variant": "hongkong",
+      "note": "Concealed all the way through, so HK21 makes it 坎坎糊 rather than 對對糊. The entry pins the distance and the tile; the fan is pinned by the certification invariant against every way it can finish.",
+      "hand": {
+        "concealed": "111m 333m 555p 777s 9s"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 13,
+        "target": 14,
+        "nearestAway": 1,
+        "includes": [
+          {
+            "signature": "fourConcealedTriplets",
+            "away": 1,
+            "needed": "9s"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-hk-002",
+      "title": "A one-suit Hong Kong hand is offered 清一色",
+      "cite": "RULING-LOG-HK.md HK8a — 清一色 7, 平糊 1, 無花 1 — and HK12, 門前清 1, which Hong Kong scores on a discard.",
+      "variant": "hongkong",
+      "note": "7 + 1 + 1 + 1 = 10, which is also the default cap. The point of the entry is that the panel quotes the whole hand, not just the flush.",
+      "hand": {
+        "concealed": "1p 2p 3p 4p 5p 6p 7p 8p 9p 5p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 10,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "fullFlush",
+            "fan": 10
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-hk-003",
+      "title": "Hong Kong is never offered an animal tile",
+      "cite": "RULING-LOG-HK.md HK1 — 144 tiles, and the animals are Singapore's.",
+      "variant": "hongkong",
+      "hand": {
+        "concealed": "1m 9m 1p 9p E S W"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 7,
+        "target": 14,
+        "noAnimals": true
+      }
+    },
+    {
+      "id": "pred-hk-004",
+      "title": "A hand that cannot reach three faan is not offered as a plan",
+      "cite": "RULING-LOG-HK.md HK2 三番起糊 — a hand below the minimum is not a legal win, so it is not a suggestion.",
+      "variant": "hongkong",
+      "hand": {
+        "concealed": "1m 2m 3m 4p 5p 6p 7s 8s"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 8,
+        "target": 14,
+        "everyCandidateAtLeast": 3
+      }
+    },
+    {
+      "id": "pred-hk-005",
+      "title": "Hong Kong offers 十三么 from a spread of terminals and honours",
+      "cite": "RULING-LOG-HK.md HK8b 十三么 例牌.",
+      "variant": "hongkong",
+      "hand": {
+        "concealed": "1m 9m 1p 9p 1s 9s E S W"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 9,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "thirteenOrphans"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-hk-006",
+      "title": "The cap a table plays changes what a plan is worth",
+      "cite": "RULING-LOG-HK.md HK3 — the cap is a setting; a 例牌 shows 13 at a 13-faan cap and 10 at the default.",
+      "variant": "hongkong",
+      "hand": {
+        "concealed": "EEE SSS WWW 5m"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "opts": {
+        "rules": {
+          "limit": 13
+        }
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 10,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "bigFourWinds",
+            "fan": 13
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-hk-007",
+      "title": "The same hand at the default cap is worth ten",
+      "cite": "RULING-LOG-HK.md HK3 — ten faan is the Hong Kong Mahjong Association's cap and the default.",
+      "variant": "hongkong",
+      "hand": {
+        "concealed": "EEE SSS WWW 5m"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 10,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "bigFourWinds",
+            "fan": 10
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-hk-008",
+      "title": "A Hong Kong hand with a claimed meld still counts to fourteen",
+      "cite": "RULING-LOG-HK.md HK1.",
+      "variant": "hongkong",
+      "hand": {
+        "concealed": "111m 333m 555p 7s",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "C C C",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 10,
+        "target": 11
+      }
+    },
+    {
+      "id": "pred-hk-009",
+      "title": "Flowers in the tray do not change what the tiles can become",
+      "cite": "RULING-LOG-HK.md HK8a — the flower lines score, but they are not part of the tile hand.",
+      "variant": "hongkong",
+      "hand": {
+        "concealed": "1p 2p 3p 4p 5p 6p 7p 8p 9p 5p",
+        "bonus": [
+          "F1"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 10,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "fullFlush"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-both-001",
+      "title": "A Singapore hand of the same tiles predicts differently",
+      "cite": "The two variants score the same tiles differently, so they plan differently. TT — the archived Tabletopia Singapore ruleset §Full Flush 4 tai vs RULING-LOG-HK.md HK8a 清一色 7.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1p 2p 3p 4p 5p 6p 7p 8p 9p 5p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 10,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "fullFlush",
+            "fan": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-both-002",
+      "title": "A hand one tile from home says one tile",
+      "cite": "The distance is the number of tiles still to acquire, nothing more.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "123m 456m 789m 234p 5p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 13,
+        "target": 14,
+        "nearestAway": 1
+      }
+    },
+    {
+      "id": "pred-both-003",
+      "title": "A hand needing a discard says what to drop",
+      "cite": "A plan that keeps every tile is rare; the panel has to name the odd one out.",
+      "variant": "hongkong",
+      "hand": {
+        "concealed": "111m 333m 555p 2m 9p 4s"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 12,
+        "target": 14,
+        "anyDiscard": true
+      },
+      "note": "Three loose tiles in three different suits cannot all become a set and an eye in two draws, so every plan has to drop something."
+    },
+    {
+      "id": "pred-fix-001",
+      "title": "A hand with three melds down is predicted, not written off",
+      "cite": "A three-meld hand needs five concealed tiles. Comparing the concealed count against a fixed threshold meant it could never be predicted at all, however close to home it was.",
+      "variant": "singapore",
+      "note": "Four keyed tiles, and the hand is one tile from Three Great Scholars.",
+      "hand": {
+        "concealed": "1m 2m 3m 5p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "C C C",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "F F F",
+            "open": true
+          },
+          {
+            "t": "pong",
+            "tiles": "P P P",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 4,
+        "target": 5,
+        "nearestAway": 1
+      }
+    },
+    {
+      "id": "pred-fix-002",
+      "title": "A dragon already claimed still counts towards the dragon hands",
+      "cite": "TT — the archived Tabletopia Singapore ruleset §Three Great Scholars (大三元). A pung on the table is IN the hand; asking for three more copies of it deleted the archetype for exactly the players who were halfway there.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1m 2m 3m 9p 9p",
+        "melds": [
+          {
+            "t": "pong",
+            "tiles": "C C C",
+            "open": true
+          }
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 5,
+        "target": 11,
+        "nearestAway": 6,
+        "includes": [
+          {
+            "signature": "bigThreeDragons",
+            "away": 6,
+            "needed": "F F F P P P"
+          }
+        ]
+      },
+      "note": "Five keyed tiles, a dragon already on the table, and the two remaining dragons are the whole distance. Before the fix this archetype forced three MORE copies of the melded 中 into the concealed hand, found only one left in the game, and returned nothing — so every dragon and wind hand vanished for exactly the players holding one."
+    },
+    {
+      "id": "pred-fix-003",
+      "title": "Hong Kong's ordinary concealed hand is offered, because 自摸 is counted",
+      "cite": "RULING-LOG-HK.md HK8a — 平糊 1, 自摸 1, 門前清 1, 無花 1 — and HK2, three faan to win. Scored only as a discard the hand reaches 3 and the panel could not offer it; on a self-draw it is 4.",
+      "variant": "hongkong",
+      "note": "The most ordinary tray in the game. Before the fix the panel offered it four limit hands eight to eleven tiles away and not this.",
+      "hand": {
+        "concealed": "1m 2m 3m 4m 5m 6m 7p 8p"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 8,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "commonHand"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-fix-004",
+      "title": "Singapore's Hidden Treasure needs a self-draw, so it is quoted as one",
+      "cite": "TT — the archived Tabletopia Singapore ruleset §Hidden Treasure (四暗刻): all triplets, concealed, self-drawn — awarded the limit.",
+      "variant": "singapore",
+      "note": "Priced as a discard win the same tiles are worth 2. The panel now says both: the floor it pays however it lands, and the limit it reaches if drawn.",
+      "hand": {
+        "concealed": "1m 1m 1m 3m 3m 3m 5p 5p 5p 7s 9s"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 11,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "hiddenTreasure"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pred-fix-005",
+      "title": "A Hong Kong hand that the flowers already won says so",
+      "cite": "RULING-LOG-HK.md HK8b — 「集齊七隻花牌可即時食糊」. The deal ends the moment the seventh flower is drawn.",
+      "variant": "hongkong",
+      "note": "Telling this player they are nine tiles from winning would be nonsense: they have won.",
+      "hand": {
+        "concealed": "1m 2m 3m 4m 5m",
+        "bonus": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "S1",
+          "S2",
+          "S3"
+        ]
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "won",
+        "keyed": 5,
+        "target": 14,
+        "candidates": 0
+      }
+    },
+    {
+      "id": "pred-fix-006",
+      "title": "Fourteen tiles that are not a hand are not called finished",
+      "cite": "The state was a size test. A tray of fourteen unrelated tiles is the likeliest mistake at a table, and it was being told to go and score.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1m 3m 5m 7m 9m 2p 4p 6p 8p 1s 3s 5s E C"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "notAHand",
+        "keyed": 14,
+        "target": 14,
+        "candidates": 0
+      }
+    },
+    {
+      "id": "pred-fix-007",
+      "title": "A wind pung is offered, because it is the cheapest fan there is",
+      "cite": "RULING-LOG-HK.md HK8a — 門風 1, 圈風 1, and 「門風及圈風重疊時計兩番」 when they are the same wind. It is the standard way a Hong Kong hand clears three faan.",
+      "variant": "hongkong",
+      "note": "East seat in the East round, so the pair of East is worth two faan once it is a pung.",
+      "hand": {
+        "concealed": "1m 2m 3m 4p 5p 6p 7s 8s E E"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 10,
+        "target": 14
+      }
+    },
+    {
+      "id": "pred-fix-008",
+      "title": "A fourth copy is a kong waiting to be declared, not a tile to throw",
+      "cite": "Candidate.discard is documented as tiles the hand has no room for. A fourth copy sitting on a triplet is not that.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1m 1m 1m 1m 3m 3m 3m 5p 5p 5p 7s 9s"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 12,
+        "target": 14,
+        "neverDiscards": [
+          "1m"
+        ]
+      }
+    },
+    {
+      "id": "pred-fix-009",
+      "title": "The sparse hints only promise fan for honours that pay",
+      "cite": "RULING-LOG-HK.md HK8a — a dragon triplet scores, and so does the seat or round wind. A triplet of any other wind is worth nothing in either variant, and the hint says \"real fan\".",
+      "variant": "hongkong",
+      "note": "One of these four honours pays: the 中. West and North are neither the seat nor the round wind here.",
+      "hand": {
+        "concealed": "W W N C"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "sparse",
+        "keyed": 4,
+        "target": 14,
+        "hintsInclude": [
+          "honours"
+        ],
+        "hintSeen": {
+          "honours": 1
+        }
+      }
+    },
+    {
+      "id": "pred-fix-010",
+      "title": "The same tiles are a limit hand drawn and two tai claimed, and the panel says both",
+      "cite": "TT §Hidden Treasure (四暗刻): all triplets, concealed, SELF-DRAWN — awarded the limit. TT §Triplets Hand (碰碰胡): two points. RULING R8b.",
+      "variant": "singapore",
+      "hand": {
+        "concealed": "1m 1m 1m 3m 3m 3m 5p 5p 5p 7s 9s"
+      },
+      "ctx": {
+        "seat": "E",
+        "prevailing": "E"
+      },
+      "expect": {
+        "state": "candidates",
+        "keyed": 11,
+        "target": 14,
+        "includes": [
+          {
+            "signature": "hiddenTreasure",
+            "fan": 2,
+            "fanBest": 5,
+            "bestWin": "selfDraw",
+            "selfDrawOnly": false
+          }
+        ]
+      },
+      "note": "The floor is what it pays if somebody throws the last tile; the ceiling is what it pays if it is drawn. Quoting either one alone would be a false statement, which is why the panel quotes the range and names the condition."
+    }
+  ]
+}
