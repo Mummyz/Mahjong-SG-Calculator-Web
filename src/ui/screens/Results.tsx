@@ -1,10 +1,13 @@
 import { useState } from 'preact/hooks'
 import { t } from '../../i18n'
 import { formatMoney, formatStake } from '../format'
-import type { GameSettings } from './Setup'
+
 import type { HandState } from './HandEntry'
 import { singapore } from '../../engine/variants/singapore'
-import { WINDS, type Wind } from '../../engine/core/tiles'
+import {
+  prevailingWind, scoreKeyedHand, seatWindOf, yourSeat, type TableState,
+} from '../../engine/variants/singapore/table'
+import type { Wind } from '../../engine/core/tiles'
 import type { ScoreResult, WinContext } from '../../engine/core/variant'
 
 const WIND_GLYPH: Record<Wind, string> = { E: '東', S: '南', W: '西', N: '北' }
@@ -28,34 +31,38 @@ const HAND_PATTERNS = new Set(Object.keys(CJK).filter(
   (k) => !['fullyConcealed', 'robbingKong', 'lastTile'].includes(k),
 ))
 
-export function Results({ game, hand, onEdit, onNext }: {
-  game: GameSettings
+export function Results({ table, stake, limit, hand, onEdit, onNext }: {
+  table: TableState
+  stake: number
+  limit: number
   hand: HandState
   onEdit: () => void
   onNext: () => void
 }) {
+  const nameOf = (i: number) => table.players[i] || t('table.playerN', { n: i + 1 })
   const [confirmNext, setConfirmNext] = useState(false)
 
   const incomplete = hand.win === null
-    || (hand.win === 'discard' && hand.discarder === null)
+    || (hand.win === 'discard' && hand.discarderIndex === null)
     || hand.winningTile === null
 
   const ctx: WinContext = {
-    seat: game.seat,
-    prevailing: game.prevailing,
+    seat: yourSeat(table),
+    prevailing: prevailingWind(table),
     win: hand.win ?? 'selfDraw',
     winningTile: hand.winningTile ?? undefined,
     flags: hand.flags,
     pao: hand.pao,
   }
-  const opts = { limit: game.limit }
-  // Everything below is read off the engine. The UI computes no score.
-  const result: ScoreResult = singapore.score(
-    { concealed: hand.concealed.join(' '), melds: hand.melds, bonus: hand.bonus }, ctx, opts,
+  const opts = { limit }
+  // Everything below is read off the engine. The UI computes no score — it
+  // only hands over every reading of the keyed hand and keeps the best.
+  const { result }: { result: ScoreResult } = scoreKeyedHand(
+    { concealed: hand.concealed, melds: hand.melds, bonus: hand.bonus }, ctx, opts,
   )
   const pay = singapore.payments(result, ctx, opts)
-  const instant = singapore.instantPayouts!(hand.bonus, game.seat)
-  const others = WINDS.filter((w) => w !== game.seat)
+  const instant = singapore.instantPayouts!(hand.bonus, yourSeat(table))
+  const others = table.players.map((_, i) => i).filter((i) => i !== table.youIndex)
 
   if (incomplete) {
     return (
@@ -122,7 +129,7 @@ export function Results({ game, hand, onEdit, onNext }: {
           <div class="fan__unit">{t('result.fanUnit')}</div>
           {result.limitApplied && (
             <p class="capnote">
-              {t('result.fanCapped', { limit: game.limit, raw: result.rawTai })}
+              {t('result.fanCapped', { limit, raw: result.rawTai })}
             </p>
           )}
 
@@ -152,14 +159,14 @@ export function Results({ game, hand, onEdit, onNext }: {
             <p class="capnote" style="margin:0 0 10px">
               {t('result.terms', {
                 win: hand.win === 'selfDraw' ? t('win.selfDraw') : t('win.discard'),
-                stake: formatStake(game.stake),
-                limit: game.limit,
+                stake: formatStake(stake),
+                limit,
               })}
             </p>
-            {hand.pao && hand.win === 'discard' && hand.discarder
+            {hand.pao && hand.win === 'discard' && hand.discarderIndex !== null
               && !result.patterns.includes('thirteenWonders') && (
               <p class="capnote" style="margin:0 0 10px">
-                {t('result.paoNote', { wind: t(`wind.${hand.discarder}`) })}
+                {t('result.paoNote', { wind: nameOf(hand.discarderIndex) })}
               </p>
             )}
             {result.patterns.includes('thirteenWonders') && (
@@ -168,30 +175,27 @@ export function Results({ game, hand, onEdit, onNext }: {
             <p class="collectline">
               <span class="collectline__k">{t('result.youCollect')}</span>
               <span class="collectline__v collect">
-                {formatMoney(pay.winnerTotal, game.stake, true)}
+                {formatMoney(pay.winnerTotal, stake, true)}
               </span>
             </p>
             <table class="ledger">
               <tbody>
-                {others.map((w) => {
-                  const isDiscarder = hand.win === 'discard' && w === hand.discarder
+                {others.map((i) => {
+                  const isDiscarder = hand.win === 'discard' && i === hand.discarderIndex
                   // Both numbers come straight off the engine's breakdown; the
                   // pao settlement is already baked into them.
                   const units = isDiscarder ? (pay.fromDiscarder ?? 0) : pay.fromEachOther
+                  const w = seatWindOf(table, i)
                   return (
-                    <tr key={w}>
+                    <tr key={i}>
                       <td>
                         <span class="seatcell">
                           <span class="seatchip" aria-hidden="true">{WIND_GLYPH[w]}</span>
-                          <span>
-                            {isDiscarder
-                              ? t('result.threwBy', { wind: t(`wind.${w}`) })
-                              : t(`wind.${w}`)}
-                          </span>
+                          <span>{t('result.pays', { name: nameOf(i) })}</span>
                         </span>
                       </td>
                       <td class={`ledger__amt ${units === 0 ? 'zero' : 'pay'}`}>
-                        {units === 0 ? t('result.nothing') : formatMoney(-units, game.stake, true)}
+                        {units === 0 ? t('result.nothing') : formatMoney(-units, stake, true)}
                       </td>
                     </tr>
                   )
@@ -199,12 +203,12 @@ export function Results({ game, hand, onEdit, onNext }: {
                 <tr class="ledger__total">
                   <td>
                     <span class="seatcell">
-                      <span class="seatchip" aria-hidden="true">{WIND_GLYPH[game.seat]}</span>
+                      <span class="seatchip" aria-hidden="true">{WIND_GLYPH[yourSeat(table)]}</span>
                       <span>{t('result.you')}</span>
                     </span>
                   </td>
                   <td class="ledger__amt collect">
-                    {formatMoney(pay.winnerTotal, game.stake, true)}
+                    {formatMoney(pay.winnerTotal, stake, true)}
                   </td>
                 </tr>
               </tbody>
@@ -255,7 +259,7 @@ export function Results({ game, hand, onEdit, onNext }: {
                   <tr key={p.key}>
                     <td>{t(`instant.${p.key}`)}</td>
                     <td>{t('result.instantEach', {
-                      amount: formatMoney(p.fromEachPlayer, game.stake),
+                      amount: formatMoney(p.fromEachPlayer, stake),
                     })}</td>
                   </tr>
                 ))}

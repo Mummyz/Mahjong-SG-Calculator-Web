@@ -95,6 +95,7 @@ describe('i18n coverage', () => {
     const FLAGS = ['robbingKong', 'lastTile', 'kongReplacement', 'flowerReplacement',
                    'heavenly', 'earthly', 'humanly', 'kongOnKong', 'pao',
                    'disabled.dealerOnly', 'disabled.nonDealerOnly', 'disabled.needsTwoKongs']
+    const EXPLAINED = FLAGS.filter((f) => !f.startsWith('disabled.'))
     const GROUPS = ['characters', 'dots', 'bamboo', 'winds', 'dragons',
                     'flowers', 'seasons', 'animals']
     const reachable = new Set<string>([
@@ -111,7 +112,10 @@ describe('i18n coverage', () => {
       ...FLAGS.map((f) => `flag.${f}`),
       ...GROUPS.map((g) => `tileinfo.group.${g}`),
       ...['characters', 'dots', 'bamboo', 'honours', 'bonus'].map((x) => `hand.tab.${x}`),
-      ...['Chow', 'Pong', 'Kong'].map((k) => `hand.meld${k}`),
+      ...['Chow', 'Pong', 'Kong'].flatMap((k) => [
+        `hand.declare${k}`, `hand.declare${k}Sub`, `hand.tag${k}`,
+      ]),
+      ...EXPLAINED.flatMap((f) => [`flag.${f}.sub`, `flag.${f}.detail`]),
     ])
     const dead = [...keys].filter((k) => !src.includes(`'${k}'`) && !reachable.has(k))
     expect(dead, 'strings nothing renders').toEqual([])

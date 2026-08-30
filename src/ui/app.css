@@ -275,19 +275,6 @@ body {
 /* the secondary action sizes to its own words instead of being squeezed */
 .dock__row .btn--ghost { flex: 0 0 auto; white-space: nowrap; }
 
-/* ── win-condition row: the choice that decides who pays ─────────────── */
-.wincond { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: var(--mj-gutter);
-           background: var(--mj-grout); padding: var(--mj-gutter); }
-.wincond__opt {
-  min-height: 46px; border: 0; border-radius: var(--mj-r); cursor: pointer;
-  background: var(--mj-slip); color: var(--mj-ink);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
-  font: 600 0.75rem/1.1 var(--f-sign); letter-spacing: 0.04em; text-transform: uppercase;
-  padding: 4px 2px; text-align: center;
-}
-.wincond__opt[aria-checked="true"] { background: var(--mj-ink); color: var(--mj-on-ink); }
-.wincond__cjk { font: 700 16px/1 var(--f-cjk); }
-.wincond__cap { font: 600 10px/1 var(--f-sign); letter-spacing: 0.06em; }
 
 /* a chip that cannot apply says why, rather than just refusing */
 .chip__why { display: block; font: 400 0.6875rem/1.2 var(--f-body);
@@ -301,11 +288,6 @@ body {
             border-radius: var(--mj-r); padding: 8px 10px; font-size: 0.8125rem; }
 .docknote > span { flex: 1; }
 
-/* The tray removes a tile on tap; this row picks one. They must not look the
-   same, so the picker sits on chit paper rather than in the mortar. */
-.grid--pick { background: var(--mj-slip); border: 1px solid var(--mj-rule);
-              border-radius: var(--mj-r); }
-.grid--pick .cell--blank { background: var(--mj-slip); }
 
 /* Bonus tiles live on their own tab but score everywhere, so what you hold is
    listed with the hand rather than hidden behind a tab. */
@@ -313,3 +295,147 @@ body {
 .bonusheld__x { font: 600 0.6875rem/1 var(--f-sign); letter-spacing: 0.05em;
                 text-transform: uppercase; padding: 5px 7px; border-radius: var(--mj-r);
                 background: var(--mj-ink); color: var(--mj-on-ink); }
+
+/* ── the tray: the whole hand in one place ───────────────────────────── */
+.tray {
+  display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px;
+  background: var(--mj-grout); padding: var(--mj-gutter); border-radius: var(--mj-r);
+}
+.tray__one { flex: 0 0 auto; position: relative; }
+.tray__one > .tile, .tray__one > .slot { width: 44px; }
+/* A meld stays together: its tiles sit tight, with a tag naming what it is.
+   An exposed meld is face-up on the table, so it sits on a solid ink block; a
+   concealed kong is still in your hand, so it only gets a paper surround. */
+.tray__group { flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px;
+               padding: 2px; border-radius: var(--mj-r);
+               background: var(--mj-slip); border: 1px solid var(--mj-rule); }
+.tray__group--exposed { background: var(--mj-ink); border-color: var(--mj-ink); }
+.tray__tiles { display: flex; gap: 1px; }
+.tray__tiles > .tile { width: 40px; }
+.tray__tag { font: 600 0.625rem/1 var(--f-sign); letter-spacing: 0.06em;
+             text-transform: uppercase; color: var(--mj-muted); text-align: center;
+             padding: 2px 2px 1px; }
+.tray__group--exposed .tag, .tray__group--exposed .tray__tag { color: var(--mj-on-ink); }
+.tray__group--exposed .tile { filter: saturate(0.6) brightness(0.96); }
+.tray__won { position: absolute; left: 0; right: 0; bottom: -15px; text-align: center;
+             font: 600 0.5625rem/1.6 var(--f-sign); letter-spacing: 0.02em; white-space: nowrap;
+             text-transform: uppercase; border-radius: 1px;
+             background: var(--mj-jade); color: var(--mj-on-jade); }
+.tray__one:has(.tray__won) { margin-bottom: 17px; }
+.chipnote { margin: 8px 0 0; padding: 8px 10px; border-radius: var(--mj-r);
+            background: var(--mj-slip); border: 1px solid var(--mj-rule);
+            font-size: 0.8125rem; }
+
+/* ── declaring a meld ────────────────────────────────────────────────── */
+.declarerow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+.declarerow > .btn { grid-column: 1 / -1; }
+.declareopt { min-height: 56px; border: 1px solid var(--mj-rule); border-radius: var(--mj-r);
+              background: var(--mj-slip); color: var(--mj-ink); cursor: pointer;
+              display: flex; flex-direction: column; align-items: center;
+              justify-content: center; gap: 2px; padding: 6px 4px; }
+.declareopt__k { font: 700 0.875rem/1 var(--f-sign); letter-spacing: 0.04em;
+                 text-transform: uppercase; }
+.declareopt__s { font: 400 0.6875rem/1.2 var(--f-body); color: var(--mj-muted);
+                 text-align: center; }
+
+/* ── circumstances, explained rather than assumed ────────────────────── */
+.unusual { display: flex; align-items: stretch; gap: 6px; margin-bottom: 6px; }
+.unusual__pick { flex: 1; min-height: 44px; text-align: left; cursor: pointer;
+                 border: 1px solid var(--mj-rule); border-radius: var(--mj-r);
+                 background: var(--mj-slip); color: var(--mj-ink); padding: 8px 10px;
+                 display: flex; flex-direction: column; gap: 2px; }
+.unusual__pick[aria-pressed="true"] { background: var(--mj-ink); color: var(--mj-on-ink);
+                                      border-color: var(--mj-ink); }
+.unusual__pick[aria-pressed="true"] .unusual__sub { color: var(--mj-on-ink); }
+.unusual__pick:disabled { color: var(--mj-disabled); cursor: not-allowed; }
+.unusual__pick:disabled .unusual__sub { color: var(--mj-disabled); }
+.unusual__name { font: 600 0.8125rem/1.2 var(--f-body); }
+.unusual__sub { font: 400 0.75rem/1.3 var(--f-body); color: var(--mj-muted); }
+.unusual__why { flex: 0 0 44px; min-height: 44px; border: 1px solid var(--mj-rule);
+                border-radius: var(--mj-r); background: var(--mj-slip); color: var(--mj-ink);
+                font: 700 1rem/1 var(--f-sign); cursor: pointer; }
+
+/* ── who won ─────────────────────────────────────────────────────────── */
+.wingrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.wingrid__opt { min-height: 44px; border: 1px solid var(--mj-rule); border-radius: var(--mj-r);
+                background: var(--mj-slip); color: var(--mj-ink); cursor: pointer;
+                font: 600 0.8125rem/1.2 var(--f-body); padding: 6px 8px;
+                overflow: hidden; text-overflow: ellipsis; }
+.wingrid__opt[aria-checked="true"] { background: var(--mj-ink); color: var(--mj-on-ink);
+                                     border-color: var(--mj-ink); }
+.winsummary { display: flex; align-items: center; justify-content: space-between; gap: 8px;
+              min-height: 44px; width: 100%; padding: 6px 10px; cursor: pointer;
+              border: 1px solid var(--mj-rule); border-radius: var(--mj-r);
+              background: var(--mj-slip); color: var(--mj-ink);
+              font: 600 0.8125rem/1.2 var(--f-body); text-align: left; }
+.winsummary__edit { font: 600 0.6875rem/1 var(--f-sign); letter-spacing: 0.06em;
+                    text-transform: uppercase; color: var(--mj-muted); }
+
+/* ── table setup: names ──────────────────────────────────────────────── */
+.namerow { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.namerow__wind { flex: 0 0 34px; height: 44px; display: flex; align-items: center;
+                 justify-content: center; border-radius: var(--mj-r);
+                 background: var(--mj-ink); color: var(--mj-on-ink);
+                 font: 700 17px/1 var(--f-cjk); }
+.namerow__you { flex: 0 0 auto; font: 600 0.6875rem/1 var(--f-sign); letter-spacing: 0.06em;
+                text-transform: uppercase; padding: 6px 8px; border-radius: var(--mj-r);
+                background: var(--mj-jade); color: var(--mj-on-jade); }
+
+/* ── sheet ───────────────────────────────────────────────────────────── */
+.sheet__scrim { position: fixed; inset: 0; z-index: 20; display: flex; align-items: flex-end;
+                justify-content: center; background: rgb(0 0 0 / 0.55); }
+.sheet { width: 100%; max-width: var(--mj-col); max-height: 86dvh; overflow-y: auto;
+         background: var(--mj-ground); border-top: 1px solid var(--mj-rule);
+         border-radius: var(--mj-r) var(--mj-r) 0 0;
+         padding: 16px var(--mj-pad) calc(16px + env(safe-area-inset-bottom));
+         display: flex; flex-direction: column; gap: 14px; }
+.sheet__title { margin: 0; font: 700 1.0625rem/1.2 var(--f-sign); letter-spacing: 0.03em;
+                text-transform: uppercase; }
+.sheet__body { font-size: 0.9375rem; line-height: 1.55; }
+.sheet__body p { margin: 0; }
+.menulist { display: flex; flex-direction: column; gap: 8px; }
+.menuitem { min-height: 56px; text-align: left; cursor: pointer; padding: 10px 12px;
+            border: 1px solid var(--mj-rule); border-radius: var(--mj-r);
+            background: var(--mj-slip); color: var(--mj-ink);
+            display: flex; flex-direction: column; gap: 3px; }
+.menuitem__k { font: 600 0.9375rem/1.2 var(--f-body); }
+.menuitem__s { font: 400 0.8125rem/1.3 var(--f-body); color: var(--mj-muted); }
+.menuitem--danger .menuitem__k { color: var(--mj-ang-ink); }
+.menuitem--danger[aria-pressed="true"] { background: var(--mj-ang); border-color: var(--mj-ang); }
+.menuitem--danger[aria-pressed="true"] .menuitem__k,
+.menuitem--danger[aria-pressed="true"] .menuitem__s { color: var(--mj-on-ang); }
+
+/* Who is on which wind, and who is dealing — always on screen. */
+.seats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin: 0;
+         padding: 0; list-style: none; background: var(--mj-rule); }
+.seats__x { display: flex; flex-direction: column; align-items: center; gap: 1px;
+            padding: 4px 2px; background: var(--mj-ground); min-width: 0; }
+.seats__x[data-you] { background: var(--mj-slip); }
+.seats__w { font: 700 13px/1 var(--f-cjk); }
+.seats__n { font: 500 0.6875rem/1.1 var(--f-body); color: var(--mj-muted);
+            max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.seats__x[data-you] .seats__n { color: var(--mj-ink); font-weight: 600; }
+.seats__d { font: 600 0.5625rem/1 var(--f-sign); letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--mj-jade-ink); }
+
+/* The note keeps its space whether or not it has anything to say, so the
+   buttons never move out from under a thumb that is already reaching. */
+.docknote[data-empty] { visibility: hidden; }
+.docknote { min-height: 40px; }
+/* Undo and Clear keep a fixed width so arming Clear does not shift Undo. */
+.trayhead .linkbtn { flex: 0 0 auto; min-width: 84px; }
+
+/* The bonus row is always present, so the step is visible even when empty. */
+.bonusheld { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; width: 100%;
+             min-height: 44px; margin: 8px 0 0; padding: 6px 10px; cursor: pointer;
+             border: 1px solid var(--mj-rule); border-radius: var(--mj-r);
+             background: var(--mj-slip); color: var(--mj-ink); text-align: left; }
+.bonusheld__none { flex: 1; color: var(--mj-muted); font: 400 0.8125rem/1.2 var(--f-body); }
+.bonusheld__go { margin-left: auto; font: 600 0.6875rem/1 var(--f-sign);
+                 letter-spacing: 0.06em; text-transform: uppercase; color: var(--mj-jade-ink); }
+/* An exposed meld can be taken back; it is a button, so give it a pressed state. */
+.tray__group--exposed { border: 0; cursor: pointer; }
+.tray__group--exposed:active { transform: translateY(1px); }
+/* Arming Clear turns it red and keeps its width, so Undo never moves. */
+.trayhead .linkbtn[aria-pressed="true"] { background: var(--mj-ang); border-color: var(--mj-ang);
+                                          color: var(--mj-on-ang); }

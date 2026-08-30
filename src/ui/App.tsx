@@ -1,44 +1,52 @@
-import { useEffect, useState } from 'preact/hooks'
+import { useEffect, useRef, useState } from 'preact/hooks'
 import { t } from '../i18n'
 import { VariantSelect } from './screens/VariantSelect'
 import { TileInfo } from './screens/TileInfo'
-import { Setup, type GameSettings } from './screens/Setup'
+import { TableSetup, type Money } from './screens/TableSetup'
 import { HandEntry, EMPTY_HAND, type HandState } from './screens/HandEntry'
 import { Results } from './screens/Results'
+import { Sheet } from './components/Sheet'
+import {
+  advanceTable, newTable, yourSeat, type TableState,
+} from '../engine/variants/singapore/table'
 import './app.css'
 import './tile.css'
 
 type Screen = 'variant' | 'tileinfo' | 'setup' | 'hand' | 'result'
-
-const DEFAULT_GAME: GameSettings = { seat: 'E', prevailing: 'E', stake: 0.5, limit: 5 }
-
-interface Saved {
-  screen: Screen
-  game: GameSettings
-  hand: HandState
-  infoOrigin: Screen
-  setupReturn: Screen
-}
-
-const KEY = 'mahjongyuk.v2'
-
-/**
- * A hand takes a couple of dozen taps to key in. Losing it to a locked phone,
- * a reload, or a stray back-swipe is not acceptable at a table, so the whole
- * session is mirrored to sessionStorage and every screen gets a history entry.
- */
 const SCREENS: Screen[] = ['variant', 'tileinfo', 'setup', 'hand', 'result']
 
+const DEFAULT_MONEY: Money = { stake: 0.5, limit: 5 }
+const defaultTable = (): TableState =>
+  newTable([1, 2, 3, 4].map((n) => t('table.playerN', { n })), 0, 0)
+
+interface Saved {
+  /** False until the player has been through setup for this table. */
+  started: boolean
+  screen: Screen
+  table: TableState
+  money: Money
+  hand: HandState
+  infoOrigin: Screen
+  setupOrigin: Screen
+}
+
+const KEY = 'mahjongyuk.table'
+
+/**
+ * A hand takes a couple of dozen taps and a table lasts all evening, so the
+ * whole session is mirrored to sessionStorage and every screen gets a history
+ * entry. Anything unrecognised is discarded rather than half-restored.
+ */
 const restore = (): Saved | null => {
   try {
-    const raw = sessionStorage.getItem(KEY)
+    const raw = localStorage.getItem(KEY)
     if (!raw) return null
     const v = JSON.parse(raw) as Partial<Saved>
-    // A session written by an older build may not match this shape. Anything
-    // unrecognised is discarded rather than rendered as a blank screen.
     if (!v.screen || !SCREENS.includes(v.screen)) return null
-    if (!v.game || !v.hand || !Array.isArray(v.hand.concealed)
-        || !Array.isArray(v.hand.log)) return null
+    if (!v.table || !Array.isArray(v.table.players) || v.table.players.length !== 4) return null
+    if (!v.money || !v.hand || !Array.isArray(v.hand.concealed) || !Array.isArray(v.hand.log)) {
+      return null
+    }
     return v as Saved
   } catch {
     return null
@@ -48,11 +56,15 @@ const restore = (): Saved | null => {
 export function App() {
   const saved = restore()
   const [screen, setScreenState] = useState<Screen>(saved?.screen ?? 'variant')
-  const [game, setGame] = useState<GameSettings>(saved?.game ?? DEFAULT_GAME)
+  const [table, setTable] = useState<TableState>(saved?.table ?? defaultTable())
+  const [money, setMoney] = useState<Money>(saved?.money ?? DEFAULT_MONEY)
   const [hand, setHandState] = useState<HandState>(saved?.hand ?? EMPTY_HAND)
   const [infoOrigin, setInfoOrigin] = useState<Screen>(saved?.infoOrigin ?? 'variant')
-  const [setupReturn, setSetupReturn] = useState<Screen>(saved?.setupReturn ?? 'hand')
-  const [freshHand, setFreshHand] = useState(false)
+  const [setupOrigin, setSetupOrigin] = useState<Screen>(saved?.setupOrigin ?? 'tileinfo')
+  const [menu, setMenu] = useState(false)
+  const [whoWon, setWhoWon] = useState(false)
+  const [confirmNew, setConfirmNew] = useState(false)
+  const [started, setStarted] = useState(saved?.started ?? false)
 
   const go = (next: Screen, replace = false) => {
     setScreenState(next)
@@ -62,25 +74,98 @@ export function App() {
     } catch { /* ignore */ }
   }
 
+  const startedRef = useRef(started)
+  startedRef.current = started
+
   useEffect(() => {
     try { history.replaceState({ screen }, '') } catch { /* ignore */ }
     const onPop = (e: PopStateEvent) => {
       const s = (e.state as { screen?: Screen } | null)?.screen
-      if (s) setScreenState(s)
+      if (!s) return
+      // Back must never walk into a hand belonging to a table that was cleared.
+      if ((s === 'hand' || s === 'result') && !startedRef.current) {
+        setScreenState('variant')
+        return
+      }
+      setScreenState(s)
     }
     addEventListener('popstate', onPop)
     return () => removeEventListener('popstate', onPop)
-    // Runs once: the listener reads its screen from the history entry itself.
   }, [])
 
   useEffect(() => {
     try {
-      sessionStorage.setItem(KEY, JSON.stringify({ screen, game, hand, infoOrigin, setupReturn }))
-    } catch { /* private mode, quota — the app still works, it just forgets */ }
-  }, [screen, game, hand, infoOrigin, setupReturn])
+      localStorage.setItem(KEY,
+        JSON.stringify({ started, screen, table, money, hand, infoOrigin, setupOrigin }))
+    } catch { /* private mode, quota — the app works, it just forgets */ }
+  }, [started, screen, table, money, hand, infoOrigin, setupOrigin])
 
-  const patchGame = (patch: Partial<GameSettings>) => setGame((g) => ({ ...g, ...patch }))
-  const patchHand = (patch: Partial<HandState>) => setHandState((h) => ({ ...h, ...patch }))
+  const patchTable = (p: Partial<TableState>) => setTable((s) => ({ ...s, ...p }))
+  const patchMoney = (p: Partial<Money>) => setMoney((s) => ({ ...s, ...p }))
+  const patchHand = (p: Partial<HandState>) => setHandState((s) => ({ ...s, ...p }))
+
+  const closeMenu = () => { setMenu(false); setWhoWon(false); setConfirmNew(false) }
+
+  /** Move the table on without scoring — someone else won, or nobody did. */
+  const passHand = (winnerIndex: number | null) => {
+    setTable((s) => advanceTable(s, winnerIndex))
+    setHandState(EMPTY_HAND)
+    closeMenu()
+    go('hand', true)
+  }
+
+  const menuSheet = menu && (
+    <Sheet title={whoWon ? t('menu.whoWon') : t('menu.title')} onClose={closeMenu}>
+      {whoWon ? (
+        <div class="menulist">
+          {table.players.map((_, i) => i).filter((i) => i !== table.youIndex).map((i) => (
+            <button type="button" class="menuitem" key={i} onClick={() => passHand(i)}>
+              <span class="menuitem__k">
+                {table.players[i] || t('table.playerN', { n: i + 1 })}
+              </span>
+            </button>
+          ))}
+          <button type="button" class="menuitem" onClick={() => passHand(null)}>
+            <span class="menuitem__k">{t('menu.washout')}</span>
+          </button>
+        </div>
+      ) : (
+        <div class="menulist">
+          <button type="button" class="menuitem"
+            onClick={() => { setInfoOrigin('hand'); closeMenu(); go('tileinfo') }}>
+            <span class="menuitem__k">{t('menu.tileset')}</span>
+            <span class="menuitem__s">{t('menu.tilesetSub')}</span>
+          </button>
+          <button type="button" class="menuitem"
+            onClick={() => { setSetupOrigin('hand'); closeMenu(); go('setup') }}>
+            <span class="menuitem__k">{t('menu.settings')}</span>
+            <span class="menuitem__s">{t('menu.settingsSub')}</span>
+          </button>
+          <button type="button" class="menuitem" onClick={() => setWhoWon(true)}>
+            <span class="menuitem__k">{t('menu.notMyHand')}</span>
+            <span class="menuitem__s">{t('menu.notMyHandSub')}</span>
+          </button>
+          <button type="button" class="menuitem menuitem--danger"
+            aria-pressed={confirmNew ? 'true' : 'false'}
+            onClick={() => {
+              if (!confirmNew) {
+                setConfirmNew(true)
+                window.setTimeout(() => setConfirmNew(false), 4000)
+                return
+              }
+              try { localStorage.removeItem(KEY) } catch { /* ignore */ }
+              setTable(defaultTable()); setMoney(DEFAULT_MONEY); setHandState(EMPTY_HAND)
+              setStarted(false); closeMenu(); go('variant', true)
+            }}>
+            <span class="menuitem__k">
+              {confirmNew ? t('menu.newTableConfirm') : t('menu.newTable')}
+            </span>
+            <span class="menuitem__s">{t('menu.newTableSub')}</span>
+          </button>
+        </div>
+      )}
+    </Sheet>
+  )
 
   switch (screen) {
     case 'variant':
@@ -88,46 +173,41 @@ export function App() {
 
     case 'tileinfo':
       return (
-        <TileInfo seat={game.seat} fromHand={infoOrigin === 'hand'}
+        <TileInfo seat={yourSeat(table)} fromHand={infoOrigin === 'hand'}
           onBack={() => go(infoOrigin)}
           onContinue={() => {
             if (infoOrigin === 'hand') { go('hand'); return }
-            setSetupReturn('hand'); setFreshHand(false); go('setup')
+            setSetupOrigin('tileinfo'); go('setup')
           }} />
       )
 
     case 'setup':
       return (
-        <Setup value={game} onChange={patchGame}
-          singleLabel={
-            setupReturn === 'hand' && !freshHand && hand.concealed.length > 0
-              ? t('nav.backToHand')
-              : freshHand ? t('nav.continue') : undefined
-          }
-          onBack={() => go('tileinfo')}
-          onContinue={() => { setFreshHand(false); go('hand') }} />
+        <TableSetup table={table} money={money} onTable={patchTable} onMoney={patchMoney}
+          firstRun={setupOrigin !== 'hand'}
+          onDone={() => { setStarted(true); go('hand') }} />
       )
 
     case 'hand':
       return (
-        <HandEntry game={game} hand={hand} setHand={patchHand}
-          onBack={() => { setSetupReturn('hand'); setFreshHand(false); go('setup') }}
-          onInfo={() => { setInfoOrigin('hand'); go('tileinfo') }}
-          onScore={() => go('result')} />
+        <>
+          <HandEntry table={table} stake={money.stake} limit={money.limit}
+            hand={hand} setHand={patchHand}
+            onMenu={() => setMenu(true)} onScore={() => go('result')} />
+          {menuSheet}
+        </>
       )
 
     case 'result':
       return (
-        <Results game={game} hand={hand}
+        <Results table={table} stake={money.stake} limit={money.limit} hand={hand}
           onEdit={() => go('hand')}
           onNext={() => {
-            // The deal usually passes, so the seat is re-confirmed before the
-            // next hand rather than silently carried over.
+            // You are the winner of the hand you just scored, so the table
+            // advances on that — dealer keeps the deal, everyone else passes it.
+            setTable((s) => advanceTable(s, s.youIndex))
             setHandState(EMPTY_HAND)
-            setSetupReturn('hand')
-            setFreshHand(true)
-            // Replace, so Back cannot return to a settlement whose hand is gone.
-            go('setup', true)
+            go('hand', true)
           }} />
       )
   }

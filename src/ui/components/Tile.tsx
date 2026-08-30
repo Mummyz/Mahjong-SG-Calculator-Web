@@ -42,22 +42,37 @@ interface TileProps {
   onClick?: (id: TileId) => void
   /** How many copies of this tile are already committed, 0–4. */
   count?: number
+  /** Visually picked out — used both for a meld in progress and the winner. */
   selected?: boolean
+  /** The tile that completed the hand. Names itself so. */
+  wonOn?: boolean
+  /** Part of the meld currently being declared. */
+  taken?: boolean
   mini?: boolean
   disabled?: boolean
   /** In the tray this tile removes itself; name it as the action it performs. */
   removes?: boolean
+  /** Not a legal choice right now — turned face-down and inert. */
+  dead?: boolean
 }
 
-export function Tile({ id, onClick, count = 0, selected, mini, disabled, removes }: TileProps) {
+export function Tile({
+  id, onClick, count = 0, selected, wonOn, taken, mini, disabled, removes, dead,
+}: TileProps) {
   const suit = suitOf(id)
-  const exhausted = count >= 4
+  const exhausted = count >= 4 || dead === true
   const cls = ['tile', suit ? '' : 'tile--honour', mini ? 'tile--mini' : ''].filter(Boolean).join(' ')
-  const label = removes
-    ? t('hand.removeTile', { tile: tileName(id) })
-    : exhausted
-      ? t('tile.exhaustedName', { tile: tileName(id) })
-      : tileName(id)
+  const label = dead
+    ? t('tile.notNowName', { tile: tileName(id) })
+    : taken
+      ? t('tile.takenName', { tile: tileName(id) })
+      : wonOn
+        ? t('hand.wonOnName', { tile: tileName(id) })
+        : removes
+          ? t('hand.removeTile', { tile: tileName(id) })
+          : exhausted
+            ? t('tile.exhaustedName', { tile: tileName(id) })
+            : tileName(id)
   // A tile nobody can tap is a picture of a tile, not a control: no tab stop,
   // no pressed state to mis-announce.
   const Wrapper = onClick ? 'button' : 'span'
@@ -70,9 +85,9 @@ export function Tile({ id, onClick, count = 0, selected, mini, disabled, removes
       data-suit={suit ?? undefined}
       data-h={suit ? undefined : id}
       data-exhausted={exhausted ? 'true' : undefined}
-      data-exhausted-label={exhausted ? '×4' : undefined}
+      data-exhausted-label={dead ? '' : exhausted ? '×4' : undefined}
       aria-pressed={onClick && !removes
-        ? (!exhausted && (selected || count > 0) ? 'true' : 'false')
+        ? (!exhausted && (selected || wonOn || taken || count > 0) ? 'true' : 'false')
         : undefined}
       aria-disabled={onClick && (exhausted || disabled) ? 'true' : undefined}
       aria-label={label}

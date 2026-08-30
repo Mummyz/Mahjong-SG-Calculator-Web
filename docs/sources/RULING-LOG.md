@@ -241,6 +241,20 @@ option `doubleSpecialHandPayout`, **default off**.
 "typically five points, though this has to be agreed among players" — default
 5, configurable. Both corroborated by `SMC`, `SGM`, `SS`.
 
+## R16 — The dealer keeps the deal on a washout *(needs owner confirmation)*
+
+**Ruling:** when a hand ends with nobody winning (荒牌), the deal does **not**
+pass — the same player deals again, and the round does not advance.
+
+`TT` describes stalemates (§Winning on the Last Available Tile Note 2) but never
+says what happens to the deal. This is the common Singapore convention and the
+one most tables play, so it is what `advanceTable` implements.
+
+**Flagged for the owner.** Some tables pass the deal on a washout instead. If
+that is how the owner's table plays, this is a one-line change in
+`src/engine/variants/singapore/table.ts` plus its test, and the owner's word
+becomes the citation the way it did for R12.
+
 ## R15 — Out of scope for Run 1
 
 Deliberately not modelled, and not in the corpus: 七抢一 Robbing the Eighth,

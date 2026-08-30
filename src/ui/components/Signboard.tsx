@@ -1,49 +1,46 @@
 import { t } from '../../i18n'
 import { formatStake } from '../format'
-import type { Wind } from '../../engine/core/tiles'
+import {
+  isDealer, prevailingWind, yourSeat, type TableState,
+} from '../../engine/variants/singapore/table'
 
-const WIND_GLYPH: Record<Wind, string> = { E: '東', S: '南', W: '西', N: '北' }
+const WIND_GLYPH: Record<string, string> = { E: '東', S: '南', W: '西', N: '北' }
 
-export function Signboard({
-  seat, prevailing, stake, limit, onSeat, onInfo,
-}: {
-  seat: Wind
-  prevailing: Wind
+/** Always on screen: which hand, which round, which wind you are, and the money. */
+export function Signboard({ table, stake, limit, onMenu }: {
+  table: TableState
   stake: number
   limit: number
-  onSeat: () => void
-  onInfo: () => void
+  onMenu: () => void
 }) {
+  const round = prevailingWind(table)
+  const seat = yourSeat(table)
+  const dealer = isDealer(table, table.youIndex)
+
   return (
     <div class="signboard">
-      <button type="button" class="signboard__seg" onClick={onSeat}
-        aria-label={t('signboard.segment', {
-          label: t('signboard.round'), value: t(`wind.${prevailing}`),
-        })}>
-        <span class="signboard__k">{t('signboard.round')}</span>
-        <span class="signboard__v" aria-hidden="true">
-          {t('signboard.wind', { glyph: WIND_GLYPH[prevailing], short: t(`wind.${prevailing}.short`) })}
+      <div class="signboard__seg">
+        <span class="signboard__k">{t('signboard.hand', { n: table.handNumber })}</span>
+        <span class="signboard__v">
+          {WIND_GLYPH[round]} {t('signboard.round', { wind: t(`wind.${round}.short`) })}
         </span>
-      </button>
-      <button type="button" class="signboard__seg" onClick={onSeat}
-        aria-label={t('signboard.segment', {
-          label: t('signboard.seat'), value: t(`wind.${seat}`),
-        })}>
-        <span class="signboard__k">{t('signboard.seat')}</span>
-        <span class="signboard__v" aria-hidden="true">
-          {t('signboard.wind', { glyph: WIND_GLYPH[seat], short: t(`wind.${seat}.short`) })}
+      </div>
+      <div class="signboard__seg">
+        <span class="signboard__k">
+          {t('table.youTag')}{dealer ? ` · ${t('table.dealerTag')}` : ''}
         </span>
-      </button>
-      <button type="button" class="signboard__seg" onClick={onSeat}>
+        <span class="signboard__v">
+          {WIND_GLYPH[seat]} {t(`wind.${seat}`)}
+        </span>
+      </div>
+      <div class="signboard__seg">
         <span class="signboard__k">{t('signboard.stake')}</span>
-        <span class="signboard__v">{formatStake(stake)}</span>
-      </button>
-      <button type="button" class="signboard__seg" onClick={onSeat}>
-        <span class="signboard__k">{t('signboard.limit')}</span>
-        <span class="signboard__v">{limit}</span>
-      </button>
-      <button type="button" class="signboard__info" onClick={onInfo}
-              aria-label={t('tileinfo.title')}>i</button>
+        <span class="signboard__v">{t('signboard.money', {
+          stake: formatStake(stake), limit,
+        })}</span>
+      </div>
+      <button type="button" class="signboard__info" onClick={onMenu}
+        aria-label={t('signboard.menu')}>⋯</button>
     </div>
   )
 }
