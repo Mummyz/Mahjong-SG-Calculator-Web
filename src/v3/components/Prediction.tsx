@@ -146,7 +146,7 @@ function CandidateCard({ variant, c }: { variant: VariantId; c: Candidate }) {
         </h3>
         <p class="cand__meta">
           <span class="cand__away">
-            {c.away === 1 ? t('predict.awayOne') : t('predict.awayN', { n: c.away })}
+            {t('predict.awayN', { n: c.away })}
           </span>
           <span class="cand__fan">{worth}</span>
         </p>

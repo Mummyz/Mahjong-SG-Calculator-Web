@@ -224,14 +224,20 @@ export function App() {
           {/* The prevailing wind. It scores — the seat wind and the round
               wind are both fan — and Run 5's signboard has no room for it, so
               this is where it is a visible fact rather than a setting. */}
-          <div class="menuitem menuitem--inert">
+          <div class="menuitem menuitem--inert menuitem--fact">
             <span class="menuitem__k">{t('menu.round')}</span>
             <span class="menuitem__s">
               {t('menu.roundSub', { wind: t(`wind.${prevailingWind(table)}`) })}
             </span>
           </div>
-          <div class="menuitem menuitem--inert">
-            <span class="menuitem__k">{t('menu.language')}</span>
+          {/* The switch reaches the sentences, not the buttons, so the row
+              says so rather than promising a language change it does not
+              make. */}
+          <div class="menuitem menuitem--inert menuitem--lang">
+            <div class="menuitem__lead">
+              <span class="menuitem__k">{t('menu.language')}</span>
+              <span class="menuitem__s">{t('menu.languageSub')}</span>
+            </div>
             <LanguageToggle compact />
           </div>
           <button type="button" class="menuitem"

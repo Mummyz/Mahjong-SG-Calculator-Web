@@ -401,10 +401,14 @@ body {
 }
 .dock__row { display: flex; gap: 8px; }
 /* Both bounded. The ghost button was content-sized, so a long label took 231
-   of the row's 328px and left the primary action 89. Neither is allowed to
-   starve the other, and either may ellipsis before it does. */
-.dock__row .btn { min-width: 0; }
-.dock__row .btn--ghost { flex: 0 1 auto; max-width: 42%; }
+   of the row's 328px and left the primary action 89. Run 5 capped it — and
+   capping alone let the flex algorithm do the same thing in reverse, wrapping
+   "Edit hand" onto two lines to give the primary room it did not need. So:
+   the ghost does NOT shrink, it is capped, and it ellipsises at the cap. */
+.dock__row .btn {
+  min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dock__row .btn--ghost { flex: 0 0 auto; max-width: 42%; }
 .dock__row .btn--block { flex: 1 1 auto; }
 /* Reserved height, so the buttons never move under a thumb already reaching —
    but 40px of reserved blank was a fifth of the dock. Two lines at 12px is
@@ -487,6 +491,15 @@ body {
 }
 .menuitem--inert { flex-direction: row; align-items: center;
                    justify-content: space-between; gap: 10px; cursor: default; }
+/* AFTER --inert, which also sets align-items: same specificity, so source
+   order is what decides, and the language row needs its two lines top-aligned
+   against the toggle beside them. */
+/* A fact, not a control: label over value, like every other row on this
+   sheet. Side by side, "Angin putaran" wrapped and squeezed the sentence
+   beside it into a two-word column. */
+.menuitem--fact { flex-direction: column; align-items: flex-start; gap: 2px; }
+.menuitem--lang { align-items: flex-start; gap: 12px; }
+.menuitem--lang .menuitem__lead { flex: 1; min-width: 0; display: grid; gap: 2px; }
 .menuitem--danger { color: var(--mj-pay); }
 .menuitem__k { font: 500 0.9375rem/1.2 var(--f-display); }
 .menuitem__s { font-size: 0.8125rem; color: var(--mj-muted); }
@@ -545,8 +558,6 @@ body {
 .fan { font: 600 3.25rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
 .fan__unit { font: 500 0.75rem/1 var(--f-body); }
 .handname { margin: 6px 0 0; font: 500 1.25rem/1.25 var(--f-display); }
-.handname__cjk { font-family: var(--f-cjk); font-size: 0.8125rem;
-                 color: var(--mj-muted); font-weight: 700; }
 .capnote { margin: 0 0 10px; font-size: 0.8125rem; color: var(--mj-muted); }
 .breakdown, .ledger { width: 100%; border-collapse: collapse; }
 .breakdown td { padding: 10px 0; border-top: 1px solid var(--mj-line); font-size: 0.875rem; }

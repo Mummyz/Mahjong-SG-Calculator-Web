@@ -21,14 +21,33 @@ const walk = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? walk(`${dir}${e.name}/`) : [`${dir}${e.name}`])
 
+/**
+ * Source with COMMENTS STRIPPED. Brand.tsx explains that 麻雀 means sparrow;
+ * that is a note to the next reader, not something the app draws, and it was
+ * buying two glyphs of webfont on every page load.
+ */
+const strip = (code: string) =>
+  code.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1 ')
+
 const src = walk(fileURLToPath(new URL('../', import.meta.url)))
   .filter((f) => /\.tsx?$/.test(f) && !f.endsWith('.test.ts'))
-  .map((f) => readFileSync(f, 'utf8'))
+  .map((f) => strip(readFileSync(f, 'utf8')))
   .join('\n')
 
-/** Every glyph the v3 components or the English bundle can put on screen. */
+/**
+ * Every glyph v3 can put on screen — the components, plus only the strings v3
+ * actually renders. Scanning ALL of en.json made /v3/ pay for the /app/
+ * engine harness's 麻雀 and 銃, which it never draws.
+ */
+const bundle = en as Record<string, string>
+const lit = new Set([...src.matchAll(/\b(?:t|tv)\(\s*(?:[A-Za-z]+\s*,\s*)?'([^']+)'/g)]
+  .map((m) => m[1]!))
+const tmpl = [...src.matchAll(/`([a-zA-Z][a-zA-Z.]*)\.\$\{/g)].map((m) => m[1]!)
+const rendered = Object.keys(bundle)
+  .filter((k) => lit.has(k) || tmpl.some((p) => k.startsWith(`${p}.`)))
+
 const used = new Set<string>()
-for (const ch of src + Object.values(en as Record<string, string>).join('')) {
+for (const ch of src + rendered.map((k) => bundle[k]).join('')) {
   if (CJK.test(ch)) used.add(ch)
 }
 
@@ -54,5 +73,7 @@ it('asks for nothing it never draws', () => {
 })
 
 it('found a non-trivial set to check', () => {
-  expect(used.size).toBeGreaterThan(60)
+  // Run 7 took the Chinese hand names off every screen, which cut the subset
+  // roughly in half. What is left is what is physically carved on a tile.
+  expect(used.size).toBeGreaterThan(35)
 })

@@ -80,7 +80,17 @@ jobs:
           grep -q '/brand/logo-mahjongyuk.png' "dist${V3}" \
             || { echo "::error::/v3/ no longer references the brand logo"; exit 1; }
 
-          echo "CNAME ok; /v1/ byte-identical; root ships ${BUNDLE}; /v3/ ships ${V3}; logo present; /app/ present"
+          # Run 7. The locale bundles are imported, not fetched, so a build
+          # that tree-shook one would ship an app whose language switch does
+          # nothing — and every test would still pass, because the tests read
+          # the source. Both surfaces import them, so Vite hoists them into a
+          # shared chunk: check the whole assets directory, not one entry.
+          grep -rq 'Kartunya sudah jadi' dist/assets/ \
+            || { echo "::error::the build shipped without the Indonesian bundle"; exit 1; }
+          grep -rq 'Score this hand' dist/assets/ \
+            || { echo "::error::the build shipped without the English bundle"; exit 1; }
+
+          echo "CNAME ok; /v1/ byte-identical; root ships ${BUNDLE}; /v3/ ships ${V3}; logo present; both locales present; /app/ present"
 
       - uses: actions/configure-pages@v6
 

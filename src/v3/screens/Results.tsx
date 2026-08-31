@@ -13,39 +13,6 @@ import {
 } from '../../engine/session/table'
 import type { RuleOptions, ScoreResult, WinContext } from '../../engine/core/variant'
 
-/**
- * Canonical Chinese names. Content, like the characters on a tile face — and
- * regional: Singapore writes 胡 where Hong Kong writes 糊, and several hands
- * have different names entirely.
- */
-const CJK_SG: Record<string, string> = {
-  chickenHand: '雞胡', lesserSequence: '小平胡', sequenceHand: '平胡', triplets: '碰碰胡',
-  halfFlush: '混一色', fullFlush: '清一色', fullFlushSequence: '清一色平胡',
-  fullFlushTriplets: '清一色碰碰胡', fullFlushLesserSequence: '清一色小平胡',
-  mixedTerminals: '混么九', pureTerminals: '清么九', allHonours: '字一色', pureGreen: '綠一色',
-  nineGates: '九蓮寶燈', hiddenTreasure: '四暗刻', eighteenArhats: '十八羅漢',
-  thirteenWonders: '十三幺', eightFlowers: '八仙過海', kongOnKong: '槓槓胡',
-  heavenly: '天胡', earthly: '地胡', humanly: '人胡',
-  smallThreeDragons: '小三元', bigThreeDragons: '大三元',
-  smallFourWinds: '小四喜', bigFourWinds: '大四喜',
-  fullyConcealed: '門清', robbingKong: '搶槓', lastTile: '海底撈月',
-}
-
-const CJK_HK: Record<string, string> = {
-  chickenHand: '雞糊', commonHand: '平糊', allTriplets: '對對糊',
-  fourConcealedTriplets: '坎坎糊', halfFlush: '混一色', fullFlush: '清一色',
-  mixedTerminals: '花幺', pureTerminals: '清幺九', allHonours: '字一色',
-  nineGates: '九子連環', eighteenArhats: '十八羅漢', thirteenOrphans: '十三么',
-  bigFourWinds: '大四喜', smallFourWinds: '小四喜',
-  bigThreeDragons: '大三元', smallThreeDragons: '小三元',
-  heavenly: '天糊', earthly: '地糊', humanly: '人糊',
-  sevenFlowers: '花糊', eightFlowers: '大花糊', kongOnKong: '連槓開花',
-  fullyConcealed: '門前清', robbingKong: '搶槓', lastTile: '海底撈月',
-  lastDiscard: '河底撈魚', kongReplacement: '槓上開花', selfDraw: '自摸',
-  noFlowers: '無花', dragonTriplet: '番子', seatWind: '門風', prevailingWind: '圈風',
-  seatFlower: '正花', seatSeason: '正花',
-  completeFlowerGroup: '一台花', completeSeasonGroup: '一台花',
-}
 
 /**
  * Components that describe how the hand was won or what was in the flower
@@ -79,7 +46,6 @@ export function Results({
   onPredictToggle: () => void
 }) {
   const plugin = VARIANTS[variant]
-  const CJK = variant === 'hongkong' ? CJK_HK : CJK_SG
   const nameOf = (i: number) => table.players[i] || t('table.playerN', { n: i + 1 })
   const [confirmNext, setConfirmNext] = useState(false)
 
@@ -152,11 +118,12 @@ export function Results({
           </div>
           <Cuit mood="cheer" size={64} />
         </div>
+        {/* English only. Run 7 took the Chinese names off every surface: they
+            were a second name for the same hand, in a script most of the people
+            at this table cannot read, sitting next to the number that is the
+            reason anybody opened the screen. */}
         {shown.map((k) => (
-          <p class="handname" key={k}>
-            {tv(variant, `pattern.${k}`)}{' '}
-            <span class="handname__cjk" aria-hidden="true">{CJK[k]}</span>
-          </p>
+          <p class="handname" key={k}>{tv(variant, `pattern.${k}`)}</p>
         ))}
         {result.limitApplied && (
           <p class="capnote" style="margin-top:8px">
@@ -268,12 +235,7 @@ export function Results({
             <tbody>
               {result.fan.map((f, i) => (
                 <tr key={`${f.key}-${i}`}>
-                  <td>
-                    {tv(variant, `pattern.${f.key}`)}
-                    {CJK[f.key] && (
-                      <span class="handname__cjk" aria-hidden="true"> {CJK[f.key]}</span>
-                    )}
-                  </td>
+                  <td>{tv(variant, `pattern.${f.key}`)}</td>
                   <td>+{f.tai}</td>
                 </tr>
               ))}
@@ -281,7 +243,7 @@ export function Results({
           </table>
 
           <div class="grouplabel">
-            <span class="caps">{t('result.basePoints')}</span>
+            <span class="caps">{tv(variant, 'result.basePoints')}</span>
             <span class="grouplabel__rule" />
             <span class="grouplabel__n">{result.base}</span>
           </div>

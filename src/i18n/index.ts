@@ -2,21 +2,18 @@
  * CONSTITUTION: from the first UI commit, every user-visible string goes
  * through t(). No hardcoded UI text, ever. See CLAUDE.md.
  *
- * LANGUAGE POLICY, owner's decision of 2026-08-31 — and it narrowed sharply.
- * The interface is ENGLISH in both language modes. The language switch
- * changes exactly the strings in TRANSLATED below: the two variant
- * descriptions on the front door. Everything else resolves from English no
- * matter which mode is on.
+ * LANGUAGE POLICY, owner's decision of Run 7, and it widened again — but not
+ * to everything. The app is LOCALISED, not translated: the sentences that
+ * explain, warn, count and settle are Indonesian; the words a player taps and
+ * the words that NAME things are English in both modes.
  *
- * The full Indonesian bundle stays in the repo. It is complete, it passed the
- * Language Critic in Run 4, and it is what a future owner decision would
- * switch back on — so it is kept rather than deleted, and TRANSLATED is the
- * one line that would have to change. What it must NOT do is drift: the
- * coverage test still holds every key in it to the glossary.
+ * Which is which lives in ONE place — ./scope.ts — and it is enumerated
+ * there, not guessed here.
  */
 
 import en from './en.json'
 import id from './id.json'
+import { TRANSLATED, translates } from './scope'
 
 export const LOCALES = ['en', 'id'] as const
 export type Locale = (typeof LOCALES)[number]
@@ -24,27 +21,15 @@ export type MessageKey = keyof typeof en
 
 const BUNDLES: Record<Locale, Record<string, string>> = { en, id }
 
+export { TRANSLATED, ENGLISH_ONLY, translates } from './scope'
+
 /**
- * The only keys the language switch reaches.
+ * The language a given string is actually IN.
  *
- * Two sentences, and they are the two the owner picked: what each variant IS.
- * A player choosing between Singapore and Hong Kong is the one moment on the
- * front door where the words carry a decision rather than a label, so that is
- * where reading it in your own language is worth something.
- */
-export const TRANSLATED: ReadonlySet<string> = new Set([
-  'variant.singapore.blurb',
-  'variant.hongkong.blurb',
-])
-
-/** Whether `key` is one the language switch actually changes. */
-export const translates = (key: string): boolean => TRANSLATED.has(key)
-
-/**
- * The language a translated string is IN, for a `lang` attribute on the one
- * element that carries it. The document itself stays `en`: an English page
- * with an Indonesian sentence in it is exactly what the markup should say,
- * and it is what makes a screen reader pronounce that sentence properly.
+ * Every screen is now a mix: Indonesian prose with English names and buttons
+ * in it. The DOCUMENT takes the active locale — the sentences are the bulk of
+ * what a screen reader has to pronounce — and this marks the English islands
+ * that are long enough for the wrong phonology to matter.
  */
 export const contentLocale = (key: string): Locale => (translates(key) ? current : 'en')
 
@@ -65,14 +50,17 @@ const stored = (): Locale | null => {
 }
 
 let current: Locale = stored() ?? 'en'
-// The document is English whatever the switch says — see the policy above.
-try { document.documentElement.lang = 'en' } catch { /* no document in tests */ }
+const stamp = (l: Locale) => {
+  try { document.documentElement.lang = l } catch { /* no document in tests */ }
+}
+stamp(current)
 const listeners = new Set<() => void>()
 
 export const setLocale = (l: Locale): void => {
   if (!isLocale(l) || l === current) return
   current = l
   try { localStorage.setItem(KEY, l) } catch { /* private mode — it just forgets */ }
+  stamp(l)
   for (const fn of [...listeners]) fn()
 }
 export const getLocale = (): Locale => current

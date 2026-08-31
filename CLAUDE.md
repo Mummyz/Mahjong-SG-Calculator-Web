@@ -55,34 +55,49 @@ are refused pending owner approval.
 
 ## LANGUAGES
 
-**The interface is ENGLISH. Owner's decision, 2026-08-31.**
+**The app is LOCALISED, not translated. Owner's decision, Run 7.**
 
-This overrides the Run 4 bar of a fully bilingual UI. The language switch is
-still on the front door, and it changes **exactly two strings**: the Singapore
-and the Hong Kong variant descriptions. Everything else — every label, button,
-heading, error and accessible name — is English in both modes.
+This replaces the Run 5 English-only policy. Bahasa Indonesia is a real mode
+now, and the bar is meaning-first:
 
-The list of what translates lives in **one place**, `TRANSLATED` in
-`src/i18n/index.ts`, and `t()` resolves from English for anything not in it.
-Widening the policy is a one-line change and an owner decision, never a side
-effect of an edit; `src/i18n/coverage.test.ts` asserts the list's contents so
-it cannot grow quietly.
+> Every Indonesian string must read as if written by a native Indonesian
+> mahjong player for other players — meaning and situation first, never
+> word-for-word.
 
-**`src/i18n/id.json` stays in the repo, complete and unused for UI chrome.**
-It passed the Language Critic in Run 4, it is what a future owner decision
-would switch back on, and deleting it would mean paying for it twice. The
-coverage test still holds every key in it to completeness, placeholders and
-the glossary, so it cannot rot while it waits.
+**The owner's test case, and it is the shape of the whole risk:** "Score this
+hand" must NEVER become *"Skor tangan ini"*. **`tangan` is a body part.** A
+mahjong hand is a set of tiles. Falling into a false friend like that is a
+**blocking** defect, and `src/i18n/coverage.test.ts` refuses the word outright.
 
-**From the FIRST UI commit, every user-visible string goes through a `t()` key.
-No hardcoded UI text, ever.** This did NOT change with the policy. Not "for
-now", not "we'll extract it later". Retrofitting i18n is how projects end up
-with half-translated UIs, and this rule exists specifically to make that
-impossible — including the case where the owner widens the policy again.
+### What switches, and what never does
 
-This applies to: labels, buttons, errors, empty states, tooltips, aria-labels,
-number/tile descriptions, and anything else a human reads. Brand names
-("Mahjongyuk") are not translatable strings.
+Split in **one place** — `ENGLISH_ALWAYS` in `src/i18n/scope.ts`. It is
+enumerated, not inferred, and everything it does not name is translated, so a
+NEW key is Indonesian by default. That is deliberate: the failure mode of a
+localised app is a string quietly added in English and never noticed.
+
+**Indonesian** — the sentences that explain, warn, count and settle:
+the two game descriptions; fan-breakdown line items; the whole prediction
+panel; table setup and its teaching copy; the win wizard; the beginner
+explanations of the nine special circumstances; the payment ledger; every
+status line, hint and error; the tile-set screen's counts and prose.
+
+**English in both modes** — the words a thumb lands on and the words that
+NAME things: every button and action; screen and section titles; the landing
+copy and tagline; tile, suit and wind names; the tile-group headings (they are
+the same words as the tab labels and the tile names — splitting them would put
+*Lingkaran* over a tile the app calls 5 Dots); named winning hands in both
+regional forms; the nine circumstance NAMES — though every word explaining
+them is Indonesian; and `chow`, `pong`, `kong`, `fan`, which the glossary
+borrows whole.
+
+**The Chinese hand names are gone from every screen** (Run 7). They were a
+second name for the same hand, in a script most of the table cannot read,
+beside the number people opened the screen for.
+
+**From the FIRST UI commit, every user-visible string goes through a `t()`
+key. No hardcoded UI text, ever.** Unchanged, and now load-bearing: it is what
+made a policy this size a scope file rather than a rewrite.
 
 ### BRAND DNA (binding on all user-facing text)
 
@@ -197,25 +212,32 @@ citation, never by a failing test.**
   and is what Run 2 used. If the owner installs a dedicated frontend design
   skill later, change this line to name it.)*
 
-### LANGUAGE CRITIC (blocking, and RE-SCOPED in Run 5)
+### LANGUAGE CRITIC (blocking, re-scoped in Run 7)
 
-**Its scope is the `TRANSLATED` set and nothing else** — today, the two variant
-descriptions. Those are the only strings a player can read in Indonesian, so
-they are the only strings the Critic judges.
+Its scope is `TRANSLATED` — today 188 strings — and its bar is **naturalness
+before fidelity**. It judges whether an Indonesian mahjong player would say
+this, not whether it maps onto the English.
 
-- **It must not flag an English UI title, label or button as code-mixing.** The
-  interface being English is the owner's decision, not a defect.
-- Within its scope: proper **formal Bahasa Indonesia**, **KBBI-standard**, and
-  **zero English mixing where an Indonesian word exists**.
-- **`docs/GLOSSARY-ID.md`** is still binding on what it covers. Exactly five
-  words stay in their original form — **Mahjongyuk, fan, pong, kong, chow** —
-  on one test: *a word stays only when it is a thing you SAY at the table or a
-  unit of the game*.
-- Enforced by `src/i18n/coverage.test.ts`, in two tiers: the live strings get
-  the Critic's bar, and the dormant bundle gets hygiene — complete, no extras,
-  no blanks, placeholders identical, CJK untouched.
+**Critics read the Indonesian FIRST, with no access to the English.** A reader
+who has seen the source cannot un-see it, and will accept a calque that a real
+player would trip over. Only after judging naturalness and guessing what each
+string means is the English revealed — and the gap between the guess and the
+truth is the false-friend report.
 
----
+All blocking:
+
+- **False friends** — every string back-translated and checked against the
+  English MEANING in mahjong context. `tangan` for a hand is the named case;
+  the Critic hunts the whole class.
+- **Glossary** — `docs/GLOSSARY-ID.md` is binding, including which word a
+  mahjong hand takes in which sentence.
+- **Register** — warm, plain, spoken Indonesian, consistent across all eight
+  areas. Not bureaucratic, not slang.
+- **Scope** — nothing on the English list translated, nothing on the
+  Indonesian list left English.
+- **Placeholders and counts** — `{name}` intact; Indonesian has no plural
+  inflection, so counts are phrased once and work for 1 and for 14; thousands
+  separated the Indonesian way (1.000).
 
 ## ROADMAP
 
@@ -228,7 +250,9 @@ they are the only strings the Critic judges.
 | **Run 3** | ✅ Submit wizard, Hong Kong Old Style engine certified, both variants live |
 | **Run 4** | ✅ Prediction, Bahasa Indonesia, and the v3 brand — preview at `/v3/` |
 | **Run 5** | ✅ Owner logo, 46 redrawn tile faces, English-only UI, gameplay layout rework — still `/v3/` |
-| **Run 6** | Owner review of `/v3/`, then promote to root |
+| **Run 6** | — no commit; nothing by this name reached the repository |
+| **Run 7** | ✅ Bahasa Indonesia localisation, meaning-first — 188 strings, `/v3/` |
+| **Run 8** | Owner review of `/v3/`, then promote to root |
 
 ---
 
@@ -252,6 +276,7 @@ src/ui/                   Preact components for `/` — Run 3, frozen
 src/v3/                   Preact components for `/v3/` — Run 4, Run 5
 src/v3/tiles/             the 46 tile faces: palette, layouts, parts, Face
 src/i18n/                 en.json, id.json, t()/tv(), the locale switch
+src/i18n/scope.ts         WHICH strings the switch reaches — the whole policy
 docs/GLOSSARY-ID.md       the binding Indonesian glossary
 docs/design/              the v3 build specification, from the Run 4 judge panel
 src/test/                 cross-cutting guards

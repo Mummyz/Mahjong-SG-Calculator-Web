@@ -143,7 +143,23 @@ describe('the /v3/ preview, and the root it must not disturb', () => {
       .map((k) => `${k}\u0000${en[k]}`).join('\u0001')
     const hash = createHash('sha256').update(pinned).digest('hex')
     expect(pinned.length, 'found no root strings to pin — the scan broke').toBeGreaterThan(2000)
+    /**
+     * RE-PINNED IN RUN 7, deliberately, and twice.
+     *
+     * 1. `flag.lastTile.detail.hongkong` lost the two Chinese hand names it
+     *    carried inline. The owner's instruction was to take the Chinese
+     *    names off every surface, and "everywhere" includes the copy the
+     *    frozen app shares.
+     * 2. `result.basePoints.hongkong` was ADDED, so /v3/ can say "Nilai
+     *    dasar" in Singapore and "Poin dasar" in Hong Kong, where the figure
+     *    really is the point table. It is inert at the root, which reads the
+     *    base key through t() and never resolves a variant sibling — but the
+     *    hash covers siblings on purpose, so a new one has to be noticed.
+     *
+     * Nothing else the root renders moved: `menu.language*` and
+     * `predict.away*` changed too, and src/ui/ renders neither.
+     */
     expect(hash, `${keys.size} keys reach the frozen root; one of their values changed`)
-      .toBe('0bdc6fc1e26ef4cdf1acfb289e1380f44d126b193ee498ba08db3ec921f6bc13')
+      .toBe('6859ac53e539961ab6254adae33961dec9c4a526d86f2356758ebae1a9678a1b')
   })
 })
