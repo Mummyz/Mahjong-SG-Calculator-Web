@@ -51,6 +51,32 @@ pays out the wrong amount is worthless.
 Two. That is the list. Requests to "just also add Riichi/Taiwanese/American"
 are refused pending owner approval.
 
+### The American card is a PERMANENT TEASER. It is not a roadmap item.
+
+Owner's decision, Run 6B. A third card appears on Pick Your Game reading
+**American / Under Development**, and it is **never going to be built**: the
+NMJL card of hands is copyrighted, so the scoring rules are not ours to
+implement. The card exists because players ask for the game, and it says so
+honestly rather than leaving them wondering.
+
+**A future run must not treat that badge as work waiting to be done.** There
+is nothing to pick up. Concretely, and permanently:
+
+- It is **not** in `VARIANTS`, and `VariantId` has no `'american'` member —
+  so there is no id for the picker to hand on, by type.
+- It has **no** tile set, no rules, no payments table and no corpus. The
+  engine has never heard of the word, and `src/v3/teaser.test.ts` fails if it
+  ever does.
+- The card renders as a plain element with no handler, no `tabindex` and no
+  `role`. It is inert **by construction**, not by a `disabled` attribute —
+  `disabled` would say "a control that is off", and this is not a control.
+- Its **name and badge stay English**; its **description line translates**,
+  the same as the other two cards'.
+- The copy promises nothing and names no date, and the test forbids both.
+
+If the owner ever reverses this, it takes an explicit instruction naming this
+section — not a run that reads "Under Development" as a to-do.
+
 ---
 
 ## LANGUAGES
@@ -250,9 +276,20 @@ All blocking:
 | **Run 3** | ✅ Submit wizard, Hong Kong Old Style engine certified, both variants live |
 | **Run 4** | ✅ Prediction, Bahasa Indonesia, and the v3 brand — preview at `/v3/` |
 | **Run 5** | ✅ Owner logo, 46 redrawn tile faces, English-only UI, gameplay layout rework — still `/v3/` |
-| **Run 6** | — no commit; nothing by this name reached the repository |
+| **Run 6** | ✅ Concealed kong fix, signed ledger, End Game, ghost-tile prediction — built AFTER Run 7 (`2839584`, `424d3b8`) |
 | **Run 7** | ✅ Bahasa Indonesia localisation, meaning-first — 188 strings, `/v3/` |
+| **Run 6B** | ✅ Masthead spacing token, American teaser card (permanent — see VARIANTS) |
 | **Run 8** | Owner review of `/v3/`, then promote to root |
+
+The rows are in the order the owner briefed them, which is **not** the order
+they landed: Run 7 shipped before Run 6, and Run 6B after both. Read the run
+NUMBER as a name, never as a sequence — and never as evidence that a lower
+number is already in the repository.
+
+An earlier version of this table said Run 6 had never reached the repository.
+That was true when it was written and false the moment Run 6 landed, and the
+Run 6B critics caught it. If a run's row and `git log` disagree, `git log` is
+the fact.
 
 ---
 

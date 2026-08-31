@@ -280,7 +280,13 @@ describe('Bahasa Indonesia', () => {
     expect(both, 'a string classified twice').toEqual([])
     // A new key is TRANSLATED by default, so the English side can only grow
     // deliberately. If this number moves, somebody made a scope decision.
-    expect(ENGLISH.length, 'the English side changed size').toBe(214)
+    //
+    // 214 -> 216 in Run 6B: `variant.american.name` and
+    // `variant.american.badge`. The teaser card's name is a name, and its
+    // badge sits in the slot the other two cards spend on "Play". Its BLURB
+    // is deliberately not among them — the description line translates, the
+    // same as the other two cards'.
+    expect(ENGLISH.length, 'the English side changed size').toBe(216)
   })
 
   it('leaves every word a thumb lands on in English', () => {

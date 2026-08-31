@@ -155,6 +155,12 @@
   --gap-row:  12px;   /* row gap = --gap + the 4px lip.  Non-negotiable.   */
   --col:      440px;
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-6: 24px; --sp-8: 32px;
+  /* The gap between the owner's logo and the invitation under it. Named
+     rather than a number in the rule, because it is a MASTHEAD decision —
+     the artwork and the promise are two beats and the pause between them is
+     the point — and because the short-screen query has to shrink it in step
+     with the logo. Owner, Run 6B. */
+  --sp-masthead: 26px;
   --r-tile: 12px; --r-mini: 10px; --r-card: 20px; --r-field: 14px;
   --r-well: 18px; --r-sheet: 28px; --r-pill: 999px;
   --press: 90ms cubic-bezier(.2,.8,.3,1);

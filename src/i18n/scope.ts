@@ -24,6 +24,12 @@ const ENGLISH_ALWAYS: readonly string[] = [
   // both in English so the front door reads the same to everyone.
   'app.', 'variant.title', 'variant.subtitle', 'variant.play',
   'variant.singapore.name', 'variant.hongkong.name',
+  // The American teaser's NAME and its badge. The card name is a name like
+  // the other two, and "Under Development" wears the badge slot the other
+  // cards spend on "Play" — a word a thumb would land on if the card were a
+  // choice. Its blurb is NOT here: the description line translates, exactly
+  // as the other two cards' do. See CLAUDE.md, VARIANTS.
+  'variant.american.name', 'variant.american.badge',
   'lang.', 'menu.languageScope',
 
   // Run 6's new actions and titles, classified under the same standing rule:

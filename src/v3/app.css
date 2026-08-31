@@ -157,15 +157,29 @@ body {
   width: 100%; max-width: 244px; height: auto; display: block;
   filter: drop-shadow(0 6px 14px var(--mj-shadow-soft));
 }
+/* Two beats, not one block: the drawn wordmark says "Mahjong, yuk!" and the
+   line under it makes the promise. At 2px they read as a single stacked lump
+   and the invitation looked like a subtitle bolted to the artwork. */
 .hero__tagline {
-  margin: 2px 0 0; text-align: center; text-wrap: balance;
+  margin: var(--sp-masthead) 0 0; text-align: center; text-wrap: balance;
   font: 500 1.0625rem/1.35 var(--f-display); color: var(--mj-ink);
 }
 
 .gamecard { display: flex; flex-direction: column; gap: 10px; width: 100%;
             text-align: left; cursor: pointer; margin-top: 14px; }
-/* The depth law forbids a card a lip, so the press is carved in instead. */
-.gamecard:active {
+/* The depth law forbids a card a lip, so the press is carved in instead.
+   BUTTON, not a bare .gamecard: the American teaser wears the same anatomy,
+   and a bare class selector handed it the one dynamic signal this app has for
+   "you hit a control". On Android Chrome :active applies to any element under
+   the touch — no handler or tabindex needed — so the inert card carved in on
+   every tap and then did nothing, which reads as a broken button rather than
+   a game that is not on offer.
+   Tag-qualified rather than :not(.gamecard--teaser) on purpose: :not() would
+   raise this to (0,3,0) and tie the dark-theme `:root[data-theme] .card`
+   rules below, silently switching the dark press on for the real cards.
+   button.gamecard:active is (0,2,1) — light theme byte-identical, dark theme
+   untouched. */
+button.gamecard:active {
   box-shadow: inset 0 0 0 1px var(--mj-line), inset 0 2px 6px var(--mj-shadow-soft);
 }
 .gamecard__top { display: flex; align-items: center; gap: 12px; }
@@ -197,9 +211,30 @@ body {
   background: var(--mj-mandarin); color: var(--mj-on-mandarin);
   font: 500 0.9375rem/1 var(--f-display); display: grid; place-items: center;
 }
+/* ── the American teaser. Shown, never playable — see VariantSelect.tsx and
+      CLAUDE.md. It has to read as the same KIND of thing as the two cards
+      above it while being obviously not a choice, so it keeps their anatomy
+      and gives up only the two things that say "tappable": the mandarin Play
+      pill, and the carved press. */
+.gamecard--teaser { cursor: default; }
+/* The Play slot, answered rather than left empty. Muted fill and a hairline
+   is the app's own costume for "a control that is not offering itself" — the
+   one place that reading is correct, because nothing here is a control. */
+.gamecard__wip {
+  flex: 0 0 auto; align-self: center;
+  padding: 6px 12px; border-radius: var(--r-pill);
+  background: var(--mj-disabled-fill); color: var(--mj-disabled);
+  border: 1px solid var(--mj-line);
+  font: 500 0.75rem/1.1 var(--f-display); letter-spacing: 0.01em;
+  display: grid; place-items: center; text-align: center;
+}
+
 /* Short screens: the masthead gives up size before anything else does. */
 @media (max-height: 700px) {
-  .hero { padding-top: 2px; }
+  /* The pause shrinks with the artwork it follows, or the space the masthead
+     gives up is handed straight back to the gap under it. Set on .hero and
+     inherited: a custom property needs a rule to live in. */
+  .hero { padding-top: 2px; --sp-masthead: 16px; }
   .hero__inner { padding-top: 26px; }
   .logo__img { max-width: 200px; }
   .hero__tagline { font-size: 0.9375rem; }

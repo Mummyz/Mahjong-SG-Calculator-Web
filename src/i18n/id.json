@@ -1,6 +1,7 @@
 {
   "variant.singapore.blurb": "148 kartu, lengkap dengan 4 hewan. Tiap naik 1 fan, nilainya jadi dua kali lipat. Batasnya 5 fan.",
   "variant.hongkong.blurb": "144 kartu, tanpa hewan. Menangnya minimal 3 fan, dan di atas 4 fan nilainya jadi dua kali lipat tiap 2 fan.",
+  "variant.american.blurb": "Permainan 152 kartu, lengkap dengan 8 joker.",
   "tileinfo.title": "Cek kelengkapan kartu",
   "tileinfo.groupCount": "{tiles} × {copies} = {total}",
   "tileinfo.total": "Jumlah",

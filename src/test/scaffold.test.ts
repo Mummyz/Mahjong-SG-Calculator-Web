@@ -158,8 +158,21 @@ describe('the /v3/ preview, and the root it must not disturb', () => {
      *
      * Nothing else the root renders moved: `menu.language*` and
      * `predict.away*` changed too, and src/ui/ renders neither.
+     *
+     * RE-PINNED IN RUN 6B, and this one is a SIBLING, not a change.
+     *
+     * The three `variant.american.*` strings joined a family the root builds
+     * by interpolation, so the scan sweeps them in and the count went 353 to
+     * 356. The root cannot render any of them: src/ui/screens/VariantSelect
+     * has its own `ORDER: VariantId[] = ['singapore', 'hongkong']`, and
+     * `VariantId` has no 'american' member, so there is no id to interpolate
+     * and no card to render it on. Inert at the root, exactly like
+     * `result.basePoints.hongkong` above — and the hash covers siblings on
+     * purpose, so a new one has to be seen rather than absorbed.
+     *
+     * NOT ONE VALUE THE ROOT ACTUALLY RENDERS CHANGED in Run 6 or Run 6B.
      */
     expect(hash, `${keys.size} keys reach the frozen root; one of their values changed`)
-      .toBe('6859ac53e539961ab6254adae33961dec9c4a526d86f2356758ebae1a9678a1b')
+      .toBe('2786910283d6c40bcd7f73583ba21986af7e9da261d8d716dac05bef91916d83')
   })
 })
