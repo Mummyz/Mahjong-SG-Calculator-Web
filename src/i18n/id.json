@@ -211,7 +211,7 @@
   "result.tabThis": "Babak ini",
   "result.tabTotal": "Total sementara",
   "result.ledgerHint": "Jumlah dari semua babak yang sudah dihitung di meja ini.",
-  "result.noHistory": "Belum ada yang dihitung — ini babak pertama.",
+  "result.noHistory": "Ini babak pertama di meja ini, jadi totalnya ya babak ini saja.",
   "result.balanced": "Jumlahnya pas nol.",
   "endgame.sub": "Untung rugi dari semua babak yang dihitung di meja ini.",
   "endgame.handsPlayed": "Sudah main {played} babak, {settled} dihitung di sini",

@@ -237,6 +237,12 @@ export function Results({
                 </button>
               ))}
             </div>
+            {/* `totals` already includes the hand on screen, so the boundary
+                is whether there is anything BEFORE it. It used to be
+                `> 1`, which made a table with one hand behind it claim to
+                have no history — and the "no history" line then sat above
+                four non-zero figures. On the first hand the two tabs show
+                the same numbers, and that is what the caption now says. */}
             {tab === 'total' && (
               <p class="capnote" style="margin:10px 0 0">
                 {ledger.length > 0 ? t('result.ledgerHint') : t('result.noHistory')}

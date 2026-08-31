@@ -11,7 +11,7 @@
   "result.tabThis": "This hand",
   "result.tabTotal": "Running total",
   "result.ledgerHint": "Every hand settled on this table, added up.",
-  "result.noHistory": "Nothing settled yet — this is the first hand.",
+  "result.noHistory": "First hand of the table, so the total is just this one.",
   "result.balanced": "Balances to zero.",
   "endgame.sub": "Signed totals across every hand this table settled.",
   "endgame.handsPlayed": "Hands played: {played} · settled here: {settled}",
