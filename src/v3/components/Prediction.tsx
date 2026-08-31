@@ -33,13 +33,15 @@ const HINT_TILES: Record<string, TileId[]> = {
   terminals: ['1m', '9p', '1s'],
 }
 
-export function Prediction({ variant, hand, ctx, rules, open, onToggle }: {
+export function Prediction({ variant, hand, ctx, rules, open, onToggle, frozen }: {
   variant: VariantId
   hand: KeyedHand
   ctx: Pick<WinContext, 'seat' | 'prevailing'>
   rules: Partial<RuleOptions>
   open: boolean
   onToggle: () => void
+  /** A meld is being declared: this panel is scenery like everything else. */
+  frozen?: boolean
 }) {
   const p = useMemo(
     () => (open ? predict(VARIANTS[variant], hand, ctx, { rules }) : null),
@@ -54,7 +56,7 @@ export function Prediction({ variant, hand, ctx, rules, open, onToggle }: {
   return (
     <section class="predict">
       <button type="button" class="predict__head" aria-expanded={open ? 'true' : 'false'}
-        onClick={onToggle}>
+        disabled={frozen} onClick={onToggle}>
         <span class="predict__title">{t('predict.title')}</span>
         {p && p.candidates.length > 0 && (
           <span class="predict__count">{p.candidates.length}</span>

@@ -23,17 +23,41 @@ const rules = (src: string): [string, string][] =>
   [...src.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^{}]*)\}/g)]
     .map((m) => [m[1]!.trim().replace(/\s+/g, ' '), m[2]!] as [string, string])
 
+describe('the stylesheet is a stylesheet', () => {
+  /**
+   * A rule was deleted from the middle of a selector list this run and left a
+   * dangling comma, which PostCSS rejects. `npm run build` caught it; the test
+   * suite did not, and the suite is what gates everything. Now it does.
+   */
+  it.each([['app.css', app], ['tile.css', tile], ['tokens.css', tokens]])(
+    '%s parses', (_name, src) => {
+      const clean = src.replace(/\/\*[\s\S]*?\*\//g, '')
+      const open = (clean.match(/\{/g) ?? []).length
+      const close = (clean.match(/\}/g) ?? []).length
+      expect(open, 'unbalanced braces').toBe(close)
+      // A selector list that ends in a comma is a rule that lost its body.
+      expect(clean, 'a selector list ending in a comma').not.toMatch(/,\s*[{}]/)
+      // A declaration must have a value.
+      for (const [sel, body] of rules(clean)) {
+        for (const d of body.split(';')) {
+          if (!d.trim() || !d.includes(':')) continue
+          expect(d.split(':').slice(1).join(':').trim().length,
+            `${sel} has an empty declaration`).toBeGreaterThan(0)
+        }
+      }
+    })
+})
+
 describe('the depth law', () => {
   /**
    * RAISED — a hard, zero-blur, coloured offset shadow — belongs to exactly
-   * four things: the tile, the primary button, the fan medal and the wordmark
-   * tile. Anything else raised is a bug, and the hero wall's tile backs are
-   * tiles by another name.
+   * three things: the tile, the primary button and the fan medal. Run 5 took
+   * the list from four to three: the drawn wordmark and its wall of tile
+   * backs are both gone, replaced by the owner's logo artwork, which is an
+   * image and casts a soft drop-shadow rather than a lip.
    */
-  const ALLOWED = [
-    '.tile', '.btn--primary', '.fanmedal', '.wm', '.hero__wall',
-  ]
-  it('raises only the four things it is allowed to raise', () => {
+  const ALLOWED = ['.tile', '.btn--primary', '.fanmedal']
+  it('raises only the three things it is allowed to raise', () => {
     const offenders: string[] = []
     for (const [sel, body] of rules(css)) {
       // A LIP is a hard offset of 3px or more with no blur. The 2px hairline
@@ -83,12 +107,26 @@ describe('the correctness law', () => {
     expect(offenders, 'state leaking into the tile face').toEqual([])
   })
 
-  it('draws the ghost and the 白 frame on different pseudo-elements', () => {
-    // Both wanted ::after. When they shared it a needed White Dragon rendered
-    // as a completely blank box with none of its encodings.
+  it('keeps the ghost badge clear of the artwork it hangs off', () => {
+    // The badge and the 白 frame both wanted ::after once, and a needed White
+    // Dragon rendered as a completely blank box with none of its encodings.
+    // Run 5 settled it structurally: 白's frame is part of the drawing, so the
+    // pseudo-elements are the badge and the gloss and nothing competes.
     expect(tile).toMatch(/\.tile\[data-needed="true"\]::before\s*\{[^}]*content: "\+"/)
     expect(tile).not.toMatch(/\.tile\[data-needed="true"\]::after/)
-    expect(tile).toMatch(/\.tile\[data-h="P"\]::after/)
+    expect(tile).not.toMatch(/\.tile\[data-h="P"\]::after/)
+  })
+
+  it('never lets a state reach inside the artwork', () => {
+    // The face is an <svg> of content. If a state selector could restyle
+    // anything in it, the correctness law would be back to being a rule
+    // somebody remembers rather than a thing the structure forbids.
+    const STATE = /\[(aria-pressed="true"|data-held|data-taken|data-needed|data-exhausted)/
+    for (const [sel] of rules(tile)) {
+      if (!STATE.test(sel)) continue
+      expect(/\.face|\bsvg\b|\bpath\b|\bcircle\b/.test(sel),
+        `${sel} reaches into the drawing`).toBe(false)
+    }
   })
 })
 
@@ -123,6 +161,9 @@ describe('the bars that do not move', () => {
     // the front door's variant names in black at 1.42:1 on the dark card.
     for (const [sel, body] of rules(app)) {
       if (!/background: *var\(--mj-card\)/.test(body)) continue
+      // A pseudo-element cannot hold text — the declare popup's caret is a
+      // rotated square — so there is no colour for it to get wrong.
+      if (/::(before|after)/.test(sel)) continue
       if (/^\s*\./.test(sel) && !/color:/.test(body)) {
         expect(`${sel} sets --mj-card with no colour`).toBe('')
       }

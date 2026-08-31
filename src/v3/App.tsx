@@ -11,7 +11,8 @@ import { Sheet } from './components/Sheet'
 import { usePredictionPanel } from './components/Prediction'
 import { SubmitWizard } from './components/SubmitWizard'
 import {
-  advanceTable, concealedKongs, newTable, submissionMatchesHand, yourSeat,
+  advanceTable, concealedKongs, newTable, prevailingWind, submissionMatchesHand,
+  yourSeat,
   type TableState, type WinSubmission,
 } from '../engine/session/table'
 import type { WinFlag } from '../engine/core/variant'
@@ -220,6 +221,15 @@ export function App() {
             <span class="menuitem__k">{t('menu.tileset')}</span>
             <span class="menuitem__s">{t('menu.tilesetSub')}</span>
           </button>
+          {/* The prevailing wind. It scores — the seat wind and the round
+              wind are both fan — and Run 5's signboard has no room for it, so
+              this is where it is a visible fact rather than a setting. */}
+          <div class="menuitem menuitem--inert">
+            <span class="menuitem__k">{t('menu.round')}</span>
+            <span class="menuitem__s">
+              {t('menu.roundSub', { wind: t(`wind.${prevailingWind(table)}`) })}
+            </span>
+          </div>
           <div class="menuitem menuitem--inert">
             <span class="menuitem__k">{t('menu.language')}</span>
             <LanguageToggle compact />

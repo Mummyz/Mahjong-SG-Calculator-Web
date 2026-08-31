@@ -6,16 +6,9 @@
 
 import { t } from '../../i18n'
 import { rankOf, suitOf, type BonusId, type TileId, type Wind } from '../../engine/core/tiles'
+import { BonusFace, Face } from '../tiles/Face'
+import { bodyOf, bonusBodyOf } from '../tiles/palette'
 
-const SUIT_MARK: Record<string, string> = { m: '萬', p: '筒', s: '索' }
-const HONOUR_GLYPH: Record<string, string> = {
-  E: '東', S: '南', W: '西', N: '北', C: '中', F: '發', P: '白',
-}
-const BONUS_GLYPH: Record<BonusId, string> = {
-  F1: '梅', F2: '蘭', F3: '菊', F4: '竹',
-  S1: '春', S2: '夏', S3: '秋', S4: '冬',
-  cat: '貓', rat: '鼠', rooster: '雞', centipede: '蜈',
-}
 const BONUS_SEAT: Partial<Record<BonusId, Wind>> = {
   F1: 'E', F2: 'S', F3: 'W', F4: 'N',
   S1: 'E', S2: 'S', S3: 'W', S4: 'N',
@@ -90,6 +83,7 @@ export function Tile({
       class={cls}
       data-suit={suit ?? undefined}
       data-h={suit ? undefined : id}
+      data-body={bodyOf(id)}
       data-exhausted={exhausted ? 'true' : undefined}
       data-exhausted-label={dead ? '' : exhausted ? '×4' : undefined}
       data-taken={taken ? 'true' : undefined}
@@ -102,18 +96,11 @@ export function Tile({
       aria-label={label}
       onClick={onClick ? () => { if (!exhausted && !disabled) onClick(id) } : undefined}
     >
-      {suit ? (
-        <>
-          <span class="tile__rank" aria-hidden="true">{rankOf(id)}</span>
-          <span class="tile__mark" aria-hidden="true">{SUIT_MARK[suit]}</span>
-          <span class="tile__rule" aria-hidden="true" />
-        </>
-      ) : (
-        <>
-          <span class="tile__glyph" aria-hidden="true">{HONOUR_GLYPH[id]}</span>
-          {!mini && <span class="tile__cap" aria-hidden="true">{honourCap(id)}</span>}
-        </>
-      )}
+      <svg class="face" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
+        <Face id={id} mini={mini} small={small} />
+      </svg>
+      {!suit && !mini && <span class="tile__cap" aria-hidden="true">{honourCap(id)}</span>}
       {count > 0 && !exhausted && !needed && (
         <span class="tile__count" aria-hidden="true">{count}</span>
       )}
@@ -127,39 +114,51 @@ interface BonusTileProps {
   held?: boolean
   onClick?: (id: BonusId) => void
   /**
-   * Shown as artwork rather than as this table's tile — on the front door,
-   * where there is no seat yet. Suppresses the seat pill, which otherwise
-   * paints over a quarter of the glyph, and the "yours" in the name.
+   * Which player, 1-4, is sitting on this tile's wind THIS hand.
+   *
+   * A flower belongs to a seat, and the seats rotate — so on the second deal
+   * 梅 is East's flower and East is player 2. Numbering the badge by the wind
+   * instead (E=1 always) would have printed "1" on a tile the screen above it
+   * says belongs to player 2.
    */
-  decorative?: boolean
+  playerOf?: (w: Wind) => number
 }
 
 /** Held has to survive losing the button: aria-pressed goes with it. */
 const label = (held: boolean, name: string): string =>
   (held ? t('tile.heldName', { tile: name }) : name)
 
-export function BonusTile({ id, seat, held, onClick, decorative }: BonusTileProps) {
-  const owner = decorative ? undefined : BONUS_SEAT[id]
+export function BonusTile({ id, seat, held, onClick, playerOf }: BonusTileProps) {
+  const owner = BONUS_SEAT[id]
   const Wrapper = onClick ? 'button' : 'span'
   return (
     <Wrapper
       type={onClick ? 'button' : undefined}
       role={onClick ? undefined : 'img'}
       class="tile tile--bonus"
+      data-body={bonusBodyOf(id)}
       data-held={held ? 'true' : undefined}
       aria-pressed={onClick ? (held ? 'true' : 'false') : undefined}
-      aria-label={label(held === true, owner === seat && !decorative
+      aria-label={label(held === true, owner === seat
         ? t('tile.ownBonusName', { tile: t(`tile.bonus.${id}`) })
-        : t(`tile.bonus.${id}`))}
+        : owner && playerOf
+          ? t('tile.bonusOfPlayer', { tile: t(`tile.bonus.${id}`), n: playerOf(owner) })
+          : t(`tile.bonus.${id}`))}
       onClick={onClick ? () => onClick(id) : undefined}
     >
-      {owner && (
+      {/* The badge is the PLAYER whose flower this is — "W" was being read as
+          a suit mark on a tile that has no suit. Ownership is still carried by
+          fill AND ring, never by the number alone. */}
+      {owner && playerOf && (
         <span class="tile__seat" data-seat={owner}
           data-own={owner === seat ? 'true' : undefined} aria-hidden="true">
-          {t(`wind.${owner}.short`)}
+          {playerOf(owner)}
         </span>
       )}
-      <span class="tile__glyph" aria-hidden="true">{BONUS_GLYPH[id]}</span>
+      <svg class="face face--bonus" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
+        <BonusFace id={id} />
+      </svg>
       {/* The caption is the SHORT form: "Musim Semi" and "Chrysanthemum" both
           wrap on a 52px face. The accessible name above keeps the full word,
           so nothing is lost to anyone reading with a screen reader. */}

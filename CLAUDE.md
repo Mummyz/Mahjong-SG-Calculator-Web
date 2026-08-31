@@ -55,12 +55,30 @@ are refused pending owner approval.
 
 ## LANGUAGES
 
-**English + Bahasa Indonesia.**
+**The interface is ENGLISH. Owner's decision, 2026-08-31.**
+
+This overrides the Run 4 bar of a fully bilingual UI. The language switch is
+still on the front door, and it changes **exactly two strings**: the Singapore
+and the Hong Kong variant descriptions. Everything else — every label, button,
+heading, error and accessible name — is English in both modes.
+
+The list of what translates lives in **one place**, `TRANSLATED` in
+`src/i18n/index.ts`, and `t()` resolves from English for anything not in it.
+Widening the policy is a one-line change and an owner decision, never a side
+effect of an edit; `src/i18n/coverage.test.ts` asserts the list's contents so
+it cannot grow quietly.
+
+**`src/i18n/id.json` stays in the repo, complete and unused for UI chrome.**
+It passed the Language Critic in Run 4, it is what a future owner decision
+would switch back on, and deleting it would mean paying for it twice. The
+coverage test still holds every key in it to completeness, placeholders and
+the glossary, so it cannot rot while it waits.
 
 **From the FIRST UI commit, every user-visible string goes through a `t()` key.
-No hardcoded UI text, ever.** Not "for now", not "we'll extract it later".
-Retrofitting i18n is how projects end up with half-translated UIs, and this rule
-exists specifically to make that impossible.
+No hardcoded UI text, ever.** This did NOT change with the policy. Not "for
+now", not "we'll extract it later". Retrofitting i18n is how projects end up
+with half-translated UIs, and this rule exists specifically to make that
+impossible — including the case where the owner widens the policy again.
 
 This applies to: labels, buttons, errors, empty states, tooltips, aria-labels,
 number/tile descriptions, and anything else a human reads. Brand names
@@ -80,11 +98,10 @@ never apologetic. Short sentences. Warm, not cute for its own sake.
 2026-08-30. Two beats: the invitation, then the promise. It is the masthead on
 the front door and it sets the register for everything else.
 
-**In Bahasa Indonesia the "yuk" must land natively** — the name IS Indonesian,
-so the Indonesian build is the one where the joke is not a joke. The Language
-Critic owns where "yuk" goes (the masthead and the play call-to-action at
-minimum) and it must read as an invitation a real person would say, not as a
-translation of an English invitation.
+**The masthead is the owner's logo artwork** (`public/brand/logo-mahjongyuk.png`,
+supplied 2026-08-31), and the "yuk" now lives in it — drawn, not typed. Nothing
+else on the front door needs to carry the invitation, and the drawn wordmark
+that used to is retired.
 
 **What this rules out:** heritage/museum register, corporate hedging
 ("please note that…"), exclamation-mark spam, and any copy that makes the
@@ -180,18 +197,23 @@ citation, never by a failing test.**
   and is what Run 2 used. If the owner installs a dedicated frontend design
   skill later, change this line to name it.)*
 
-### LANGUAGE CRITIC (blocking on the Indonesian locale)
+### LANGUAGE CRITIC (blocking, and RE-SCOPED in Run 5)
 
-- Proper **formal Bahasa Indonesia**, **KBBI-standard**
-- **Zero English mixing where an Indonesian word exists**
-- The glossary landed in Run 4: **`docs/GLOSSARY-ID.md`**, and it is binding.
-  Exactly five words stay in their original form — **Mahjongyuk, fan, pong,
-  kong, chow** — on one test: *a word stays only when it is a thing you SAY at
-  the table or a unit of the game*. Everything a player merely reads is
-  Indonesian.
-- Enforced by `src/i18n/coverage.test.ts`: every key translated, no extra keys,
-  placeholders identical, CJK untouched, no English outside the five, and the
-  brand's *yuk* present on the Indonesian front door.
+**Its scope is the `TRANSLATED` set and nothing else** — today, the two variant
+descriptions. Those are the only strings a player can read in Indonesian, so
+they are the only strings the Critic judges.
+
+- **It must not flag an English UI title, label or button as code-mixing.** The
+  interface being English is the owner's decision, not a defect.
+- Within its scope: proper **formal Bahasa Indonesia**, **KBBI-standard**, and
+  **zero English mixing where an Indonesian word exists**.
+- **`docs/GLOSSARY-ID.md`** is still binding on what it covers. Exactly five
+  words stay in their original form — **Mahjongyuk, fan, pong, kong, chow** —
+  on one test: *a word stays only when it is a thing you SAY at the table or a
+  unit of the game*.
+- Enforced by `src/i18n/coverage.test.ts`, in two tiers: the live strings get
+  the Critic's bar, and the dormant bundle gets hygiene — complete, no extras,
+  no blanks, placeholders identical, CJK untouched.
 
 ---
 
@@ -205,7 +227,8 @@ citation, never by a failing test.**
 | **Run 2B** | ✅ Hand-entry redesign — rolling table, guided declare, named seats |
 | **Run 3** | ✅ Submit wizard, Hong Kong Old Style engine certified, both variants live |
 | **Run 4** | ✅ Prediction, Bahasa Indonesia, and the v3 brand — preview at `/v3/` |
-| **Run 5** | Owner review of `/v3/`, then promote to root |
+| **Run 5** | ✅ Owner logo, 46 redrawn tile faces, English-only UI, gameplay layout rework — still `/v3/` |
+| **Run 6** | Owner review of `/v3/`, then promote to root |
 
 ---
 
@@ -217,6 +240,8 @@ v3/index.html             `/v3/` — the Run 4 preview. Its UI is src/v3/
 app/index.html            `/app/` — the plain engine harness
 public/CNAME              mahjongyuk.com — copied into every build
 public/v1/index.html      the permanent /v1/ calculator (hash-pinned)
+public/brand/             the owner's logo, served
+assets/brand/             the owner's originals — source, never served
 src/engine/core/          tiles, hand parser, set decomposition
 src/engine/variants/      singapore/, hongkong/, and the registry both are in
 src/engine/session/       the table: seats, rotation, declaring, submitting
@@ -224,7 +249,8 @@ src/engine/corpus/        golden test corpus — see its README
 src/engine/predict/       prediction: distance to win, candidates, tiles needed
 docs/sources/             archived rule sources + the ruling log
 src/ui/                   Preact components for `/` — Run 3, frozen
-src/v3/                   Preact components for `/v3/` — Run 4
+src/v3/                   Preact components for `/v3/` — Run 4, Run 5
+src/v3/tiles/             the 46 tile faces: palette, layouts, parts, Face
 src/i18n/                 en.json, id.json, t()/tv(), the locale switch
 docs/GLOSSARY-ID.md       the binding Indonesian glossary
 docs/design/              the v3 build specification, from the Run 4 judge panel

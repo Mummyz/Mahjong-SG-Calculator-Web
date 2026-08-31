@@ -61,7 +61,7 @@ body {
 /* ── cards: flat, hairlined, in BOTH themes. A white card on the mint ground
       is 1.24:1, and a 6%-alpha shadow is not structure on a phone at low
       brightness — so the hairline ships everywhere. ───────────────────── */
-.card, .slip, .chit {
+.card, .slip {
   background: var(--mj-card);
   /* A background without a colour is a dark-theme bug waiting: the game card
      headings rendered in UA black at 1.42:1 on the dark card. */
@@ -71,21 +71,20 @@ body {
   border: 1px solid var(--mj-line);
   box-shadow: 0 1px 2px var(--mj-shadow-soft), 0 8px 20px -12px var(--mj-shadow);
 }
+/* A hairline alone is thin on a dark card; a one-pixel top highlight is what
+   gives it an edge without turning it into a raised object. */
 :root[data-theme="dark"] .card,
-:root[data-theme="dark"] .slip,
-:root[data-theme="dark"] .chit { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06); }
+:root[data-theme="dark"] .slip { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06); }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .card,
-  :root:not([data-theme="light"]) .slip,
-  :root:not([data-theme="light"]) .chit { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06); }
+  :root:not([data-theme="light"]) .slip { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06); }
 }
 /* CARVED IN. The inset shadow alone composited to 1.01–1.07:1 in dark, so
    every well in the app was invisible; the hairline is what makes "carved"
    a boundary rather than a hope. */
-.well, .tray, .tray__group, .totalband {
+.tray, .tray__group, .totalband {
   box-shadow: inset 0 0 0 1px var(--mj-line), inset 0 2px 6px var(--mj-shadow-soft);
 }
-.well { background: var(--mj-felt); border-radius: var(--r-well); padding: 10px; }
 
 /* ── type ─────────────────────────────────────────────────────────────── */
 .title { font: 500 1.5rem/1.2 var(--f-display); letter-spacing: 0;
@@ -96,7 +95,7 @@ body {
 .grouplabel { display: flex; align-items: center; gap: 10px; margin: 16px 0 8px;
               min-height: 24px; }
 .grouplabel__rule { flex: 1; }
-.grouplabel__n, .pillcount {
+.grouplabel__n {
   font: 500 0.8125rem/1 var(--f-body); color: var(--mj-muted);
   font-variant-numeric: tabular-nums;
   background: var(--mj-felt); border-radius: var(--r-pill); padding: 6px 10px;
@@ -129,25 +128,39 @@ body {
 }
 
 /* ── the landing: a real front door ──────────────────────────────────── */
-/* clip rather than hidden, with a margin, so a focus ring on the language
-   toggle is not shaved off at the hero's edge. */
-/* 26dvh, not 30: the Indonesian front door runs longer at every level — the
-   tagline, the heading and both blurbs — and at 30dvh the second card's
-   bottom fell 22px past the fold on the reference screen. */
-.hero { position: relative; overflow: clip; overflow-clip-margin: 6px; padding-top: 34px;
-        min-height: clamp(160px, 26dvh, 220px); }
-.hero__wall { position: absolute; top: -34px; left: -6px; right: -6px;
-              display: flex; gap: 6px; pointer-events: none; z-index: 0; }
-.hero__wall > i {
-  flex: 0 0 44px; height: 56px; border-radius: var(--r-tile);
-  background: linear-gradient(160deg, var(--mj-back), var(--mj-back-2));
-  box-shadow: 0 4px 0 var(--mj-back-lip), 0 8px 12px -6px var(--mj-shadow);
+/* Run 5. The hero used to open on a clipped row of green tile backs, and the
+   owner's verdict on it was blunt. The logo is dense, glossy and full of
+   colour, so the fix was not a better pattern behind it — it was nothing
+   behind it. What is left is a bloom of the page's own two hues, thrown from
+   opposite corners so the mark sits in a pool of light rather than on a band.
+
+   NOT clipped. `overflow: clip` cut both radial gradients while they were
+   still strongly opaque, so the "bloom" was a tinted rectangle with hard
+   vertical seams 8px outside the hero. Nothing overflows this box any more —
+   the wall of tile backs that needed clipping is gone — so the light is
+   allowed to fall off the way light does. */
+.hero { position: relative; padding: 8px 0 4px; isolation: isolate; }
+.hero::before {
+  content: ""; position: absolute; inset: -18% -22% -10%; z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(52% 46% at 22% 30%, var(--mj-bloom-a) 0%, transparent 70%),
+    radial-gradient(56% 48% at 84% 66%, var(--mj-bloom-b) 0%, transparent 72%);
 }
-.hero__inner { position: relative; z-index: 1; padding-top: 34px; }
-.hero__invite { margin: 6px 0 0; font: 500 1.0625rem/1.35 var(--f-display);
-                color: var(--mj-ink); }
-.wm { margin: 0; }
-.wm__svg { width: 100%; max-width: 300px; height: auto; display: block; overflow: visible; }
+.hero__inner { position: relative; z-index: 1; padding-top: 30px; }
+
+/* The masthead is centred and everything under it is not: the crest sits in
+   the middle, the choices read from the left like a list, which is what they
+   are. */
+.logo { margin: 0; display: flex; justify-content: center; }
+.logo__img {
+  width: 100%; max-width: 244px; height: auto; display: block;
+  filter: drop-shadow(0 6px 14px var(--mj-shadow-soft));
+}
+.hero__tagline {
+  margin: 2px 0 0; text-align: center; text-wrap: balance;
+  font: 500 1.0625rem/1.35 var(--f-display); color: var(--mj-ink);
+}
 
 .gamecard { display: flex; flex-direction: column; gap: 10px; width: 100%;
             text-align: left; cursor: pointer; margin-top: 14px; }
@@ -158,38 +171,38 @@ body {
 .gamecard__top { display: flex; align-items: center; gap: 12px; }
 .gamecard__name { flex: 1; font: 600 1.375rem/1.15 var(--f-display); margin: 0;
                   text-wrap: balance; }
+/* A NUMBER, not a chip. It was a 56px mandarin disc, and with Play now a
+   mandarin pill on the same card the eye had two identical loud circles and
+   no way to tell which was the button. As a pale pill with a hairline it was
+   worse: that is exactly the .btn:disabled costume, so the card read as a
+   disabled control stacked over an enabled one. A fact wears no container. */
 .gamecard__n {
-  flex: 0 0 56px; width: 56px; height: 56px; border-radius: var(--r-pill);
-  display: grid; place-items: center; background: var(--mj-mandarin);
-  color: var(--mj-on-mandarin); font: 600 1.5rem/1 var(--f-display);
-  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto; color: var(--mj-muted);
+  font: 600 1.75rem/1 var(--f-display); font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 /* Two lines in every locale: the Indonesian blurb runs longer and pushed the
    second card past the fold. The clamp lives on an INNER span because a flex
    item's display is blockified, which silently turned -webkit-box into
    flow-root and clipped a line in half instead of ending it. */
-.gamecard__blurb { margin: 0; font-size: 0.875rem; color: var(--mj-muted); }
+.gamecard__blurb { margin: 0; flex: 1; min-width: 0; font-size: 0.875rem;
+                   color: var(--mj-muted); }
 .gamecard__blurb > span {
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;
   overflow: hidden;
 }
-.gamecard__foot { display: flex; align-items: flex-end; gap: 8px; }
-/* flex-end, so the landscape bonus tile keeps its 5:4 instead of being
-   stretched to the height of the portrait ones, and the row lines up on the
-   tiles' lips — which is how they sit on a table anyway. */
-.gamecard__tiles { display: flex; gap: var(--gap); flex: 1; align-items: flex-end; }
-.gamecard__tiles .tile { width: 52px; }
+.gamecard__foot { display: flex; align-items: flex-end; gap: 12px; }
 .gamecard__go {
   flex: 0 0 auto; min-height: 44px; padding: 0 18px; border-radius: var(--r-pill);
   background: var(--mj-mandarin); color: var(--mj-on-mandarin);
   font: 500 0.9375rem/1 var(--f-display); display: grid; place-items: center;
 }
-/* Two cards and a hero do not fit a 640pt screen; below that it scrolls. */
-@media (max-height: 680px) {
-  .hero { min-height: 150px; padding-top: 26px; }
-  .hero__wall > i { height: 46px; }
-  .wm__svg { max-width: 250px; }
-  .hero__invite { display: none; }
+/* Short screens: the masthead gives up size before anything else does. */
+@media (max-height: 700px) {
+  .hero { padding-top: 2px; }
+  .hero__inner { padding-top: 26px; }
+  .logo__img { max-width: 200px; }
+  .hero__tagline { font-size: 0.9375rem; }
 }
 
 /* ── language ─────────────────────────────────────────────────────────── */
@@ -211,18 +224,39 @@ body {
 /* ── status pills, replacing the solid signboard band ─────────────────── */
 .signboard { display: flex; align-items: stretch; gap: 6px;
              padding: 10px var(--pad) 0; }
+/* CONTENT-SIZED, not equal thirds. Equal thirds clipped "1,000 · max 10" to
+   "1,000 · max 1" while two short seat names sat on slack they had no use
+   for. flex-basis auto gives each cell what it needs — and when two long
+   names mean the row genuinely does not fit, the NAMES give way, because a
+   truncated name is still recognisable and "1,000 · ma…" is not a number. */
+.signboard__seg { flex: 1 1 auto; }
+.signboard__seg:nth-of-type(3) { flex-shrink: 0; }
 .signboard__seg {
-  flex: 1; min-width: 0; min-height: 44px; display: flex; flex-direction: column;
+  min-width: 0; min-height: 44px; display: flex; flex-direction: column;
   justify-content: center; gap: 1px; padding: 4px 10px; border: 0;
   border-radius: var(--r-field); background: var(--mj-card); color: var(--mj-ink);
-  text-align: left; cursor: pointer;
+  text-align: left;
   box-shadow: 0 1px 2px var(--mj-shadow-soft);
 }
 .signboard__k { font: 400 0.6875rem/1 var(--f-body); color: var(--mj-muted);
                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.signboard__v { font: 500 0.875rem/1.1 var(--f-display);
+.signboard__v { font: 500 0.8125rem/1.15 var(--f-display);
                 font-variant-numeric: tabular-nums; white-space: nowrap;
-                overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+                min-width: 0; display: flex; align-items: baseline; gap: 5px; }
+/* text-overflow does not apply to a FLEX CONTAINER's own text, so with the
+   wind glyph beside it a long name overflowed the cell instead of ellipsing.
+   The clipping belongs on the item. */
+.signboard__v > .signboard__name {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* The wind is the seat, and it is the one thing in this cell that has to
+   survive a long name being ellipsised away. */
+.signboard__w { flex: 0 0 auto; font: 700 0.8125rem/1 var(--f-cjk); }
+/* Read, not seen. The wind glyphs in the signboard are aria-hidden — a screen
+   reader would say "east" for 東 only by luck of the font — so the wind is
+   spelled out here instead, and the seat is a scoring input, not decoration. */
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+      overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .signboard__info {
   flex: 0 0 44px; width: 44px; min-height: 44px; display: grid; place-items: center;
   border: 0; border-radius: var(--r-pill); background: var(--mj-card);
@@ -230,32 +264,21 @@ body {
   box-shadow: 0 1px 2px var(--mj-shadow-soft);
 }
 
-/* ── seats. The dealer gets a ring AND a letter; never the ring alone. ── */
-.seats { display: flex; gap: 6px; padding: 10px var(--pad) 0; }
-.seat { flex: 1; min-width: 0; display: flex; flex-direction: column;
-        align-items: center; gap: 3px; }
-.seat__avatar {
-  width: 32px; height: 32px; border-radius: var(--r-pill); display: grid;
-  place-items: center; font: 700 0.8125rem/1 var(--f-cjk);
-  background: var(--mj-seat-e); color: var(--mj-on-seat);
-}
-.seat[data-wind="S"] .seat__avatar { background: var(--mj-seat-s); }
-.seat[data-wind="W"] .seat__avatar { background: var(--mj-seat-w); }
-.seat[data-wind="N"] .seat__avatar { background: var(--mj-seat-n); }
-.seat[data-dealer="true"] .seat__avatar { box-shadow: 0 0 0 2px var(--mj-mandarin); }
-.seat__name { font-size: 0.6875rem; color: var(--mj-muted); max-width: 100%;
-              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* The lip tokens are boundary colours, audited to the 3:1 NON-TEXT bar. Used
-   as text they measured 3.40:1 (this label) and 3.82:1 (the tray's add
-   affordance) — both below AA. The mandarin ring on the avatar is what carries
-   the emphasis; the word only has to be readable. */
-.seat__deal { font-size: 0.625rem; color: var(--mj-ink); font-weight: 600; }
+/* ── the suit picker. Inside the scroll since Run 5 — it sits directly above
+      the wall it controls, under the hand — and STICKY, because with the
+      prediction panel open the page runs to 960px and the way back to another
+      suit was scrolling off the top with the wall it belongs to.
 
-/* ── the suit picker: a segmented control ────────────────────────────── */
+      A card bar, not a felt pill on the ground: a sticky element needs an
+      opaque backdrop, and the ground is a gradient painted on the shell, so
+      nothing flat can match it at every scroll position. A toolbar is what
+      this is; it may as well look like one. ───────────────────────────── */
 .tabs {
+  position: sticky; top: 0; z-index: 4;
   display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px;
-  margin: 10px var(--pad) 0; padding: 4px;
-  background: var(--mj-felt); border-radius: var(--r-pill);
+  margin: 14px calc(var(--pad) * -1) 0; padding: 6px var(--pad);
+  background: var(--mj-card); color: var(--mj-ink);
+  box-shadow: 0 1px 0 var(--mj-line);
 }
 .tab {
   min-height: 48px; border: 0; border-radius: var(--r-pill); background: none;
@@ -263,15 +286,14 @@ body {
   align-items: center; justify-content: center; gap: 1px; padding: 0 2px;
 }
 .tab[aria-selected="true"] {
-  background: var(--mj-card); color: var(--mj-ink); font-weight: 600;
-  box-shadow: 0 2px 5px var(--mj-shadow-soft);
+  background: var(--mj-felt); color: var(--mj-ink); font-weight: 600;
 }
 .tab__cjk { font: 700 0.9375rem/1 var(--f-cjk); }
 .tab__cap { font: 500 0.625rem/1 var(--f-body); letter-spacing: 0;
             text-transform: none; }
 
 /* ── the tray is a rack: carved-in felt with popped-out tiles in it ───── */
-.trayhead { display: flex; align-items: center; gap: 10px; margin: 16px 0 8px;
+.trayhead { display: flex; align-items: center; gap: 10px; margin: 12px 0 8px;
             min-height: 32px; }
 .trayhead__n { font: 500 0.875rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
 .trayhead__sp { flex: 1; }
@@ -328,9 +350,23 @@ body {
                  color: var(--mj-ink); }
 
 /* ── declaring a meld ────────────────────────────────────────────────── */
-.declarerow { display: grid; grid-template-columns: repeat(3, 1fr);
-              gap: 8px; margin-top: 12px; scroll-margin-bottom: 16px; }
-.declarerow > .btn { grid-column: 1 / -1; }
+/* Anchored over the dock, so answering it never scrolls the wall away. The
+   caret points at the Declare button it came out of. */
+.declarepop {
+  position: absolute; left: var(--pad); right: var(--pad); bottom: calc(100% - 8px);
+  z-index: 7; padding: 12px; border-radius: var(--r-well);
+  background: var(--mj-card); color: var(--mj-ink);
+  box-shadow: inset 0 0 0 1px var(--mj-line), 0 -6px 28px var(--mj-shadow);
+  display: grid; gap: 8px;
+}
+.declarepop::after {
+  content: ""; position: absolute; left: 34px; bottom: -8px; width: 16px; height: 16px;
+  background: var(--mj-card); border-right: 1px solid var(--mj-line);
+  border-bottom: 1px solid var(--mj-line); transform: rotate(45deg); border-radius: 0 0 3px 0;
+}
+.declarepop__t { margin: 0; font: 500 0.9375rem/1.2 var(--f-display); }
+.declarepop__opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.declarepop__x { justify-self: start; }
 .declareopt {
   min-height: 64px; border: 1px solid var(--mj-line); border-radius: var(--r-field);
   background: var(--mj-card); color: var(--mj-ink); cursor: pointer;
@@ -345,6 +381,14 @@ body {
                  text-align: center; }
 .shell[data-focus] .tabs .tab[disabled] { opacity: 0.4; }
 .shell[data-focus] .bonusgrid { opacity: 0.4; }
+/* While the KIND is being chosen the wall stays face-up — that is the point
+   of the popup — but it must not answer a thumb. Without pointer-events off,
+   a tile pressed down 3px and sprang back having done nothing, which is what
+   a broken app looks like. Once a kind IS chosen the wall goes live again and
+   the illegal tiles turn over, which is a different and legible signal. */
+.shell[data-focus="pick"] .grid,
+.shell[data-focus="pick"] .tray,
+.shell[data-focus="pick"] .predict { opacity: 0.5; pointer-events: none; }
 
 /* ── the dock. A flex sibling of .scroll, not an overlay — so no backdrop
       filter; the content dissolves into the ground instead. ───────────── */
@@ -352,14 +396,28 @@ body {
   position: sticky; bottom: 0; z-index: 5; border: 0;
   background: linear-gradient(180deg, transparent 0, var(--mj-ground-2) 22%,
               var(--mj-ground-2) 100%);
-  padding: 12px var(--pad) calc(12px + env(safe-area-inset-bottom));
-  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 6px;
 }
 .dock__row { display: flex; gap: 8px; }
-.dock__row .btn--block { flex: 1; }
-/* Reserved height, so the buttons never move under a thumb already reaching. */
-.docknote { margin: 0; min-height: 40px; display: flex; align-items: center;
-            gap: 10px; font-size: 0.8125rem; color: var(--mj-muted); }
+/* Both bounded. The ghost button was content-sized, so a long label took 231
+   of the row's 328px and left the primary action 89. Neither is allowed to
+   starve the other, and either may ellipsis before it does. */
+.dock__row .btn { min-width: 0; }
+.dock__row .btn--ghost { flex: 0 1 auto; max-width: 42%; }
+.dock__row .btn--block { flex: 1 1 auto; }
+/* Reserved height, so the buttons never move under a thumb already reaching —
+   but 40px of reserved blank was a fifth of the dock. Two lines at 12px is
+   30px, which is what the longest prompt actually needs; min-height alone
+   would have let a long one GROW the dock and move the buttons anyway, which
+   is the exact failure the reservation exists to prevent. */
+.docknote { margin: 0; height: 30px; display: flex; align-items: center;
+            font-size: 0.75rem; line-height: 1.25;
+            color: var(--mj-muted); overflow: hidden; }
+.docknote > span {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden;
+}
 .docknote[data-empty] { visibility: hidden; }
 
 /* ── forms ────────────────────────────────────────────────────────────── */
@@ -516,7 +574,6 @@ body {
 .totalband__k { font: 500 0.9375rem/1.2 var(--f-display); }
 .totalband__v { font: 600 2.125rem/1 var(--f-display); color: var(--mj-collect);
                 font-variant-numeric: tabular-nums; }
-.collectline { display: none; }
 
 /* ── what could this become? ─────────────────────────────────────────── */
 .predict { margin-top: 14px; }
@@ -564,8 +621,12 @@ body {
   background: var(--mj-felt); border-radius: var(--r-field); padding: 8px;
   box-shadow: inset 0 0 0 1px var(--mj-line);
 }
-.cand__tiles .tile { width: 34px; }
-.cand__tiles--drop .tile { width: 30px; }
+/* 34px and 30px were sized for the retired face, which was a 19px rank
+   numeral and a mark. The drawn face carries its rank in a corner stamp that
+   scales with the tile, and at 30px that stamp is eight pixels tall — on the
+   one panel whose whole job is to name tiles the player has not got yet. */
+.cand__tiles .tile { width: 40px; }
+.cand__tiles--drop .tile { width: 36px; }
 .predict__count {
   flex: 0 0 auto; font: 500 0.75rem/1 var(--f-body); color: var(--mj-muted);
   background: var(--mj-felt); border-radius: var(--r-pill); padding: 6px 10px;
@@ -602,9 +663,6 @@ body {
 .cuit[data-mood="cheer"] .cuit__eyes--happy { display: block; }
 .cuit[data-mood="think"] .cuit__think { display: block; }
 
-.placeholder { display: none; }
-.masthead { display: none; }
-.pushdown { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

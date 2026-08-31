@@ -129,4 +129,50 @@ describe('no screen decides for itself which tiles exist', () => {
     }
     expect(offenders, 'a screen naming a Singapore-only tile').toEqual([])
   })
+
+  /**
+   * THE LEAKAGE BUG, IN WORDS.
+   *
+   * The Run 4 guards above stop a screen naming a tile group in CODE. Run 5
+   * found the same bug living in a STRING: the bonus summary read "Flowers,
+   * seasons, animals — none" on a Hong Kong table, which plays no animals.
+   * A string that names a group belongs to the group, not to a screen.
+   */
+  it('never names the animals in a string both variants are shown', () => {
+    const en = JSON.parse(readFileSync(
+      fileURLToPath(new URL('../../i18n/en.json', import.meta.url)), 'utf8',
+    )) as Record<string, string>
+    // ANIMALS is the only group that is not in both sets, so it is the only
+    // word that can lie. Flowers and seasons are on both tables.
+    //
+    // Legitimately allowed to say it: the group's own label and tile names;
+    // a string scoped to one variant by its key; a flag's explanation, since
+    // the flags themselves are variant-gated by the test above; and the /app/
+    // engine harness, which is not the product.
+    // A key ending in a variant name is scoped by tv() to that variant; a
+    // key that HAS such a sibling is the other variant's branch, and tv()
+    // never reaches it from the one with a sibling.
+    // pattern.* and instant.* are ENGINE output: a name only reaches a
+    // player when the engine emitted the pattern, and only Singapore can
+    // emit an animal. variant.<id>.* is each variant describing itself.
+    const OK = new RegExp(String.raw`^(tileinfo\.group\.|tile\.bonus\.|hand\.tab\.`
+      + String.raw`|flag\.|harness\.|pattern\.|instant\.|variant\.(singapore|hongkong)\.)`
+      + String.raw`|\.(singapore|hongkong)$`)
+    const offenders = Object.entries(en)
+      .filter(([k, v]) => !OK.test(k) && !(`${k}.hongkong` in en) && /\banimals?\b/i.test(v))
+      .map(([k, v]) => `${k}: "${v}"`)
+    expect(offenders, 'the animals named in copy Hong Kong also sees').toEqual([])
+  })
+
+  it('builds the bonus summary from the variant rather than from English', () => {
+    const en = JSON.parse(readFileSync(
+      fileURLToPath(new URL('../../i18n/en.json', import.meta.url)), 'utf8',
+    )) as Record<string, string>
+    expect(en['hand.bonusNoneIn'], 'must take the groups as a placeholder')
+      .toMatch(/\{groups\}/)
+    // The frozen root at / renders hand.bonusNone with no variables, so that
+    // one must stay placeholder-free — and variant-neutral, which is why it
+    // no longer lists the groups at all.
+    expect(en['hand.bonusNone']).not.toMatch(/\{/)
+  })
 })

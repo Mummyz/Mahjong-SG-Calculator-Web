@@ -13,9 +13,16 @@
    three mandated suit encodings on precisely the tiles a player stares at
    hardest. This construction makes that unreachable.
 
-   SUIT IS ENCODED THREE TIMES, always: the rank numeral, the coloured CJK
-   mark, and a rule whose SHAPE rhymes with the suit — one bar for 萬, three
-   dots for 筒, three dashes for 索.
+   SUIT IS ENCODED THREE TIMES, always, and Run 5 moved the encodings into
+   the artwork without dropping one: the corner rank NUMERAL, the corner suit
+   MARK (筒 / 索; a 萬 tile's face is a 32px 萬 and needs no second one), and
+   the pip's own SHAPE — a coin is never a bamboo segment is never a glyph.
+   The pip COUNT is a fourth carrier the retired face did not have.
+
+   THE FACE IS AN <svg>, THE STATE IS CSS. Everything drawn inside .face is
+   content and cannot change because of what the player did; everything in
+   this file is state and never reaches inside the artwork. That split is what
+   makes the correctness law structural rather than a rule somebody remembers.
    ========================================================================= */
 
 .tile {
@@ -36,9 +43,13 @@
 .tile--mini {
   /* min-height:48px on .tile was beating aspect-ratio here, so the "square"
      mini was 44x48, the ghost 34x48 and the ledger's wind tile 34x48. The
-     floor belongs to full-size tiles; a mini sets its own height. */
+     floor belongs to full-size tiles; a mini sets its own height.
+     Run 5: 4/5, not 1/1. The artwork is one drawing at every size, and a
+     square crop of a portrait tile cut the corner stamp in half — which is
+     the encoding the tray depends on, since nine pips at 44px are there to
+     be recognised rather than counted. */
   min-height: 0;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
   width: 44px;
   border-radius: var(--r-mini);
   box-shadow: 0 3px 0 0 var(--tile-lip, var(--mj-lip-wind)),
@@ -51,6 +62,31 @@
   color: var(--mj-bonus-ink);
 }
 span.tile { cursor: default; }
+
+/* ── the artwork. One drawing per tile, scaled by the box it lands in, over
+      the CSS gloss so the shine sits under the marks the way it does on a
+      real tile. Never a tab stop, never announced: the accessible name on
+      the element carries the tile. ─────────────────────────────────────── */
+.face {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; pointer-events: none; z-index: 1;
+  overflow: visible;
+}
+
+/* ── the pastel bodies. A pale wash of the mark's own hue, per the reference
+      sheet. Set as the tile's two face stops rather than as a new background,
+      so the gloss, the lip, the press, the turn-over and every audited ink
+      keep working untouched. ──────────────────────────────────────────── */
+.tile[data-body="cream"] { --mj-tile-hi: var(--mj-p-cream-hi); --mj-tile-face: var(--mj-p-cream); }
+.tile[data-body="mint"]  { --mj-tile-hi: var(--mj-p-mint-hi);  --mj-tile-face: var(--mj-p-mint); }
+.tile[data-body="peach"] { --mj-tile-hi: var(--mj-p-peach-hi); --mj-tile-face: var(--mj-p-peach); }
+.tile[data-body="lav"]   { --mj-tile-hi: var(--mj-p-lav-hi);   --mj-tile-face: var(--mj-p-lav); }
+.tile[data-body="sky"]   { --mj-tile-hi: var(--mj-p-sky-hi);   --mj-tile-face: var(--mj-p-sky); }
+.tile[data-body="blush"] { --mj-tile-hi: var(--mj-p-blush-hi); --mj-tile-face: var(--mj-p-blush); }
+/* A bonus tile is a pastel body too now, so its own face stops step aside. */
+.tile--bonus[data-body] {
+  background: linear-gradient(180deg, var(--mj-tile-hi) 0%, var(--mj-tile-face) 78%);
+}
 
 /* ── the gloss. One layer, never two. Off below 48px, where it only lifts
       the face under the suit mark and costs contrast. ─────────────────── */
@@ -72,80 +108,37 @@ span.tile { cursor: default; }
 .tile[data-h="C"] { --tile-lip: var(--mj-lip-m); }
 .tile[data-h="F"] { --tile-lip: var(--mj-lip-s); }
 
-/* ── encoding 1: the rank numeral ─────────────────────────────────────── */
-.tile__rank {
-  position: absolute; left: 0; right: 0; top: 9%; text-align: center;
-  font: 500 var(--rank-size, 30px)/1 var(--f-display);
-  font-variant-numeric: tabular-nums; color: var(--mj-tile-ink);
-}
-.tile--mini .tile__rank {
-  top: 2px; left: 5px; right: auto; text-align: left; --rank-size: 19px;
-}
-
-/* ── encoding 2: the coloured CJK mark, clear of the gloss band ───────── */
-.tile__mark {
-  position: absolute; left: 0; right: 0; top: 53%; text-align: center;
-  font: 700 17px/1 var(--f-cjk); color: var(--suit);
-}
-.tile--mini .tile__mark {
-  top: 3px; right: 4px; left: auto; font-size: 11px;
-}
-
-/* ── encoding 3: the rule, whose SHAPE rhymes with the suit ───────────── */
-.tile__rule {
-  position: absolute; left: 22%; right: 22%; bottom: 9%;
-  height: 5px; border: 0; border-radius: 3px; color: var(--suit);
-}
-.tile[data-suit="m"] .tile__rule { background: currentColor; }
-.tile[data-suit="p"] .tile__rule {
-  background-image: radial-gradient(circle at 50% 50%, currentColor 0 44%, transparent 46%);
-  background-size: 33.334% 100%; background-repeat: repeat-x;
-}
-.tile[data-suit="s"] .tile__rule {
-  background-image: linear-gradient(90deg, currentColor 0 64%, transparent 64%);
-  background-size: 33.334% 100%; background-repeat: repeat-x;
-}
-.tile--mini .tile__rule { left: 14%; right: 14%; bottom: 6px; height: 4px; }
-
-/* ── honours ──────────────────────────────────────────────────────────── */
-.tile--honour .tile__glyph {
-  position: absolute; inset: 8% 0 30%; display: grid; place-items: center;
-  font: 700 34px/1 var(--f-cjk); color: var(--mj-tile-ink);
-}
-.tile--mini .tile__glyph { font-size: 22px; inset: 6% 0 6%; }
-/* Any tile under 48px gets the smaller glyph, whether or not it is a mini —
-   the ledger's wind tile is 34px and a 34px em box overflowed its cell. */
-.tile[data-small] .tile__glyph { font-size: 20px; inset: 6% 0 6%; }
-.tile[data-h="C"] .tile__glyph { color: var(--mj-suit-m); }
-.tile[data-h="F"] .tile__glyph { color: var(--mj-suit-s); }
-/* 白 is a frame, not a glyph — the tile face is blank by design. */
-.tile[data-h="P"] .tile__glyph { visibility: hidden; }
-.tile[data-h="P"]::after {
-  content: ""; position: absolute; inset: 24% 22% 30%; border-radius: 6px;
-  box-shadow: inset 0 0 0 3px var(--mj-suit-s);
-}
+/* ── the caption. The one piece of the face that is WORDS, so it is HTML and
+      not SVG: it is translated, it is selectable, and it is what carries a
+      wind or a season if the system CJK font never arrives. ───────────── */
 .tile__cap {
-  position: absolute; left: 0; right: 0; bottom: 8%; text-align: center;
-  font: 500 11px/1 var(--f-display); letter-spacing: 0; text-transform: none;
-  color: var(--mj-tile-cap);
+  position: absolute; left: 0; right: 0; bottom: 4%; text-align: center;
+  font: 500 10px/1 var(--f-display); letter-spacing: 0; text-transform: none;
+  color: var(--mj-tile-cap); z-index: 2;
 }
 .tile--mini .tile__cap { display: none; }
+/* At 40px a 10px caption sat on the glyph. The face already drops its
+   flourish at this size; the caption comes down to meet it. */
+.tile[data-small] .tile__cap { font-size: 8px; bottom: 3%; }
 
 /* ── bonus tiles: a different class of object, on sight ───────────────── */
-.tile--bonus .tile__glyph {
-  position: absolute; inset: 6% 0 34%; display: grid; place-items: center;
-  font: 700 25px/1 var(--f-cjk); color: var(--mj-bonus-ink);
-}
 .tile--bonus .tile__cap {
-  bottom: 6%; font-size: 9px; color: var(--mj-bonus-cap);
-  overflow-wrap: anywhere; padding: 0 3px;
+  /* 10px, not 9: at 360px a bonus tile is 76px wide and this is the only
+     WORD on it. Nine was under the floor the rest of the app holds to. */
+  bottom: 5%; font-size: 10px; color: var(--mj-tile-cap);
+  overflow-wrap: anywhere; padding: 0 2px;
 }
 /* Ownership is carried by fill AND ring — never by colour alone. */
 .tile__seat {
-  position: absolute; top: 4px; left: 4px; height: 20px; padding: 0 7px;
+  position: absolute; top: 4px; left: 4px; height: 20px; min-width: 20px;
+  padding: 0 5px;
   border-radius: var(--r-pill); display: grid; place-items: center;
-  font: 500 11px/1 var(--f-display);
+  font: 600 11px/1 var(--f-display); font-variant-numeric: tabular-nums;
   background: var(--mj-seat-e); color: var(--mj-on-seat); z-index: 1;
+  /* A chip, not a floating digit. In light the seat pastels sit within a
+     rounding error of the pastel bodies they are drawn on, so without this
+     the fill had no edge and the badge read as ink on the tile. */
+  box-shadow: 0 0 0 1px var(--mj-line);
 }
 .tile__seat[data-seat="S"] { background: var(--mj-seat-s); }
 .tile__seat[data-seat="W"] { background: var(--mj-seat-w); }
@@ -154,6 +147,7 @@ span.tile { cursor: default; }
   background: var(--mj-jade); color: var(--mj-on-jade);
   box-shadow: 0 0 0 2px var(--mj-tile-ink);
 }
+/* the cells are status, not controls: they were wearing a button's cursor */
 
 /* ── selected / held. The face, the rank, the mark and the rule are all
       UNTOUCHED: every suit encoding survives selection. ───────────────── */
@@ -175,9 +169,12 @@ span.tile { cursor: default; }
               0 4px 0 0 var(--mj-jade-lip),
               0 10px 16px -8px var(--mj-shadow);
 }
-/* A sticker, not an inlay. */
+/* A sticker, not an inlay — and it hangs off the BOTTOM-right corner, which
+   is the one corner of the drawn face that carries nothing. Top-right is
+   where the corner stamp puts the suit mark, and a 22px opaque disc there
+   erased it on every tile the player had already used a copy of. */
 .tile__count {
-  position: absolute; top: -6px; right: -6px; z-index: 2;
+  position: absolute; bottom: -6px; right: -6px; z-index: 2;
   width: 22px; height: 22px; border-radius: var(--r-pill);
   background: var(--mj-ink); color: var(--mj-card);
   font: 500 12px/22px var(--f-display); text-align: center;
@@ -202,14 +199,17 @@ span.tile { cursor: default; }
   background: none; box-shadow: none; transform: none;
   outline: 2px dashed var(--mj-slot-edge); outline-offset: -2px;
 }
+/* The artwork stays at full strength — it is how the player knows WHICH tile
+   they are missing. What a ghost loses is weight, not ink. */
 /* The "+" is a BADGE, drawn on ::before and hanging outside the tile.
-   Drawn on ::after it collided with two things at once: the 白 frame, which
-   left a needed White Dragon a completely blank box with none of its three
-   encodings, and the suit rule, whose third pip it painted over. ::after is
-   left entirely alone here so both survive. */
+   BOTTOM-right, not top-right. Top-right is where the corner stamp puts the
+   suit mark, and the badge was painting over it — on the one screen whose
+   entire job is to name a tile the player does not have yet, and where the
+   pips are therefore doing the most work. Nothing lives in the bottom-right
+   of a face, and a ghost has no lip for the badge to fight. */
 .tile[data-needed="true"]::before {
   content: "+"; display: grid; place-items: center;
-  position: absolute; inset: -6px -6px auto auto;
+  position: absolute; inset: auto -6px -6px auto;
   width: 18px; height: 18px; border-radius: var(--r-pill);
   background: var(--mj-collect); color: var(--mj-card);
   font: 500 13px/1 var(--f-display); box-shadow: none; z-index: 2;
@@ -239,10 +239,14 @@ span.tile { cursor: default; }
 
 /* ── the empty slot: how a player sees how many tiles they still owe, so it
       gets a real 3:1 boundary rather than a hairline nobody can find. ─── */
+/* An empty slot is a GAP, and it should look like one. Filled it read as a
+   green tile, and a fourteen-tile hand opened as three rows of green tiles
+   with five real ones hidden among them. Dashed and unfilled, the felt shows
+   through and the tiles the player actually holds are the only solid things
+   in the rack. The 2px edge keeps its 3:1 boundary either way. */
 .slot {
-  aspect-ratio: 1 / 1; width: 44px; min-height: 0; border-radius: var(--r-mini);
-  background: var(--mj-slot); border: 0;
-  box-shadow: inset 0 0 0 2px var(--mj-slot-edge);
+  aspect-ratio: 4 / 5; width: 44px; min-height: 0; border-radius: var(--r-mini);
+  background: none; border: 2px dashed var(--mj-slot-edge);
 }
 
 /* ── a carved-in chip among raised tiles: the depth law doing the labelling */

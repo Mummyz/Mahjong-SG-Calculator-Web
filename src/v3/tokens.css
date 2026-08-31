@@ -96,6 +96,53 @@
   --mj-seat-n:        #E3D2FF;
   --mj-on-seat:       #12211C;
 
+  /* ── THE PUFF PALETTE.  The inks the tile artwork is carved in.  Every
+        mark is drawn twice: a BASE body and a DEEP rim that reads as the
+        shaded side of the extrusion.  Which of the two carries the shape's
+        4.5:1 boundary flips between themes — deep in light, base in dark —
+        and tiles/contrast.test.ts checks both, against every pastel body the
+        mark is actually drawn on.                                          */
+  --gy-red:       #E04B44;  --gy-red-dp:    #90201C;
+  --gy-green:     #34A96C;  --gy-green-dp:  #145F3B;
+  --gy-blue:      #4A7BE0;  --gy-blue-dp:   #1E3D8E;
+  --gy-purple:    #9166E0;  --gy-purple-dp: #4C2A8E;
+  --gy-gold:      #EDB43C;  --gy-gold-dp:   #8A5C08;
+  --gy-pink:      #F27BA4;  --gy-pink-dp:   #9E2F58;
+  --gy-orange:    #F49141;  --gy-orange-dp: #964A0E;
+  --gy-teal:      #33B0A4;  --gy-teal-dp:   #0E605A;
+  --gy-cream:     #FFF8EC;  --gy-cream-dp:  #A08553;
+  --gy-ink:       #4E4038;  --gy-ink-dp:    #241B15;
+
+  /* The same ink AS TEXT. A corner stamp is words, not a shape, so it takes
+     the layer that reads on the body — the deep rim in light, the bright base
+     in dark — at the 4.5:1 text bar rather than the 3:1 graphic one. Without
+     this the whole set's rank numerals vanished in dark mode. */
+  --gy-red-tx: #90201C;
+  --gy-green-tx: #145F3B;
+  --gy-blue-tx: #1E3D8E;
+  --gy-purple-tx: #4C2A8E;
+  --gy-gold-tx: #8A5C08;
+  --gy-pink-tx: #9E2F58;
+  --gy-orange-tx: #964A0E;
+  --gy-teal-tx: #0E605A;
+  --gy-cream-tx: #A08553;
+  --gy-ink-tx: #241B15;
+
+  /* ── PASTEL BODIES.  A pale wash of the mark's own hue, per the reference
+        sheet.  Set on the tile as the two stops of its face gradient, so the
+        gloss, the lip and the press all keep working untouched.            */
+  --mj-p-cream-hi: #FFFDF7; --mj-p-cream: #FBEFD9;
+  --mj-p-mint-hi:  #F5FCF8; --mj-p-mint:  #DDF3E7;
+  --mj-p-peach-hi: #FFF8F2; --mj-p-peach: #FFE3D3;
+  --mj-p-lav-hi:   #FAF6FF; --mj-p-lav:   #EBE1FB;
+  --mj-p-sky-hi:   #F4F9FF; --mj-p-sky:   #DEEAFB;
+  --mj-p-blush-hi: #FFF6F9; --mj-p-blush: #FEDFE8;
+
+  /* The bloom behind the masthead. Decoration only — nothing is ever read on
+     it, so it is tuned for air rather than for contrast. */
+  --mj-bloom-a:       rgb(255 205 150 / 0.55);
+  --mj-bloom-b:       rgb(160 232 200 / 0.55);
+
   /* ── DEPTH & FOCUS ────────────────────────────────────────────────── */
   --mj-shadow:        rgb(22 36 31 / 0.28);
   --mj-shadow-soft:   rgb(22 36 31 / 0.12);
@@ -116,8 +163,12 @@
         CJK is a system stack and is NEVER webfont-loaded.                 */
   --f-display: "Fredoka", "Trebuchet MS", ui-rounded, system-ui, sans-serif;
   --f-body:    "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-cjk:     "PingFang TC", "Hiragino Sans", "Heiti TC",
-               "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  /* Noto Sans TC leads since Run 5: it is subset-loaded by v3/index.html, so
+     the tile faces are the SAME on every device rather than whatever the
+     platform happens to ship. The system stack is the fallback, and the
+     written captions are the fallback's fallback. */
+  --f-cjk:     "Noto Sans TC", "PingFang TC", "Hiragino Sans", "Heiti TC",
+               "Microsoft JhengHei", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -181,6 +232,38 @@
     --mj-seat-w:        #A9BDF0;  /* 8.91:1                                */
     --mj-seat-n:        #C4ADEB;  /* 8.35:1                                */
     --mj-on-seat:       #12211C;
+
+    --gy-red:       #FF9C96;  --gy-red-dp:    #7A1512;
+    --gy-green:     #56D69B;  --gy-green-dp:  #0C4B2D;
+    --gy-blue:      #93B4FF;  --gy-blue-dp:   #16307A;
+    --gy-purple:    #C3A2FF;  --gy-purple-dp: #3C1F78;
+    --gy-gold:      #F4C864;  --gy-gold-dp:   #6E4805;
+    --gy-pink:      #FFA3C0;  --gy-pink-dp:   #85204A;
+    --gy-orange:    #FFB16E;  --gy-orange-dp: #7C3A08;
+    --gy-teal:      #5CD3C6;  --gy-teal-dp:   #094C47;
+    --gy-cream:     #F6EAD4;  --gy-cream-dp:  #6E5828;
+    --gy-ink:       #D8CCC2;  --gy-ink-dp:    #17110D;
+
+    --gy-red-tx: #FF9C96;
+    --gy-green-tx: #56D69B;
+    --gy-blue-tx: #93B4FF;
+    --gy-purple-tx: #C3A2FF;
+    --gy-gold-tx: #F4C864;
+    --gy-pink-tx: #FFA3C0;
+    --gy-orange-tx: #FFB16E;
+    --gy-teal-tx: #5CD3C6;
+    --gy-cream-tx: #F6EAD4;
+    --gy-ink-tx: #D8CCC2;
+
+    --mj-p-cream-hi: #2F2A21; --mj-p-cream: #241F17;
+    --mj-p-mint-hi:  #1F342B; --mj-p-mint:  #16261F;
+    --mj-p-peach-hi: #35271E; --mj-p-peach: #291C15;
+    --mj-p-lav-hi:   #2B2439; --mj-p-lav:   #201A2C;
+    --mj-p-sky-hi:   #1F2939; --mj-p-sky:   #161F2C;
+    --mj-p-blush-hi: #34212A; --mj-p-blush: #29171F;
+
+    --mj-bloom-a:       rgb(255 174 69 / 0.13);
+    --mj-bloom-b:       rgb(63 220 168 / 0.13);
 
     --mj-shadow:        rgb(0 0 0 / 0.55);
     --mj-shadow-soft:   rgb(0 0 0 / 0.35);
@@ -248,6 +331,38 @@
   --mj-seat-w:        #A9BDF0;
   --mj-seat-n:        #C4ADEB;
   --mj-on-seat:       #12211C;
+
+  --gy-red:       #FF9C96;  --gy-red-dp:    #7A1512;
+  --gy-green:     #56D69B;  --gy-green-dp:  #0C4B2D;
+  --gy-blue:      #93B4FF;  --gy-blue-dp:   #16307A;
+  --gy-purple:    #C3A2FF;  --gy-purple-dp: #3C1F78;
+  --gy-gold:      #F4C864;  --gy-gold-dp:   #6E4805;
+  --gy-pink:      #FFA3C0;  --gy-pink-dp:   #85204A;
+  --gy-orange:    #FFB16E;  --gy-orange-dp: #7C3A08;
+  --gy-teal:      #5CD3C6;  --gy-teal-dp:   #094C47;
+  --gy-cream:     #F6EAD4;  --gy-cream-dp:  #6E5828;
+  --gy-ink:       #D8CCC2;  --gy-ink-dp:    #17110D;
+
+  --gy-red-tx: #FF9C96;
+  --gy-green-tx: #56D69B;
+  --gy-blue-tx: #93B4FF;
+  --gy-purple-tx: #C3A2FF;
+  --gy-gold-tx: #F4C864;
+  --gy-pink-tx: #FFA3C0;
+  --gy-orange-tx: #FFB16E;
+  --gy-teal-tx: #5CD3C6;
+  --gy-cream-tx: #F6EAD4;
+  --gy-ink-tx: #D8CCC2;
+
+  --mj-p-cream-hi: #2F2A21; --mj-p-cream: #241F17;
+  --mj-p-mint-hi:  #1F342B; --mj-p-mint:  #16261F;
+  --mj-p-peach-hi: #35271E; --mj-p-peach: #291C15;
+  --mj-p-lav-hi:   #2B2439; --mj-p-lav:   #201A2C;
+  --mj-p-sky-hi:   #1F2939; --mj-p-sky:   #161F2C;
+  --mj-p-blush-hi: #34212A; --mj-p-blush: #29171F;
+
+  --mj-bloom-a:       rgb(255 174 69 / 0.13);
+  --mj-bloom-b:       rgb(63 220 168 / 0.13);
 
   --mj-shadow:        rgb(0 0 0 / 0.55);
   --mj-shadow-soft:   rgb(0 0 0 / 0.35);

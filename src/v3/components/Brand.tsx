@@ -1,54 +1,22 @@
 import { t } from '../../i18n'
 
 /**
- * The wordmark and the host.
+ * The masthead.
  *
- * "Mahjongyuk" is "Mahjong, yuk!" — an invitation, so the mark is the word
- * with the invitation landing on it as a tile. The exclamation mark is drawn
- * rather than typed: a bar over a ring, which reads as "!" and also as 一筒,
- * the one-dot coin.
+ * Run 5 replaced the drawn wordmark with the owner's own logo artwork. It is
+ * one image and it carries the whole identity — the name, the invitation, the
+ * tiles and the host — so everything around it went quiet: the green wall of
+ * tile backs that used to run behind it is gone, and what is left is a soft
+ * bloom of the page's own two hues.
  *
- * Everything is vector and token-coloured. If the webfont never arrives the
- * letters fall back and the tile, the lip, the gloss, the exclamation and the
- * bird are all still there — the identity never depends on the network.
+ * The alt text is the brand name and nothing else. The tagline underneath is
+ * real text, so a reader who never sees the image still gets the promise.
  */
-
-const FACE = 'Fredoka, "Trebuchet MS", ui-rounded, system-ui, sans-serif'
-
-export function Wordmark() {
+export function Logo() {
   return (
-    <h1 class="wm" aria-label={t('app.name')}>
-      <svg class="wm__svg" viewBox="0 0 300 96" width="300" height="96"
-        xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-        <defs>
-          <linearGradient id="wmFace" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="var(--mj-mandarin-hi)" />
-            <stop offset="1" stop-color="var(--mj-mandarin)" />
-          </linearGradient>
-          <linearGradient id="wmGloss" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".55" />
-            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0" />
-          </linearGradient>
-        </defs>
-
-        <text x="0" y="70" font-family={FACE} font-size="42" font-weight="600"
-          letter-spacing="-0.6" fill="var(--mj-ink)">mahjong</text>
-
-        <g transform="rotate(-7 220 52)">
-          <rect x="187" y="26" width="66" height="64" rx="17" fill="var(--mj-mandarin-lip)" />
-          <rect x="187" y="20" width="66" height="64" rx="17" fill="url(#wmFace)" />
-          <rect x="190" y="23" width="60" height="26" rx="13" fill="url(#wmGloss)" />
-          <text x="193" y="61" font-family={FACE} font-size="24" font-weight="600"
-            fill="var(--mj-on-mandarin)">yuk</text>
-          <rect x="236" y="35" width="6.5" height="16" rx="3.2" fill="var(--mj-on-mandarin)" />
-          <circle cx="239.2" cy="59" r="4.6" fill="none"
-            stroke="var(--mj-on-mandarin)" stroke-width="2.8" />
-        </g>
-
-        <g transform="translate(163,-14) scale(.72) rotate(6 32 32)">
-          <CuitBody mood="idle" />
-        </g>
-      </svg>
+    <h1 class="logo">
+      <img class="logo__img" src="/brand/logo-mahjongyuk.png" alt={t('app.name')}
+        width="560" height="511" fetchpriority="high" decoding="async" />
     </h1>
   )
 }
@@ -104,14 +72,5 @@ function CuitBody({ mood }: { mood: Mood }) {
         <circle cx="62" cy="10" r="1.5" fill="#3FBF97" />
       </g>
     </g>
-  )
-}
-
-/** The wall the front door opens on: real tile backs, clipped by the hero. */
-export function HeroWall() {
-  return (
-    <div class="hero__wall" aria-hidden="true">
-      {Array.from({ length: 8 }, (_, i) => <i key={i} />)}
-    </div>
   )
 }

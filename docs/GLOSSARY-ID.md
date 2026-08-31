@@ -1,5 +1,17 @@
 # Bahasa Indonesia — the glossary
 
+> **SCOPE, from 2026-08-31.** The owner narrowed the language policy: the
+> interface is English in both modes, and the switch reaches only the two
+> variant descriptions on the front door (`TRANSLATED` in
+> `src/i18n/index.ts`). **This glossary is binding on those strings** and on
+> anything a future widening switches back on.
+>
+> It is NOT a licence to flag English UI text as code-mixing. The English
+> interface is a decision, not a defect. See CLAUDE.md → LANGUAGES.
+>
+> `src/i18n/id.json` is kept complete and held to this glossary by
+> `src/i18n/coverage.test.ts`, so it does not rot while it waits.
+
 Per the constitution the glossary is the **first** i18n deliverable: it decides
 which game terms stay untranslated before a single string is written, and it is
 then enforced on every string. The Language Critic owns compliance.

@@ -103,4 +103,47 @@ describe('the /v3/ preview, and the root it must not disturb', () => {
     }
     expect(bad, 'one app surface importing the other').toEqual([])
   })
+
+  /**
+   * THE ROOT'S STRINGS ARE PART OF THE ROOT.
+   *
+   * The manifest above hashes the eighteen files under src/ui/ — and every
+   * one of them imports src/i18n/en.json, which is NOT frozen and which Run 5
+   * edited heavily. Three times in one run a shared key was changed in a way
+   * that reached the frozen app: a {groups} placeholder it never passes, a
+   * {wind} placeholder it never passes, and a hint describing a badge only
+   * the new screen draws.
+   *
+   * So the STRINGS the root renders are pinned too. Changing one is allowed —
+   * it is sometimes a strict improvement, and Run 5 made two on purpose — but
+   * it has to be a decision, which means updating this hash and saying why.
+   */
+  it('pins every string the frozen root renders', () => {
+    const uiDir = fileURLToPath(new URL('../ui/', import.meta.url))
+    const walk = (d: string): string[] =>
+      readdirSync(d, { withFileTypes: true })
+        .flatMap((e) => (e.isDirectory() ? walk(`${d}${e.name}/`) : [`${d}${e.name}`]))
+    const src = walk(uiDir).filter((f) => /\.tsx?$/.test(f))
+      .map((f) => readFileSync(f, 'utf8')).join('\n')
+    const en = JSON.parse(readFileSync(
+      fileURLToPath(new URL('../i18n/en.json', import.meta.url)), 'utf8')) as Record<string, string>
+
+    const keys = new Set<string>()
+    // t('key') and tv(variant, 'key'), plus the per-variant siblings tv() can
+    // reach, and the template families the root builds by interpolation.
+    for (const m of src.matchAll(/\b(?:t|tv)\(\s*(?:[A-Za-z]+\s*,\s*)?'([^']+)'/g)) keys.add(m[1]!)
+    for (const m of src.matchAll(/`([a-z][a-zA-Z.]*)\.\$\{/g)) {
+      for (const k of Object.keys(en)) if (k.startsWith(`${m[1]!}.`)) keys.add(k)
+    }
+    for (const k of [...keys]) {
+      for (const v of ['singapore', 'hongkong']) if (en[`${k}.${v}`] !== undefined) keys.add(`${k}.${v}`)
+    }
+
+    const pinned = [...keys].filter((k) => en[k] !== undefined).sort()
+      .map((k) => `${k}\u0000${en[k]}`).join('\u0001')
+    const hash = createHash('sha256').update(pinned).digest('hex')
+    expect(pinned.length, 'found no root strings to pin — the scan broke').toBeGreaterThan(2000)
+    expect(hash, `${keys.size} keys reach the frozen root; one of their values changed`)
+      .toBe('0bdc6fc1e26ef4cdf1acfb289e1380f44d126b193ee498ba08db3ec921f6bc13')
+  })
 })

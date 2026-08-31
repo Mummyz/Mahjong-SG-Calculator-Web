@@ -73,7 +73,14 @@ jobs:
           [ "$V3" != "$BUNDLE" ] \
             || { echo "::error::/v3/ and the root are serving the same bundle"; exit 1; }
 
-          echo "CNAME ok; /v1/ byte-identical; root ships ${BUNDLE}; /v3/ ships ${V3}; /app/ present"
+          # Run 5. The front door IS the logo now — if the asset does not ship,
+          # the masthead is alt text on an empty page.
+          test -f dist/brand/logo-mahjongyuk.png \
+            || { echo "::error::the brand logo is missing from the build"; exit 1; }
+          grep -q '/brand/logo-mahjongyuk.png' "dist${V3}" \
+            || { echo "::error::/v3/ no longer references the brand logo"; exit 1; }
+
+          echo "CNAME ok; /v1/ byte-identical; root ships ${BUNDLE}; /v3/ ships ${V3}; logo present; /app/ present"
 
       - uses: actions/configure-pages@v6
 

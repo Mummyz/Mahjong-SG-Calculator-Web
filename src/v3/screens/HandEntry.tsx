@@ -2,13 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { t } from '../../i18n'
 import { Tile, BonusTile, tileName } from '../components/Tile'
 import { Signboard } from '../components/Signboard'
-import { Seats } from '../components/Seats'
 import { Prediction } from '../components/Prediction'
 import { isHonour, type BonusId, type TileId, tally } from '../../engine/core/tiles'
 import type { MeldInput } from '../../engine/core/hand'
 import {
   buildMeld, concealedKongs, concealedTarget, concealedTargets, handIsComplete,
-  handIsReadable, legalNextTiles, prevailingWind, tilesRemaining, yourSeat,
+  handIsReadable, legalNextTiles, playerOnWind, prevailingWind, tilesRemaining,
+  yourSeat,
   type MeldKind, type TableState,
 } from '../../engine/session/table'
 import { VARIANTS, inventoryOf, type VariantId } from '../../engine/variants'
@@ -157,16 +157,41 @@ export function HandEntry({
     if (emptied) { setDeclare(null); setPicking(false) }
   }, [emptied])
 
-  const declareRef = useRef<HTMLDivElement>(null)
   const gridRef = useRef<HTMLDivElement>(null)
+  const tabsRef = useRef<HTMLDivElement>(null)
+  const popRef = useRef<HTMLDivElement>(null)
+  const declareBtnRef = useRef<HTMLButtonElement>(null)
+  /**
+   * The chooser is a popup anchored over the dock, not a row in the scroll.
+   * As a row it sat under the prediction panel — a thousand pixels below the
+   * fold with the panel open — and answering it scrolled the wall away. Over
+   * the dock it costs the bottom eighty pixels of the wall and nothing else,
+   * which is the whole point: the tiles you are about to tap stay on screen.
+   */
   useEffect(() => {
-    if (picking) declareRef.current?.scrollIntoView({ block: 'end' })
+    if (picking) popRef.current?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus()
   }, [picking])
-  // Choosing a kind unmounts the chooser and asks the player to tap a tile —
-  // and the scroll position was still pinned at the bottom, so "Tap the first
-  // tile of the run" was shown with zero wall tiles on screen.
+  /**
+   * Escape gets you out of BOTH halves of a declare, and closing the chooser
+   * puts the reading cursor back on the button that opened it. Focus was
+   * falling to <body> on every exit, which sends a screen reader back to the
+   * top of the page from the bottom of it.
+   */
   useEffect(() => {
-    if (declare) gridRef.current?.scrollIntoView({ block: 'start' })
+    if (!focus) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (picking) { setPicking(false); declareBtnRef.current?.focus() }
+      else setDeclare(null)
+    }
+    addEventListener('keydown', onKey)
+    return () => removeEventListener('keydown', onKey)
+  }, [focus, picking])
+  // Choosing a kind asks the player to tap a tile, so the wall goes to the
+  // top — and the TABS go with it, since the tile they want may be in another
+  // suit and the way back to it was scrolling off the screen.
+  useEffect(() => {
+    if (declare) tabsRef.current?.scrollIntoView({ block: 'start' })
   }, [declare?.kind])
 
   // A hand holds four sets and a pair, so a fifth meld cannot exist, and a
@@ -181,9 +206,13 @@ export function HandEntry({
   }
   const canDeclare = (['chow', 'pong', 'kong'] as MeldKind[]).some(meldRoom)
 
-  /** Declare says what is actually left rather than just going dead. */
-  const declareLabel = (): string => {
-    if (canDeclare && !complete) return t('hand.declare')
+  /**
+   * Why declaring is off, as a SENTENCE — and it goes in the note, not on the
+   * button. On the button it was up to 231px of a 328px dock row, and the
+   * primary action was squeezed into what was left of it.
+   */
+  const declareWhy = (): string | null => {
+    if (canDeclare && !complete) return null
     if (complete) return t('hand.declareComplete')
     if (hand.melds.length >= 4) return t('hand.declareNoRoom')
     if (slotsLeft === 1) return t('hand.declareOneLeft')
@@ -244,7 +273,7 @@ export function HandEntry({
         ? t('hand.pickChowFirst')
         : t('hand.pickChowMore', { n: tilesRemaining('chow', declare.chosen) })
       : declare.kind === 'pong' ? t('hand.pickPong') : t('hand.pickKong')
-    : refused ? t('hand.full') : null
+    : refused ? t('hand.full') : picking ? null : declareWhy()
 
   const picker = pickers.find((p) => p.key === tab) ?? null
   const suit = picker && picker.tiles[0]!.length === 2 ? picker.tiles[0]![1] : undefined
@@ -253,61 +282,32 @@ export function HandEntry({
     return (
       <Tile key={id} id={id} count={used.get(id) ?? 0}
         onClick={focus && !declare ? undefined : tapWall}
-        taken={chosen} dead={!chosen && (legal ? !legal.has(id) : picking)} />
+        taken={chosen}
+        /* Face-down means "not a legal next tile", and that is only knowable
+           once a KIND has been chosen. While the chooser is open the wall is
+           inert but stays face-up: turning forty tiles over to ask a
+           three-way question was the opposite of keeping the wall in view. */
+        dead={!chosen && legal ? !legal.has(id) : false} />
     )
   }
 
+  /**
+   * Two focus modes, not one. While the KIND is being chosen the wall is
+   * scenery: it stays face-up (that is the whole point of the popup) but it
+   * must not look tappable, because a tile that depresses under a thumb and
+   * does nothing reads as a broken app rather than as a question waiting.
+   */
+  const mode = declare ? 'meld' : picking ? 'pick' : undefined
+
   return (
-    <div class="shell" data-focus={focus ? 'true' : undefined}>
+    <div class="shell" data-focus={mode}>
       <Signboard table={table} stake={stake} limit={limit}
         onMenu={focus ? () => {} : onMenu} disabled={focus} />
-      <Seats table={table} />
-
-      <div class="tabs" role="tablist" aria-label={t('hand.pickerSuits')}>
-        {tabs.map((x) => (
-          <button type="button" key={x.key} class="tab" role="tab"
-            aria-selected={tab === x.key ? 'true' : 'false'}
-            disabled={focus && x.key === BONUS_TAB}
-            onClick={() => setTab(x.key)}>
-            <span class="tab__cjk" aria-hidden="true">{x.cjk}</span>
-            <span class="tab__cap">{t(`hand.tab.${x.key}`)}</span>
-          </button>
-        ))}
-      </div>
 
       <div class="scroll">
-        {picker && (
-          <div class={`grid grid--${suit ? 5 : 4}`} style="margin-top:10px" ref={gridRef}>
-            {picker.tiles.map(wallTile)}
-            <div class="stampcell" aria-hidden="true">
-              <span class="stampcell__glyph">{suit ? SUIT_CJK[suit] : picker.cjk}</span>
-              <span class="stampcell__n">×{picker.total}</span>
-            </div>
-          </div>
-        )}
-        {tab === BONUS_TAB && (
-          <>
-            <p class="sub" style="margin:10px 0 6px">{t('hand.bonusHint')}</p>
-            {inv.bonusGroups.map((g) => (
-              <section key={g.key}>
-                <div class="grouplabel">
-                  <span class="caps">{t(`tileinfo.group.${g.key}`)}</span>
-                  <span class="grouplabel__rule" />
-                </div>
-                <div class="grid grid--4 bonusgrid">
-                  {g.tiles.map((b) => (
-                    <BonusTile key={b} id={b as BonusId} seat={yourSeat(table)}
-                      held={hand.bonus.includes(b as BonusId)}
-                      onClick={focus
-                        ? undefined
-                        : (id) => setHand({ bonus: toggle(hand.bonus, id) })} />
-                  ))}
-                </div>
-              </section>
-            ))}
-          </>
-        )}
-
+        {/* YOUR HAND FIRST. The tray used to sit below the wall, so on a 360px
+            screen the thing the player is building was never on screen at the
+            moment they were building it. */}
         <div class="trayhead">
           <span class="caps">{t('hand.yourHand')}</span>
           <span class="trayhead__n">
@@ -381,55 +381,130 @@ export function HandEntry({
             ? hand.bonus.map((b) => (
               <span class="bonusheld__x" key={b}>{t(`tile.bonus.${b}`)}</span>
             ))
-            : <span class="bonusheld__none">{t('hand.bonusNone')}</span>}
+            : (
+              /* Built from the variant's OWN bonus groups. As a fixed string
+                 it said "Flowers, seasons, animals" on a Hong Kong table,
+                 which is the Run 4 leakage bug in words instead of tiles.
+                 Its own key, because the FROZEN root at / still renders
+                 hand.bonusNone with no variables and would have printed the
+                 placeholder verbatim. */
+              <span class="bonusheld__none">{t('hand.bonusNoneIn', {
+                groups: inv.bonusGroups
+                  .map((g) => t(`tileinfo.group.${g.key}`))
+                  .join(t('list.join')),
+              })}</span>
+            )}
           <span class="bonusheld__go">{t('hand.bonusAdd')}</span>
         </button>
 
-        {picking && (
-          <div class="declarerow" ref={declareRef}>
-            {(['chow', 'pong', 'kong'] as MeldKind[]).map((k) => (
-              <button type="button" key={k} class="declareopt" disabled={!meldRoom(k)}
-                onClick={() => {
-                  // The bonus tab has no wall tiles on it, so a declare
-                  // started from there would strand the player in focus mode.
-                  if (tab === BONUS_TAB) setTab(tabs[0]!.key)
-                  setDeclare({ kind: k, chosen: [] }); setPicking(false)
-                }}>
-                <span class="declareopt__k">
-                  {t(`hand.declare${k[0]!.toUpperCase()}${k.slice(1)}`)}
-                </span>
-                <span class="declareopt__s">
-                  {t(`hand.declare${k[0]!.toUpperCase()}${k.slice(1)}Sub`)}
-                </span>
-              </button>
+        {/* THE WALL. Its tabs stick to the top of the scroll, so scrolling
+            down the wall never takes the way back to another suit with it. */}
+        <div class="tabs" role="tablist" aria-label={t('hand.pickerSuits')} ref={tabsRef}>
+          {tabs.map((x) => (
+            <button type="button" key={x.key} class="tab" role="tab"
+              aria-selected={tab === x.key ? 'true' : 'false'}
+              disabled={focus && x.key === BONUS_TAB}
+              onClick={() => setTab(x.key)}>
+              <span class="tab__cjk" aria-hidden="true">{x.cjk}</span>
+              <span class="tab__cap">{t(`hand.tab.${x.key}`)}</span>
+            </button>
+          ))}
+        </div>
+
+        {picker && (
+          <div class={`grid grid--${suit ? 5 : 4}`} style="margin-top:10px" ref={gridRef}>
+            {picker.tiles.map(wallTile)}
+            <div class="stampcell" aria-hidden="true">
+              <span class="stampcell__glyph">{suit ? SUIT_CJK[suit] : picker.cjk}</span>
+              <span class="stampcell__n">×{picker.total}</span>
+            </div>
+          </div>
+        )}
+        {tab === BONUS_TAB && (
+          <>
+            {/* Its own key. The seat badge is a NUMBER only in v3; the frozen
+                root at / still draws a letter, and it renders hand.bonusHint
+                too — it would have told a player to read a number that is not
+                there. Third time this run that the shared bundle bit. */}
+            <p class="sub" style="margin:10px 0 6px">{t('hand.bonusHintSeats')}</p>
+            {inv.bonusGroups.map((g) => (
+              <section key={g.key}>
+                <div class="grouplabel">
+                  <span class="caps">{t(`tileinfo.group.${g.key}`)}</span>
+                  <span class="grouplabel__rule" />
+                </div>
+                <div class="grid grid--4 bonusgrid">
+                  {g.tiles.map((b) => (
+                    <BonusTile key={b} id={b as BonusId} seat={yourSeat(table)}
+                      playerOf={(w) => playerOnWind(table, w) + 1}
+                      held={hand.bonus.includes(b as BonusId)}
+                      onClick={focus
+                        ? undefined
+                        : (id) => setHand({ bonus: toggle(hand.bonus, id) })} />
+                  ))}
+                </div>
+              </section>
             ))}
-            <button type="button" class="btn" onClick={() => setPicking(false)}>
+          </>
+        )}
+
+        {/* Gated on focus like every other control: collapsing the panel
+            mid-declare threw the wall a screen and a half up the page. */}
+        <Prediction variant={variant} hand={hand} rules={{ limit, halfPayment }}
+          ctx={{ seat: yourSeat(table), prevailing: prevailingWind(table) }}
+          open={predictOpen} onToggle={focus ? () => {} : onPredictToggle}
+          frozen={focus} />
+      </div>
+
+      <div class="dock">
+        {picking && (
+          <div class="declarepop" ref={popRef} role="dialog"
+            aria-label={t('hand.declareTitle')}>
+            <p class="declarepop__t">{t('hand.declareTitle')}</p>
+            <div class="declarepop__opts">
+              {(['chow', 'pong', 'kong'] as MeldKind[]).map((k) => (
+                <button type="button" key={k} class="declareopt" disabled={!meldRoom(k)}
+                  onClick={() => {
+                    // The bonus tab has no wall tiles on it, so a declare
+                    // started from there would strand the player in focus mode.
+                    if (tab === BONUS_TAB) setTab(tabs[0]!.key)
+                    setDeclare({ kind: k, chosen: [] }); setPicking(false)
+                  }}>
+                  <span class="declareopt__k">
+                    {t(`hand.declare${k[0]!.toUpperCase()}${k.slice(1)}`)}
+                  </span>
+                  <span class="declareopt__s">
+                    {t(`hand.declare${k[0]!.toUpperCase()}${k.slice(1)}Sub`)}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <button type="button" class="linkbtn declarepop__x"
+              onClick={() => { setPicking(false); declareBtnRef.current?.focus() }}>
               {t('hand.declareCancel')}
             </button>
           </div>
         )}
-        <Prediction variant={variant} hand={hand} rules={{ limit, halfPayment }}
-          ctx={{ seat: yourSeat(table), prevailing: prevailingWind(table) }}
-          open={predictOpen} onToggle={onPredictToggle} />
-      </div>
-
-      <div class="dock">
+        {/* Text only. The Cancel control used to live in here, and when Run 5
+            gave the note a fixed 30px box with overflow hidden it clipped a
+            44px button down to a strip the thumb could not reach the top or
+            bottom of. It is a button, so it sits with the buttons. */}
         <p class="docknote" role="status" data-empty={note ? undefined : 'true'}>
           <span>{note ?? ''}</span>
-          {declare && (
-            <button type="button" class="linkbtn" onClick={() => setDeclare(null)}>
-              {t('hand.declareCancel')}
-            </button>
-          )}
         </p>
         {/* Both of the screen's actions live in the dock. Declare used to sit
             in the scroll flow under the prediction panel, which put it a
             thousand pixels below the fold the moment the panel was open. */}
         <div class="dock__row">
-          {!picking && !declare && (
-            <button type="button" class="btn btn--ghost"
-              disabled={complete || !canDeclare} onClick={() => setPicking(true)}>
-              {declareLabel()}
+          {declare ? (
+            <button type="button" class="btn btn--ghost" onClick={() => setDeclare(null)}>
+              {t('hand.declareCancel')}
+            </button>
+          ) : (
+            <button type="button" class="btn btn--ghost" aria-expanded={picking}
+              ref={declareBtnRef}
+              disabled={complete || !canDeclare} onClick={() => setPicking(!picking)}>
+              {t('hand.declare')}
             </button>
           )}
           <button type="button" class="btn btn--primary btn--block"

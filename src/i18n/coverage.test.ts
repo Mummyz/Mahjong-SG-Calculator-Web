@@ -12,7 +12,7 @@ import { readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import en from './en.json'
-import { LOCALE_NAMES } from './index'
+import { LOCALE_NAMES, TRANSLATED } from './index'
 
 // Both corpora, because both variants ship. Between them they are the
 // exhaustive list of what the engine can emit.
@@ -91,6 +91,34 @@ describe('i18n coverage', () => {
       }
     }
     expect(missing, `t() keys with no string`).toEqual([])
+  })
+
+  /**
+   * THE SHARED-BUNDLE TRAP, and Run 5 walked straight into it.
+   *
+   * src/ui/ is the FROZEN Run 3 app still served at `/`. Its components
+   * cannot be edited — but it reads the SAME en.json as the app being built.
+   * Run 5 gave hand.bonusNone a {groups} placeholder for the new screen, and
+   * the frozen screen, which calls it with no variables, would have printed
+   * "{groups} — none" to a player at `/`.
+   *
+   * So: a key called WITHOUT a variables object must have no placeholder in
+   * it. That is checkable, and now it is checked.
+   */
+  it('never gives a placeholder to a string that is called without one', () => {
+    const offenders: string[] = []
+    for (const file of uiFiles) {
+      const src = readFileSync(file, 'utf8')
+      // t('key') closed immediately — no comma, so no variables passed.
+      for (const m of src.matchAll(/\bt\(\s*'([^']+)'\s*\)/g)) {
+        const key = m[1]!
+        const val = (en as Record<string, string>)[key]
+        if (val && /\{\w+\}/.test(val)) {
+          offenders.push(`${file.split('/').slice(-2).join('/')}: t('${key}') → "${val}"`)
+        }
+      }
+    }
+    expect(offenders, 'a placeholder that will print verbatim').toEqual([])
   })
 
   it('has no dead strings in the bundle', () => {
@@ -208,6 +236,55 @@ const enOf = en as Record<string, string>
 const BORROWED = ['Mahjongyuk', 'fan', 'pong', 'kong', 'chow']
 
 describe('Bahasa Indonesia', () => {
+  /**
+   * LANGUAGE POLICY, owner's decision of 2026-08-31. The interface is English
+   * in both modes; the switch reaches only the two variant descriptions. So
+   * this suite has two jobs now, and they have different bars.
+   *
+   * THE LANGUAGE CRITIC'S SCOPE is TRANSLATED and nothing else. It reads the
+   * strings a player can actually see in Indonesian. An English word anywhere
+   * else in this bundle is not code-mixing, because nobody will ever read it.
+   *
+   * THE REST OF THE BUNDLE still gets hygiene checks — complete, no extras,
+   * no blanks, placeholders intact, CJK untouched — so that the day the owner
+   * widens the policy again, what switches on is not three years of rot.
+   */
+  const LIVE = [...TRANSLATED]
+
+  it('is the two strings the switch actually reaches', () => {
+    // If this list ever grows, the Language Critic's scope grows with it, and
+    // that is a decision for the owner rather than a side effect of an edit.
+    expect(LIVE.sort()).toEqual(['variant.hongkong.blurb', 'variant.singapore.blurb'])
+    for (const k of LIVE) expect(keys.has(k), `${k} has no English source`).toBe(true)
+  })
+
+  describe('the strings a player reads', () => {
+    it.each(LIVE)('%s is written in Indonesian', (k) => {
+      const v = idOf[k]!
+      expect(v.trim().length, 'blank').toBeGreaterThan(10)
+      expect(v, 'still the English string').not.toBe(enOf[k])
+      // A sentence with no Indonesian function word in it is a sentence that
+      // was never translated, whatever else it contains.
+      expect(/\b(dan|dengan|tanpa|dari|setiap|tiap|yang|untuk|di|ke)\b/.test(v),
+        `${k} reads as English`).toBe(true)
+    })
+
+    it.each(LIVE)('%s borrows only what the glossary allows', (k) => {
+      const allowed = new Set([...BORROWED.map((w) => w.toLowerCase()), 'hong', 'kong'])
+      const words = (x: string) =>
+        (x.replace(/\{\w+\}/g, ' ').toLowerCase().match(/[a-z]{3,}/g) ?? [])
+      const enWords = new Set(words(enOf[k] ?? ''))
+      const left = words(idOf[k]!).filter((w) => enWords.has(w) && !allowed.has(w))
+      expect(left, `English left in ${k}`).toEqual([])
+    })
+
+    it.each(LIVE)('%s uses the glossary term for a card', (k) => {
+      // GLOSSARY-ID.md, binding: the pieces are "kartu", never "ubin".
+      expect(idOf[k]!).not.toMatch(/\bubin\b/i)
+      expect(idOf[k]!).toMatch(/\bkartu\b/i)
+    })
+  })
+
   it('translates every key the English bundle has', () => {
     const missing = [...keys].filter((k) => !idKeys.has(k)).sort()
     expect(missing, `no Indonesian for ${missing.length} keys`).toEqual([])
@@ -246,39 +323,9 @@ describe('Bahasa Indonesia', () => {
     expect(wrong, 'CJK changed in translation').toEqual([])
   })
 
-  it('borrows only the five words the glossary allows', () => {
-    // A crude but effective net: an ASCII word of four letters or more that
-    // appears in the English string and survives unchanged into the Indonesian
-    // one is either a borrowing or a miss.
-    const allowed = new Set(BORROWED.map((w) => w.toLowerCase()))
-    // Placeholder NAMES are not words — they are identifiers, and a separate
-    // test above requires them to survive unrenamed. Strip them first.
-    const words = (s: string) =>
-      (s.replace(/\{\w+\}/g, ' ').toLowerCase().match(/[a-z]{4,}/g) ?? [])
-    // Proper nouns, and words that are KBBI headwords in Indonesian in their
-    // own right — absorbed loanwords, not English mixing. A player writing
-    // Indonesian writes "menu", "bonus" and "minimum".
-    const SHARED = new Set([
-      'mahjong', 'hong', 'kong', 'singapura', 'singapore', 'total', 'player',
-      'timur', 'selatan', 'barat', 'utara', 'english', 'bahasa', 'indonesia',
-      'menu', 'bonus', 'minimum', 'joker', 'poin', 'meja',
-    ])
-    const offenders: string[] = []
-    for (const k of idKeys) {
-      const enWords = new Set(words(enOf[k] ?? ''))
-      for (const w of words(idOf[k]!)) {
-        if (allowed.has(w) || SHARED.has(w)) continue
-        if (enWords.has(w)) offenders.push(`${k}: "${w}"`)
-      }
-    }
-    expect(offenders, 'English left in the Indonesian bundle').toEqual([])
-  })
-
-  it('keeps the brand and its invitation', () => {
+  it('keeps the brand spelled the one way it is spelled', () => {
     expect(idOf['app.name']).toBe('Mahjongyuk')
-    // The name IS the invitation, so the Indonesian front door has to say it.
-    const front = `${idOf['app.tagline'] ?? ''} ${idOf['variant.play'] ?? ''} ${idOf['variant.title'] ?? ''}`
-    expect(front.toLowerCase(), 'the Indonesian front door has lost its "yuk"').toContain('yuk')
+    expect(enOf['app.name']).toBe('Mahjongyuk')
   })
 
   it('names the languages in their own language', () => {
