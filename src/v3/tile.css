@@ -214,6 +214,14 @@ span.tile { cursor: default; }
   background: var(--mj-collect); color: var(--mj-card);
   font: 500 13px/1 var(--f-display); box-shadow: none; z-index: 2;
 }
+/* ── but NOT in the tray. Run 6 paints ghosts into the empty slots, where
+      every other tile-shaped thing is a button: a wall tile adds, a held tile
+      removes. A green round "+" on a 44px target in that company is button
+      vocabulary — and a tray ghost is a <span> that does nothing when tapped.
+      The dashed outline already says "not here yet", so the badge was the one
+      part of the treatment that promised an action. It stays in the
+      prediction panel, where nothing around it is tappable. */
+.tray .tile[data-needed="true"]::before { content: none; }
 
 /* ── exhausted: the tile turns over. This is the ONE case where the face is
       repainted, because the object itself has been flipped.

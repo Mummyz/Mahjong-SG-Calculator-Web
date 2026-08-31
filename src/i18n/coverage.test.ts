@@ -55,6 +55,25 @@ const uiFiles = ['../ui/', '../v3/']
   .filter((f) => /\.tsx?$/.test(f) && !f.endsWith('.test.ts'))
 
 describe('i18n coverage', () => {
+  /**
+   * NO KEY TWICE IN THE FILE.
+   *
+   * JSON.parse keeps the last of a repeated key and says nothing, so a string
+   * edited in the wrong place is silently ignored — Run 6 shipped a new
+   * concealed-kong chip for twenty minutes that the app could not see. Every
+   * other test in this file reads the PARSED bundle and is blind to it.
+   */
+  it.each([['en.json', '../i18n/en.json'], ['id.json', '../i18n/id.json']])(
+    '%s declares each key exactly once', (_name, rel) => {
+      const raw = readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8')
+      const seen = new Map<string, number>()
+      for (const m of raw.matchAll(/^\s*"([^"]+)"\s*:/gm)) {
+        seen.set(m[1]!, (seen.get(m[1]!) ?? 0) + 1)
+      }
+      const dupes = [...seen].filter(([, n]) => n > 1).map(([k]) => k)
+      expect(dupes, 'a key the parser will silently shadow').toEqual([])
+    })
+
   it('names every hand pattern the engine can produce', () => {
     const missing = [...patterns].filter((p) => !keys.has(`pattern.${p}`)).sort()
     expect(missing, `no string for pattern.${missing.join(', pattern.')}`).toEqual([])
@@ -261,7 +280,7 @@ describe('Bahasa Indonesia', () => {
     expect(both, 'a string classified twice').toEqual([])
     // A new key is TRANSLATED by default, so the English side can only grow
     // deliberately. If this number moves, somebody made a scope decision.
-    expect(ENGLISH.length, 'the English side changed size').toBe(207)
+    expect(ENGLISH.length, 'the English side changed size').toBe(214)
   })
 
   it('leaves every word a thumb lands on in English', () => {
@@ -278,8 +297,9 @@ describe('Bahasa Indonesia', () => {
 
   it('translates every sentence that explains, warns, counts or settles', () => {
     for (const k of ['hand.needTiles', 'hand.notAHand', 'predict.need',
-      'predict.drop', 'predict.awayN', 'result.payments', 'result.paysVerb',
-      'result.youCollect', 'wizard.whichTile', 'wizard.howWon', 'hand.threwIt',
+      'predict.drop', 'predict.awayFan', 'result.payments', 'result.tabThis',
+      'result.tabTotal', 'result.youCollect', 'wizard.whichTile',
+      'wizard.howWon', 'hand.threwIt', 'hand.kongDecline', 'info.round',
       'pattern.selfDraw', 'pattern.noFlowers', 'pattern.seatWind',
       'pattern.seatFlower', 'flag.heavenly.sub', 'flag.heavenly.detail',
       'table.stakeHint', 'tileinfo.groupCount', 'reject.wrongTileCount']) {

@@ -33,7 +33,9 @@ const HINT_TILES: Record<string, TileId[]> = {
   terminals: ['1m', '9p', '1s'],
 }
 
-export function Prediction({ variant, hand, ctx, rules, open, onToggle, frozen }: {
+export function Prediction({
+  variant, hand, ctx, rules, open, onToggle, frozen, ghost, onGhost,
+}: {
   variant: VariantId
   hand: KeyedHand
   ctx: Pick<WinContext, 'seat' | 'prevailing'>
@@ -42,6 +44,13 @@ export function Prediction({ variant, hand, ctx, rules, open, onToggle, frozen }
   onToggle: () => void
   /** A meld is being declared: this panel is scenery like everything else. */
   frozen?: boolean
+  /**
+   * The candidate whose tiles are currently painted into the tray as ghosts,
+   * by key — or null. PRESENTATION ONLY: see the guard in ghost.test.ts.
+   */
+  ghost?: string | null
+  /** Show this candidate's missing tiles as ghosts, or clear them. */
+  onGhost?: (key: string | null, tiles: TileId[]) => void
 }) {
   const p = useMemo(
     () => (open ? predict(VARIANTS[variant], hand, ctx, { rules }) : null),
@@ -112,7 +121,7 @@ export function Prediction({ variant, hand, ctx, rules, open, onToggle, frozen }
           )}
 
           {p.candidates.map((c) => (
-            <CandidateCard key={c.key} variant={variant} c={c} />
+            <CandidateCard key={c.key} variant={variant} c={c} ghost={ghost} onGhost={onGhost} />
           ))}
         </div>
       )}
@@ -120,7 +129,12 @@ export function Prediction({ variant, hand, ctx, rules, open, onToggle, frozen }
   )
 }
 
-function CandidateCard({ variant, c }: { variant: VariantId; c: Candidate }) {
+function CandidateCard({ variant, c, ghost, onGhost }: {
+  variant: VariantId
+  c: Candidate
+  ghost?: string | null
+  onGhost?: (key: string | null, tiles: TileId[]) => void
+}) {
   const names = [...new Set(c.patterns.filter(isHandPattern))]
   /**
    * A hand is not worth one number. Which of the missing tiles lands last, and
@@ -130,11 +144,12 @@ function CandidateCard({ variant, c }: { variant: VariantId; c: Candidate }) {
    */
   const ranged = c.fan !== c.fanBest
   const partial = c.finishOn.length < c.needed.length
-  const worth = ranged
-    ? t('predict.worthRange', { min: c.fan, max: c.fanBest })
-    : c.limitApplied
-      ? t('predict.worthCapped', { n: c.fan })
-      : t('predict.worth', { n: c.fan })
+  // "<n> tiles away : <fan or range> Fan" — one figure, one line, no "worth".
+  // The range is the engine's own floor and ceiling, not a guess.
+  const fan = ranged ? `${c.fan}\u2013${c.fanBest}` : `${c.fan}`
+  const badge = c.limitApplied
+    ? t('predict.awayFanCapped', { n: c.away, fan })
+    : t('predict.awayFan', { n: c.away, fan })
 
   return (
     <article class="card cand">
@@ -144,12 +159,7 @@ function CandidateCard({ variant, c }: { variant: VariantId; c: Candidate }) {
             ? names.map((k) => tv(variant, `pattern.${k}`)).join(' + ')
             : t('predict.plain')}
         </h3>
-        <p class="cand__meta">
-          <span class="cand__away">
-            {t('predict.awayN', { n: c.away })}
-          </span>
-          <span class="cand__fan">{worth}</span>
-        </p>
+        <p class="cand__meta"><span class="cand__fan">{badge}</span></p>
       </header>
 
       {(ranged || partial || !c.winsOnDiscard || c.bestWin === 'selfDraw') && (
@@ -182,6 +192,25 @@ function CandidateCard({ variant, c }: { variant: VariantId; c: Candidate }) {
         </>
       ) : (
         <p class="cand__label">{t('predict.stillFar', { n: c.away })}</p>
+      )}
+
+      {/* GHOSTS. The button hands the card's missing tiles to the tray to be
+          drawn as outlines. It hands over a LIST OF TILES and nothing else:
+          the hand model never learns they exist. */}
+      {/* Only where the card actually names the tiles. Past FAR the body
+          shows "still {n} away" instead of a tile list on purpose, and a
+          button offering to paint that list contradicts it. */}
+      {onGhost && c.needed.length > 0 && c.away <= FAR && (
+        <div class="cand__use">
+          <button type="button" class={`btn ${ghost === c.key ? '' : 'btn--ghost'}`}
+            aria-pressed={ghost === c.key ? 'true' : 'false'}
+            onClick={() => onGhost(
+              ghost === c.key ? null : c.key,
+              ghost === c.key ? [] : c.needed.flatMap((n) => Array<TileId>(n.count).fill(n.tile)),
+            )}>
+            {ghost === c.key ? t('predict.useThisOff') : t('predict.useThis')}
+          </button>
+        </div>
       )}
 
       {c.discard.length > 0 && (

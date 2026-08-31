@@ -1,6 +1,8 @@
 import { t } from '../../i18n'
 import { formatStake } from '../format'
-import { seatWindOf, yourSeat, type TableState } from '../../engine/session/table'
+import {
+  dealInRound, roundNumber, seatWindOf, yourSeat, type TableState,
+} from '../../engine/session/table'
 
 const WIND_GLYPH: Record<string, string> = { E: '東', S: '南', W: '西', N: '北' }
 
@@ -37,7 +39,13 @@ export function Signboard({ table, stake, limit, onMenu, disabled }: {
   return (
     <div class="signboard">
       <div class="signboard__seg">
-        <span class="signboard__k">{t('signboard.roundN', { n: table.handNumber })}</span>
+        {/* THE TRUE ROUND, 1–4, and the deal inside it. It used to be fed
+            table.handNumber under a label that means the prevailing-wind
+            cycle, so after eight deals it read "Round 8" — a state mahjong
+            cannot be in. The number is the cycle; the deal is beside it. */}
+        <span class="signboard__k">{t('signboard.roundDeal', {
+          round: roundNumber(table), deal: dealInRound(table),
+        })}</span>
         <span class="signboard__v">
           <span class="signboard__w" aria-hidden="true">{WIND_GLYPH[seat]}</span>
           <span class="sr">{t(`wind.${seat}`)}</span>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { t, tv } from '../i18n'
+import { formatStake } from './format'
 import { useLocale } from '../i18n/useLocale'
 import { LanguageToggle } from './components/LanguageToggle'
 import { VariantSelect } from './screens/VariantSelect'
@@ -7,21 +8,22 @@ import { TileInfo } from './screens/TileInfo'
 import { TableSetup, type Money } from './screens/TableSetup'
 import { HandEntry, EMPTY_HAND, type HandState } from './screens/HandEntry'
 import { Results } from './screens/Results'
+import { EndGame } from './screens/EndGame'
 import { Sheet } from './components/Sheet'
 import { usePredictionPanel } from './components/Prediction'
 import { SubmitWizard } from './components/SubmitWizard'
 import {
-  advanceTable, concealedKongs, newTable, prevailingWind, submissionMatchesHand,
-  yourSeat,
-  type TableState, type WinSubmission,
+  advanceTable, concealedKongs, dealInRound, newTable, prevailingWind, roundNumber,
+  seatWindOf, submissionMatchesHand, yourSeat,
+  type HandLedger, type TableState, type WinSubmission,
 } from '../engine/session/table'
 import type { WinFlag } from '../engine/core/variant'
 import { VARIANTS, isVariantId, keepPlayable, type VariantId } from '../engine/variants'
 import './app.css'
 import './tile.css'
 
-type Screen = 'variant' | 'tileinfo' | 'setup' | 'hand' | 'result'
-const SCREENS: Screen[] = ['variant', 'tileinfo', 'setup', 'hand', 'result']
+type Screen = 'variant' | 'tileinfo' | 'setup' | 'hand' | 'result' | 'endgame'
+const SCREENS: Screen[] = ['variant', 'tileinfo', 'setup', 'hand', 'result', 'endgame']
 
 /**
  * Opening money settings per variant. The limit is each variant's own default
@@ -47,7 +49,12 @@ interface Saved {
   submission: WinSubmission | null
   infoOrigin: Screen
   setupOrigin: Screen
+  /** Every hand this table has SETTLED, signed per player. See HandLedger. */
+  history?: HandLedger[]
 }
+
+/** What is carved on the seat's tile. Content, not copy — see CLAUDE.md. */
+const WIND_GLYPH: Record<string, string> = { E: '東', S: '南', W: '西', N: '北' }
 
 const KEY = 'mahjongyuk.table'
 
@@ -102,6 +109,24 @@ export function App() {
   const wizardRef = useRef(false)
   wizardRef.current = wizard
   const [submission, setSubmission] = useState<WinSubmission | null>(saved?.submission ?? null)
+  /**
+   * THE LEDGER. Every hand this table settled, signed and summing to zero.
+   *
+   * Only hands the app actually scored are in here: a hand somebody else won
+   * moved money the app never saw, and inventing zeros for it would make the
+   * running total quietly wrong. The end-game summary says how many of the
+   * hands played are covered, so the number is never mistaken for the night.
+   */
+  const [ledger, setLedger] = useState<HandLedger[]>(saved?.history ?? [])
+  /**
+   * The hand on the result screen, settled but not yet committed.
+   *
+   * End Game reached from a result has to include the hand the player is
+   * looking at — a final score that leaves out the last hand is the one thing
+   * nobody would trust. It is not written into the ledger, because going back
+   * and pressing Next hand would then count it twice.
+   */
+  const [pending, setPending] = useState<readonly number[] | null>(null)
   const [explain, setExplain] = useState<WinFlag | 'pao' | null>(null)
   const [started, setStarted] = useState(saved?.started ?? false)
   const [predictOpen, togglePredict] = usePredictionPanel()
@@ -148,10 +173,27 @@ export function App() {
     try {
       localStorage.setItem(KEY,
         JSON.stringify({
-          started, variant, screen, table, money, hand, submission, infoOrigin, setupOrigin,
+          started, variant,
+          // NEVER RESTORE INTO THE END-GAME SUMMARY. Its figures include
+          // `pending` — the settled-but-uncommitted hand on the result screen
+          // — and `pending` is deliberately not persisted, because writing it
+          // would let Next hand count the same hand twice. Restoring the
+          // screen without it would show a final score quietly missing the
+          // last hand, so the reload lands on the result it came from.
+          screen: screen === 'endgame' ? 'result' : screen,
+          table, money,
+          // GHOSTS ARE NEVER SAVED. They are presentation, and the state that
+          // clears them — which candidate is being shown — is component-local
+          // and does not survive a reload. Persisting the outlines but not
+          // their owner left a restored hand wearing ghosts that nothing
+          // could clear. Presentation only, in every direction, including
+          // across time.
+          hand: { ...hand, ghost: [] },
+          submission, infoOrigin,
+          setupOrigin, history: ledger,
         }))
     } catch { /* private mode, quota — the app works, it just forgets */ }
-  }, [started, variant, screen, table, money, hand, submission, infoOrigin, setupOrigin])
+  }, [started, variant, screen, table, money, hand, submission, infoOrigin, setupOrigin, ledger])
 
   const patchTable = (p: Partial<TableState>) => setTable((s) => ({ ...s, ...p }))
   const patchMoney = (p: Partial<Money>) => setMoney((s) => ({ ...s, ...p }))
@@ -190,7 +232,7 @@ export function App() {
   }
 
   const menuSheet = menu && (
-    <Sheet title={whoWon ? t('menu.whoWon') : t('menu.title')} onClose={closeMenu}>
+    <Sheet title={whoWon ? t('menu.whoWon') : t('info.title')} onClose={closeMenu}>
       {whoWon ? (
         <div class="menulist">
           {table.players.map((_, i) => i).filter((i) => i !== table.youIndex).map((i) => (
@@ -216,23 +258,60 @@ export function App() {
         </div>
       ) : (
         <div class="menulist">
-          <button type="button" class="menuitem"
-            onClick={() => { setInfoOrigin('hand'); closeMenu(); go('tileinfo') }}>
-            <span class="menuitem__k">{t('menu.tileset')}</span>
-            <span class="menuitem__s">{t('menu.tilesetSub')}</span>
-          </button>
-          {/* The prevailing wind. It scores — the seat wind and the round
-              wind are both fan — and Run 5's signboard has no room for it, so
-              this is where it is a visible fact rather than a setting. */}
-          <div class="menuitem menuitem--inert menuitem--fact">
-            <span class="menuitem__k">{t('menu.round')}</span>
-            <span class="menuitem__s">
-              {t('menu.roundSub', { wind: t(`wind.${prevailingWind(table)}`) })}
-            </span>
+          {/* FOUR BLOCKS. The sheet had six rows, three of which were settings
+              wearing the same costume as the facts beside them. What the table
+              IS is read-only and comes first; the two screens that change it
+              are links inside it, so nothing was lost by folding them in. */}
+          {/* No heading: the sheet is titled "Table Information" six
+              millimetres above this block. */}
+          <div class="menuitem menuitem--inert menuitem--fact infoblock">
+            <dl class="infogrid" style="margin-top:0">
+              <dt>{t('info.round')}</dt>
+              <dd>{t('info.roundValue', {
+                round: roundNumber(table), deal: dealInRound(table),
+              })} · {t(`wind.${prevailingWind(table)}`)}</dd>
+              <dt>{t('info.dealer')}</dt>
+              <dd>
+                <span class="infogrid__w" aria-hidden="true">東</span>
+                {table.players[table.dealerIndex]
+                  || t('table.playerN', { n: table.dealerIndex + 1 })}
+              </dd>
+              <dt>{t('info.seats')}</dt>
+              <dd>
+                {table.players.map((n, i) => (
+                  <span class="infoseat" key={i}>
+                    <span class="infoseat__w" aria-hidden="true">
+                      {WIND_GLYPH[seatWindOf(table, i)]}
+                    </span>
+                    {n || t('table.playerN', { n: i + 1 })}
+                    {i === table.youIndex ? ` (${t('table.youName')})` : ''}
+                  </span>
+                ))}
+              </dd>
+              <dt>{t('info.money')}</dt>
+              {/* The unit is NAMED IN THE STRING, not passed in. It used to
+                  come from result.fanUnit, which is ENGLISH_ALWAYS and has no
+                  Hong Kong sibling — so an HK table read "1 Fan = 24,000"
+                  while the result screen beside it said "1 point = 24,000".
+                  In Hong Kong the stake buys a base POINT, not a fan, so the
+                  facts panel was stating the wrong rate. Same shape as
+                  result.terms / result.terms.hongkong. */}
+              <dd>{tv(variant, 'info.moneyValue', {
+                stake: formatStake(money.stake),
+                limit: money.limit,
+              })}</dd>
+            </dl>
+            <div class="infolinks">
+              <button type="button" class="linkbtn"
+                onClick={() => { setInfoOrigin('hand'); closeMenu(); go('tileinfo') }}>
+                {t('menu.tileset')}
+              </button>
+              <button type="button" class="linkbtn"
+                onClick={() => { setSetupOrigin('hand'); closeMenu(); go('setup') }}>
+                {t('menu.settings')}
+              </button>
+            </div>
           </div>
-          {/* The switch reaches the sentences, not the buttons, so the row
-              says so rather than promising a language change it does not
-              make. */}
           <div class="menuitem menuitem--inert menuitem--lang">
             <div class="menuitem__lead">
               <span class="menuitem__k">{t('menu.language')}</span>
@@ -240,11 +319,6 @@ export function App() {
             </div>
             <LanguageToggle compact />
           </div>
-          <button type="button" class="menuitem"
-            onClick={() => { setSetupOrigin('hand'); closeMenu(); go('setup') }}>
-            <span class="menuitem__k">{t('menu.settings')}</span>
-            <span class="menuitem__s">{t('menu.settingsSub')}</span>
-          </button>
           <button type="button" class="menuitem" onClick={() => setWhoWon(true)}>
             <span class="menuitem__k">{t('menu.notMyHand')}</span>
             <span class="menuitem__s">{t('menu.notMyHandSub')}</span>
@@ -260,6 +334,13 @@ export function App() {
               try { localStorage.removeItem(KEY) } catch { /* ignore */ }
               setTable(defaultTable()); setMoney(DEFAULT_MONEY.singapore)
               setHandState(EMPTY_HAND)
+              // THE MONEY GOES TOO. This reset cleared the table, the hand and
+              // the submission but left `ledger` and `pending` standing, so a
+              // brand-new table opened carrying the last table's running
+              // total — and the persist effect wrote it straight back to the
+              // storage key that had just been removed. EndGame's own
+              // onNewGame always cleared both; this path is the same action.
+              setLedger([]); setPending(null)
               setSubmission(null); setStarted(false); closeMenu(); go('variant', true)
             }}>
             <span class="menuitem__k">
@@ -338,16 +419,37 @@ export function App() {
         </>
       )
 
+    case 'endgame':
+      return (
+        <EndGame table={table} stake={money.stake} ledger={ledger} pending={pending}
+          onBack={() => { setPending(null); go('result') }}
+          onNewGame={() => {
+            setLedger([]); setPending(null)
+            setTable(newTable(table.players, table.youIndex, table.youIndex))
+            setHandState(EMPTY_HAND); setSubmission(null); setStarted(false)
+            go('setup', true)
+          }} />
+      )
+
     case 'result':
       // A submission that no longer describes the hand is not shown at all.
       if (!submissionMatchesHand(hand, submission)) { go('hand', true); return null }
       return (
         <Results variant={variant} table={table} stake={money.stake} limit={money.limit}
           halfPayment={money.halfPayment} hand={hand}
-          predictOpen={predictOpen} onPredictToggle={togglePredict}
-          submission={submission!}
+          submission={submission!} ledger={ledger}
           onEdit={() => go('hand')}
-          onNext={() => {
+          onEndGame={(deltas) => { setPending(deltas); go('endgame') }}
+          onNext={(deltas) => {
+            // The hand is settled: it joins the ledger before the table moves
+            // on, because advanceTable is what changes the round and the deal
+            // this entry is stamped with.
+            setLedger((l) => [...l, {
+              handNumber: table.handNumber,
+              round: roundNumber(table),
+              winnerIndex: table.youIndex,
+              deltas: [...deltas],
+            }])
             // You are the winner of the hand you just scored, so the table
             // advances on that — dealer keeps the deal, everyone else passes it.
             setTable((s) => advanceTable(s, s.youIndex))

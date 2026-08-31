@@ -1,15 +1,14 @@
 import { useState } from 'preact/hooks'
 import { t, tv } from '../../i18n'
 import { formatMoney, formatStake } from '../format'
-import { Prediction } from '../components/Prediction'
-import { Cuit } from '../components/Brand'
 import { Tile } from '../components/Tile'
 
 import type { HandState } from './HandEntry'
 import type { WinSubmission } from '../../engine/session/table'
 import { VARIANTS, type VariantId } from '../../engine/variants'
 import {
-  prevailingWind, scoreKeyedHand, seatWindOf, yourSeat, type TableState,
+  prevailingWind, runningTotal, scoreKeyedHand, seatWindOf, settleHand, yourSeat,
+  type HandLedger, type TableState,
 } from '../../engine/session/table'
 import type { RuleOptions, ScoreResult, WinContext } from '../../engine/core/variant'
 
@@ -31,7 +30,7 @@ const VALUE_SETS = ['dragonTriplet', 'seatWind', 'prevailingWind', 'seatPrevaili
 
 export function Results({
   variant, table, stake, limit, halfPayment, hand, submission, onEdit, onNext,
-  predictOpen, onPredictToggle,
+  onEndGame, ledger,
 }: {
   variant: VariantId
   table: TableState
@@ -41,13 +40,15 @@ export function Results({
   hand: HandState
   submission: WinSubmission
   onEdit: () => void
-  onNext: () => void
-  predictOpen: boolean
-  onPredictToggle: () => void
+  /** Hands this table has already settled. This one is not in it yet. */
+  ledger: readonly HandLedger[]
+  onNext: (deltas: readonly number[]) => void
+  onEndGame: (deltas: readonly number[]) => void
 }) {
   const plugin = VARIANTS[variant]
   const nameOf = (i: number) => table.players[i] || t('table.playerN', { n: i + 1 })
   const [confirmNext, setConfirmNext] = useState(false)
+  const [tab, setTab] = useState<'this' | 'total'>('this')
 
   const ctx: WinContext = {
     seat: yourSeat(table),
@@ -65,7 +66,26 @@ export function Results({
   )
   const pay = plugin.payments(result, ctx, opts)
   const instant = plugin.instantPayouts?.(hand.bonus, yourSeat(table)) ?? []
-  const others = table.players.map((_, i) => i).filter((i) => i !== table.youIndex)
+  /**
+   * This hand, signed, per player. Built by moving units between players, so
+   * it balances by construction rather than by the arithmetic being right.
+   */
+  const deltas = pay
+    ? settleHand({
+      playerCount: table.players.length,
+      winnerIndex: table.youIndex,
+      pay,
+      win: submission.win,
+      discarderIndex: submission.discarderIndex,
+      instants: instant,
+    })
+    : table.players.map(() => 0)
+  // The running total INCLUDES this hand: a player reading it wants the state
+  // of the night as it stands, not as it stood before the hand they just won.
+  const totals = runningTotal(
+    [...ledger, { handNumber: table.handNumber, round: 1, winnerIndex: table.youIndex, deltas }],
+    table.players.length,
+  )
 
   if (!result.valid) {
     return (
@@ -111,25 +131,44 @@ export function Results({
       <div class="scroll">
         <h1 class="title">{t('result.title')}</h1>
 
-        <div class="resulthead">
-          <div class="fanmedal">
-            <div class="fan">{result.totalTai}</div>
-            <div class="fan__unit">{t('result.fanUnit')}</div>
+        {/* ONE BLOCK. The medal and the mascot were a second and third thing
+            competing with the number they were decorating, and the breakdown
+            that explains the number sat two cards further down. What the hand
+            scored, what it is called, and where the fan came from are one
+            fact, so they are one block, and it is the first thing under the
+            heading. */}
+        <div class="card resultblock">
+          <div class="resultblock__top">
+            <span class="resultblock__fan">{result.totalTai}</span>
+            <span class="resultblock__unit">{t('result.fanUnit')}</span>
+            <span class="resultblock__names">
+              {/* English only, and one name per line — see Run 7. */}
+              {shown.map((k) => (
+                <span class="handname" key={k}>{tv(variant, `pattern.${k}`)}</span>
+              ))}
+            </span>
           </div>
-          <Cuit mood="cheer" size={64} />
+          {result.limitApplied && (
+            <p class="capnote" style="margin:8px 0 0">
+              {t('result.fanCapped', { limit, raw: result.rawTai })}
+            </p>
+          )}
+          <table class="breakdown" style="margin-top:10px">
+            <tbody>
+              {result.fan.map((f, i) => (
+                <tr key={`${f.key}-${i}`}>
+                  <td>{tv(variant, `pattern.${f.key}`)}</td>
+                  <td>+{f.tai}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div class="grouplabel">
+            <span class="caps">{tv(variant, 'result.basePoints')}</span>
+            <span class="grouplabel__rule" />
+            <span class="grouplabel__n">{result.base}</span>
+          </div>
         </div>
-        {/* English only. Run 7 took the Chinese names off every surface: they
-            were a second name for the same hand, in a script most of the people
-            at this table cannot read, sitting next to the number that is the
-            reason anybody opened the screen. */}
-        {shown.map((k) => (
-          <p class="handname" key={k}>{tv(variant, `pattern.${k}`)}</p>
-        ))}
-        {result.limitApplied && (
-          <p class="capnote" style="margin-top:8px">
-            {t('result.fanCapped', { limit, raw: result.rawTai })}
-          </p>
-        )}
 
         {instant.length > 0 && (
           <div class="card" style="margin-top:12px">
@@ -183,20 +222,31 @@ export function Results({
             {flowerHand && (
               <p class="capnote" style="margin:0 0 10px">{t('result.flowerNote')}</p>
             )}
+            {/* FOUR PLAYERS, SIGNED, SUMMING TO ZERO — including the winner.
+                The old ledger showed the three people who pay you and left the
+                winner implied by their absence, which is a settlement you
+                cannot check. Every row is that player's own change for the
+                hand, and the signs balance because settleHand MOVES units
+                between players rather than writing them. */}
+            <div class="ledgertabs" role="tablist" aria-label={t('result.payments')}>
+              {(['this', 'total'] as const).map((k) => (
+                <button type="button" key={k} role="tab" class="ledgertab"
+                  aria-selected={tab === k ? 'true' : 'false'}
+                  onClick={() => setTab(k)}>
+                  {k === 'this' ? t('result.tabThis') : t('result.tabTotal')}
+                </button>
+              ))}
+            </div>
+            {tab === 'total' && (
+              <p class="capnote" style="margin:10px 0 0">
+                {ledger.length > 0 ? t('result.ledgerHint') : t('result.noHistory')}
+              </p>
+            )}
             <table class="ledger">
               <tbody>
-                {others.map((i) => {
-                  const isDiscarder = pay.fromDiscarder !== null
-                    && submission.win === 'discard' && i === submission.discarderIndex
-                  // Both numbers come straight off the engine's breakdown; the
-                  // pao and payment-convention settlements are already in them.
-                  const units = isDiscarder ? pay.fromDiscarder! : pay.fromEachOther
+                {table.players.map((_, i) => {
+                  const units = (tab === 'this' ? deltas : totals)[i] ?? 0
                   const w = seatWindOf(table, i)
-                  // The sign is relative to the READER. This screen only ever
-                  // renders a hand YOU won, so every figure on it is money
-                  // arriving: plus, and green. Rendering each row as the other
-                  // player's loss painted a winning night red. The verb is
-                  // always spelled out, so direction is never colour alone.
                   return (
                     <tr key={i}>
                       <td>
@@ -205,13 +255,13 @@ export function Results({
                           <span>
                             <span class="seatcell__name">{nameOf(i)}</span><br />
                             <span class="seatcell__verb">
-                              {units === 0 ? t('result.nothing') : t('result.paysVerb')}
+                              {i === table.youIndex ? t('result.you') : t(`wind.${w}`)}
                             </span>
                           </span>
                         </span>
                       </td>
-                      <td class={`ledger__amt ${units === 0 ? 'zero' : 'collect'}`}>
-                        {units === 0 ? '—' : formatMoney(units, stake, true)}
+                      <td class={`ledger__amt ${units === 0 ? 'zero' : units > 0 ? 'collect' : 'pay'}`}>
+                        {units === 0 ? '\u2014' : formatMoney(units, stake, true)}
                       </td>
                     </tr>
                   )
@@ -219,47 +269,24 @@ export function Results({
               </tbody>
             </table>
             <div class="totalband">
-              <span class="totalband__k">{t('result.youCollect')}</span>
-              <span class="totalband__v">{formatMoney(pay.winnerTotal, stake, true)}</span>
+              <span class="totalband__k">{t('result.balanced')}</span>
+              <span class="totalband__v">
+                {formatMoney((tab === 'this' ? deltas : totals)
+                  .reduce((a, b) => a + b, 0), stake)}
+              </span>
             </div>
           </div>
         )}
 
-
-        <div class="card" style="margin-top:12px">
-          <div class="grouplabel" style="margin-top:0">
-            <span class="caps">{t('result.breakdown')}</span>
-            <span class="grouplabel__rule" />
-          </div>
-          <table class="breakdown">
-            <tbody>
-              {result.fan.map((f, i) => (
-                <tr key={`${f.key}-${i}`}>
-                  <td>{tv(variant, `pattern.${f.key}`)}</td>
-                  <td>+{f.tai}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div class="grouplabel">
-            <span class="caps">{tv(variant, 'result.basePoints')}</span>
-            <span class="grouplabel__rule" />
-            <span class="grouplabel__n">{result.base}</span>
-          </div>
-
-        </div>
-
-
-        <Prediction variant={variant} hand={hand} rules={opts}
-          ctx={{ seat: yourSeat(table), prevailing: prevailingWind(table) }}
-          open={predictOpen} onToggle={onPredictToggle} />
       </div>
 
       <div class="dock">
-        <div class="dock__row">
+        <div class="dock__row dock__row--three">
           <button type="button" class="btn btn--ghost" onClick={onEdit}>
             {t('result.editHand')}
+          </button>
+          <button type="button" class="btn btn--ghost" onClick={() => onEndGame(deltas)}>
+            {t('result.endGame')}
           </button>
           <button type="button" class="btn btn--primary btn--block"
             aria-pressed={confirmNext ? 'true' : 'false'}
@@ -269,7 +296,7 @@ export function Results({
                 window.setTimeout(() => setConfirmNext(false), 4000)
                 return
               }
-              onNext()
+              onNext(deltas)
             }}>
             {confirmNext ? t('result.nextConfirm') : t('result.nextHand')}
           </button>

@@ -26,6 +26,11 @@ const ENGLISH_ALWAYS: readonly string[] = [
   'variant.singapore.name', 'variant.hongkong.name',
   'lang.', 'menu.languageScope',
 
+  // Run 6's new actions and titles, classified under the same standing rule:
+  // a word a thumb lands on, or a screen's name, is English in both modes.
+  'result.endGame', 'endgame.newGame', 'endgame.title', 'endgame.back',
+  'predict.useThis', 'predict.useThisOff', 'info.title',
+
   // ── ACTIONS ───────────────────────────────────────────────────────────
   // Every word a thumb lands on. A player learns six verbs once and then
   // stops reading them, so switching them buys nothing and costs the

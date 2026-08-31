@@ -222,7 +222,10 @@ body {
 .hero__lang { position: absolute; top: 6px; right: 0; z-index: 2; }
 
 /* ── status pills, replacing the solid signboard band ─────────────────── */
-.signboard { display: flex; align-items: stretch; gap: 6px;
+/* 4px, not 6. With the round cell now carrying "Round 2 · deal 3" the three
+   cells and the menu button want 269px of a 266px row — three pixels, paid
+   for out of the gaps rather than out of the words. */
+.signboard { display: flex; align-items: stretch; gap: 4px;
              padding: 10px var(--pad) 0; }
 /* CONTENT-SIZED, not equal thirds. Equal thirds clipped "1,000 · max 10" to
    "1,000 · max 1" while two short seat names sat on slack they had no use
@@ -327,6 +330,13 @@ body {
   box-shadow: inset 0 0 0 1px var(--mj-line), 0 1px 2px var(--mj-shadow-soft);
 }
 .tray__group--exposed .tile { filter: none; }
+/* A CONCEALED kong is not a meld claimed from the table, and must not read as
+   one: the exposed groups are raised cards, this one is sunk into the felt with
+   a dashed edge — the way four tiles sit face-down in front of you. */
+.tray__group--concealed {
+  background: var(--mj-slot);
+  box-shadow: inset 0 0 0 2px var(--mj-slot-edge);
+}
 .tray__tiles { display: flex; gap: 4px; }
 /* 40px is fine for a meld's own tiles, which are pictures. The concealed-kong
    group's tiles are buttons and must keep the 44px floor. */
@@ -336,7 +346,25 @@ body {
 .tray__tag--auto { color: var(--mj-ink); font-weight: 600; }
 .chipnote { margin: 8px 0 0; padding: 10px 12px; border-radius: var(--r-field);
             background: var(--mj-card); color: var(--mj-ink);
-            border: 1px solid var(--mj-line); font-size: 0.8125rem; }
+            border: 1px solid var(--mj-line); font-size: 0.8125rem;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.chipnote > span { flex: 1; min-width: 12ch; }
+/* THE ANSWER MUST NOT BE THE SAME COLOUR AS THE QUESTION. `.linkbtn` is
+   card-coloured with `border: 0`, and a chip is card-coloured too, so
+   "Not a kong" measured 1.00:1 against the chip it sits on — carried entirely
+   by a 1px shadow, which on the dark ground is very nearly nothing. Felt is
+   this app's second surface and `.bonusheld__x` already uses it for a control
+   inside a card, so the vocabulary is on screen either way. Same for the two
+   Table Information links, which sat card-on-card-on-card. */
+.chipnote .linkbtn, .infolinks .linkbtn {
+  background: var(--mj-felt); border: 1px solid var(--mj-slot-edge);
+}
+/* The kong chip is the one that changed the hand's size, so it is the one
+   that gets an edge — and the answer to it sits inside it. */
+.chipnote--kong { border-color: var(--mj-jade-lip); }
+/* The hand is the right size and still not a hand. The one chip that is a
+   problem rather than a fact, so it is the one that takes the warning edge. */
+.chipnote--warn { border-color: var(--mj-mandarin-lip); }
 .bonusheld {
   width: 100%; margin-top: 10px; min-height: 48px; display: flex;
   align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 12px; border: 0;
@@ -588,8 +616,10 @@ body {
 
 /* ── what could this become? ─────────────────────────────────────────── */
 .predict { margin-top: 14px; }
+/* NOT sticky. It was pinned at top:0 with z-index 4 — the same slot the suit
+   tabs occupy — so the panel's header sat on top of the tabs and the wall
+   scrolled underneath both. It is a section in the page flow like any other. */
 .predict__head {
-  position: sticky; top: 0; z-index: 4;
   width: 100%; min-height: 56px; display: flex; align-items: center; gap: 10px;
   padding: 10px 14px; cursor: pointer; text-align: left; border: 1px solid var(--mj-line);
   border-radius: var(--r-card); background: var(--mj-card); color: var(--mj-ink);
@@ -614,16 +644,25 @@ body {
 }
 .cand { display: flex; flex-direction: column; gap: 8px; }
 .cand__head { display: flex; align-items: flex-start; gap: 10px; }
-.cand__name { margin: 0; flex: 1; font: 500 0.9375rem/1.25 var(--f-display);
-              text-wrap: balance; }
+.cand__name { margin: 0; flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere;
+              font: 500 0.9375rem/1.25 var(--f-display); text-wrap: balance; }
+/* SHRINKABLE, and the badge inside it wraps. It was `flex: 0 0 auto`, which
+   takes max-content and gives nothing back: Indonesian's longest badge —
+   "Tinggal 5 kartu lagi · 3–5 fan — kena batas" — is 252px of a 296px card
+   once the hand name beside it has taken its share, so the card scrolled
+   sideways. The page body must never scroll horizontally, and a badge that
+   takes two lines on a narrow phone is the cheaper of the two. */
 .cand__meta { margin: 0; display: flex; flex-direction: column; align-items: flex-end;
-              gap: 2px; flex: 0 0 auto; }
-.cand__away { font: 500 0.8125rem/1 var(--f-display);
-              font-variant-numeric: tabular-nums; white-space: nowrap; }
-.cand__fan { font: 500 0.75rem/1 var(--f-body); background: var(--mj-mandarin);
+              gap: 2px; flex: 0 1 auto; min-width: 0; }
+/* One badge, one line. Distance and worth were two stacked elements saying
+   two halves of the same fact; they are one sentence now. */
+.cand__fan { font: 500 0.75rem/1.3 var(--f-body); background: var(--mj-mandarin);
              color: var(--mj-on-mandarin); border-radius: var(--r-pill);
-             padding: 5px 10px; white-space: nowrap; }
+             padding: 6px 11px; text-align: right;
+             font-variant-numeric: tabular-nums; }
 .cand__label { margin: 0; font: 400 0.75rem/1 var(--f-body); color: var(--mj-muted); }
+.cand__use { display: flex; justify-content: flex-end; margin-top: 10px; }
+.cand__use .btn { min-height: 44px; padding: 0 16px; }
 /* Tiles stand in felt here as they do in the tray: on bare card the solid
    tile face measured 1.00:1, so a tile you HOLD was less visible than a ghost
    of one you do not. */
@@ -684,3 +723,71 @@ body {
   }
 }
 .cand__caveat { margin: 0; font-size: 0.75rem; color: var(--mj-muted); text-wrap: pretty; }
+
+
+/* ── Run 6 ─────────────────────────────────────────────────────────────── */
+
+/* ONE RESULT BLOCK. The fan, what the hand is called, and where the fan came
+   from are one fact — so they are one card, and it is the first thing under
+   the heading. The medal that used to carry the number was a raised object
+   competing with the number it decorated. */
+.resultblock { margin-top: 4px; }
+.resultblock__top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.resultblock__fan {
+  font: 600 3rem/1 var(--f-display); font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.resultblock__unit { font: 500 0.875rem/1 var(--f-body); color: var(--mj-muted); }
+.resultblock__names { flex: 1 1 100%; display: grid; gap: 2px; }
+.resultblock .handname { margin: 0; font: 500 1.125rem/1.25 var(--f-display);
+                         text-wrap: balance; }
+
+/* THE LEDGER'S TWO TABS. A segmented control, not a pill row: they select a
+   view of the same table rather than navigating anywhere. */
+.ledgertabs {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px;
+  padding: 4px; margin: 0 0 4px; border-radius: var(--r-pill);
+  background: var(--mj-felt);
+}
+.ledgertab {
+  min-height: 44px; border: 0; border-radius: var(--r-pill); background: none;
+  color: var(--mj-muted); cursor: pointer;
+  font: 500 0.875rem/1 var(--f-display);
+}
+.ledgertab[aria-selected="true"] {
+  background: var(--mj-card); color: var(--mj-ink); font-weight: 600;
+  box-shadow: 0 1px 3px var(--mj-shadow-soft);
+}
+/* A loss is a real direction and gets its own colour — never colour alone:
+   the sign is always printed, and the seat name is always beside it. */
+.ledger__amt.pay { color: var(--mj-pay); }
+
+/* THREE ACTIONS DO NOT FIT ON ONE 328px ROW, and capping them was the wrong
+   half of the problem. At 30% each the ghosts left the primary 115px for
+   "Tap again for the next hand", which needs 179 — and `.btn` is an
+   inline-flex box, so `text-overflow: ellipsis` cannot apply to its own text
+   (the same trap the signboard documents above). The label was CENTRED and
+   clipped at BOTH ends, rendering "gain for the next": a confirmation on a
+   money-committing action that says neither what to do nor what happens.
+
+   So the row wraps instead. The two secondary actions share the top line and
+   the primary takes the full width beneath, which is also where a primary
+   action belongs on a phone. Nothing ellipsises because nothing overflows. */
+.dock__row--three { flex-wrap: wrap; }
+.dock__row--three .btn--ghost { flex: 1 1 0; max-width: none; }
+.dock__row--three .btn--block { flex: 1 0 100%; }
+
+/* TABLE INFORMATION. Read-only facts as a definition list, with the two
+   screens that can change them folded in as links so no function was lost. */
+.infoblock { display: block; }
+.infogrid {
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 14px;
+  margin: 10px 0 0; font-size: 0.875rem;
+}
+.infogrid dt { color: var(--mj-muted); }
+.infogrid dd { margin: 0; color: var(--mj-ink); }
+.infogrid__w { font: 700 0.875rem/1 var(--f-cjk); margin-right: 6px; }
+.infoseat { display: block; }
+.infoseat__w { font: 700 0.8125rem/1 var(--f-cjk); margin-right: 6px;
+               color: var(--mj-muted); }
+.infolinks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }

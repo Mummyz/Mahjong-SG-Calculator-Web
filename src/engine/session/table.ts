@@ -17,6 +17,7 @@
 import { WINDS, tally, type TileId, type Wind } from '../core/tiles'
 import type { HandInput, MeldInput } from '../core/hand'
 import type {
+  InstantPayout, PaymentBreakdown,
   RuleOptions, ScoreOk, ScoreRejected, ScoreResult, VariantPlugin, WinContext,
 } from '../core/variant'
 
@@ -121,11 +122,18 @@ export const concealedTarget = (hand: KeyedHand): number => concealedTargets(han
 /**
  * Every reading of a keyed hand worth handing to the engine.
  *
- * Four identical concealed tiles are almost always a concealed kong, so that
- * reading comes first. But the same four tiles can also be part of an
- * irregular hand that takes no melds at all — Nine Gates can hold four of a
- * terminal — so the un-konged reading is offered too and the caller keeps
- * whichever scores. Neither reading is ever silently preferred.
+ * Four identical concealed tiles are almost always a concealed kong, so the
+ * fully-konged reading comes first. But the same four tiles can also be part
+ * of an irregular hand that takes no melds at all — Nine Gates can hold four
+ * of a terminal — so the un-konged reading is offered too, and the caller
+ * keeps whichever scores. Neither reading is ever silently preferred.
+ *
+ * EVERY SUBSET, not just all-or-nothing. Run 6: a hand holding two quads at
+ * fifteen tiles is a real hand — one quad melded as a kong, the other read as
+ * a pong plus a tile that joins a chow — and the old all-or-none enumeration
+ * had no reading for it. It offered a sixteen-tile konged reading and a
+ * fifteen-tile plain one, scored neither, and the player was told their tiles
+ * were not a hand with nothing to do about it.
  */
 export function composeHands(hand: KeyedHand): HandInput[] {
   const flat = (t: readonly TileId[]) => t.join(' ')
@@ -138,21 +146,28 @@ export function composeHands(hand: KeyedHand): HandInput[] {
   const kongs = concealedKongs(hand.concealed)
   if (kongs.length === 0) return [plain]
 
-  const rest = [...hand.concealed]
-  const kongMelds: MeldInput[] = []
-  for (const k of kongs) {
-    for (let i = 0; i < 4; i++) {
-      const at = rest.indexOf(k)
-      if (at >= 0) rest.splice(at, 1)
+  const readings: HandInput[] = []
+  // Descending by kong count, so the fullest reading is still first.
+  for (let mask = (1 << kongs.length) - 1; mask >= 0; mask--) {
+    const take = kongs.filter((_, i) => (mask >> i) & 1)
+    if (take.length === 0) continue
+    const rest = [...hand.concealed]
+    const kongMelds: MeldInput[] = []
+    for (const k of take) {
+      for (let i = 0; i < 4; i++) {
+        const at = rest.indexOf(k)
+        if (at >= 0) rest.splice(at, 1)
+      }
+      kongMelds.push({ t: 'kong', tiles: [k, k, k, k].join(' '), open: false })
     }
-    kongMelds.push({ t: 'kong', tiles: [k, k, k, k].join(' '), open: false })
+    readings.push({
+      concealed: flat(rest),
+      melds: [...hand.melds, ...kongMelds],
+      bonus: [...hand.bonus],
+    })
   }
-  const konged: HandInput = {
-    concealed: flat(rest),
-    melds: [...hand.melds, ...kongMelds],
-    bonus: [...hand.bonus],
-  }
-  return [konged, plain]
+  readings.sort((a, b) => b.melds!.length - a.melds!.length)
+  return [...readings, plain]
 }
 
 // ─── guided meld declaration ─────────────────────────────────────────────
@@ -290,13 +305,94 @@ export interface WinSubmission {
   readonly pao: boolean
 }
 
+/**
+ * WHAT ONE SETTLED HAND MOVED, per player, signed.
+ *
+ * The result screen used to render three rows — the people who pay YOU — and
+ * the winner was implied by their absence. A four-player ledger has to show
+ * four players, and it has to balance: a settlement where the signs do not sum
+ * to zero is money invented or destroyed, which is the one thing a scoring
+ * app cannot do.
+ *
+ * So it is built by MOVING units, never by writing them: every unit is taken
+ * from one player and given to another in the same statement. Zero-sum is a
+ * property of the construction, not of the arithmetic being right.
+ */
+export interface HandLedger {
+  readonly handNumber: number
+  /** The mahjong round it was played in, 1–4. */
+  readonly round: number
+  /** null on a washout, or when someone else won and the app never scored it. */
+  readonly winnerIndex: number | null
+  /** Signed units per player, in seat order. Sums to zero. */
+  readonly deltas: readonly number[]
+}
+
+/**
+ * Turn a scored hand into a signed four-player settlement.
+ *
+ * Instant payouts are included: they are money that changed hands during this
+ * hand, and a running total that left them out would not settle at the end of
+ * the night. The result screen still shows them in their own block, because
+ * WHY money moved and HOW MUCH are different questions.
+ */
+export function settleHand(args: {
+  playerCount: number
+  winnerIndex: number
+  pay: PaymentBreakdown
+  win: 'selfDraw' | 'discard'
+  discarderIndex: number | null
+  instants?: readonly InstantPayout[]
+}): number[] {
+  const { playerCount, winnerIndex, pay, win, discarderIndex } = args
+  const deltas = Array<number>(playerCount).fill(0)
+  const move = (from: number, units: number) => {
+    if (from === winnerIndex || units === 0) return
+    deltas[from] = (deltas[from] ?? 0) - units
+    deltas[winnerIndex] = (deltas[winnerIndex] ?? 0) + units
+  }
+  for (let i = 0; i < playerCount; i++) {
+    if (i === winnerIndex) continue
+    const owed = win === 'discard' && pay.fromDiscarder !== null && i === discarderIndex
+      ? pay.fromDiscarder
+      : pay.fromEachOther
+    move(i, owed)
+    for (const p of args.instants ?? []) move(i, p.fromEachPlayer)
+  }
+  return deltas
+}
+
+/** Sum a run of settled hands into one signed figure per player. */
+export function runningTotal(history: readonly HandLedger[], playerCount: number): number[] {
+  const out = Array<number>(playerCount).fill(0)
+  for (const h of history) {
+    for (let i = 0; i < playerCount; i++) out[i] = (out[i] ?? 0) + (h.deltas[i] ?? 0)
+  }
+  return out
+}
+
+/**
+ * The mahjong ROUND, 1–4 — 東 South West North, the prevailing wind cycle.
+ *
+ * Not the deal counter. A round is at most four, and "Round 8" is a state the
+ * game cannot be in; the signboard said it for eight deals because it was
+ * showing handNumber under a label that means something else.
+ */
+export const roundNumber = (t: TableState): number => (t.prevailingIndex % 4) + 1
+
+/** Which deal of the current round this is, 1–4. */
+export const dealInRound = (t: TableState): number => t.dealsThisRound + 1
+
 /** Is the keyed hand the right size to be a winning hand? */
 export function handIsComplete(hand: KeyedHand): boolean {
   const { min, max } = concealedTargets(hand)
   if (min < 2) return false
-  // Four of a tile is nearly always a concealed kong, but an irregular hand
-  // can hold four with no meld at all, so the shorter reading counts too.
-  return hand.concealed.length === max || hand.concealed.length === min
+  // ANY size in the range, not just the two ends. Four of a tile is nearly
+  // always a concealed kong, but an irregular hand can hold four with no meld
+  // at all — and with two quads held, reading one as a kong and not the other
+  // lands exactly between min and max. composeHands now offers that reading,
+  // so the size check has to admit it.
+  return hand.concealed.length >= min && hand.concealed.length <= max
 }
 
 /**

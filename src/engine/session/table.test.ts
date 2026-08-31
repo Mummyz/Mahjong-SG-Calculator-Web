@@ -11,7 +11,7 @@ import {
   advanceTable, buildMeld, composeHands, concealedKongs, concealedTarget,
   isDealer, legalNextTiles, newTable, playerOnWind, prevailingWind, seatWindOf,
   handIsComplete, handIsReadable, scoreKeyedHand, submissionMatchesHand, tilesRemaining,
-  yourSeat, concealedTargets,
+  yourSeat, concealedTargets, settleHand, runningTotal, roundNumber, dealInRound,
 } from './table'
 import { hongkong, singapore } from '../variants'
 
@@ -154,6 +154,74 @@ describe('concealed kongs', () => {
     // un-konged reading has to survive.
     expect(plain!.melds).toHaveLength(0)
     expect(plain!.concealed).toBe('1m 1m 1m 1m 2p 2p')
+  })
+
+  /**
+   * THE DEAD END, and the shape of it.
+   *
+   * A player taps a tile four times. The app used to call the hand complete at
+   * fourteen — because fourteen is a legal size when the quad is read as a
+   * pong plus a floater — refuse to score it, and offer nothing: no empty
+   * slot, no prompt, no reason. The fifteenth tile that makes the kong reading
+   * work was reachable and never mentioned.
+   *
+   * The engine's half of the fix is that every kong subset is now a reading,
+   * and that any size between min and max counts as complete. The UI's half is
+   * that the kong is taken by default and can be declined.
+   */
+  it('offers every subset of the concealed kongs, fullest first', () => {
+    const two = keyed('1m 1m 1m 1m 9s 9s 9s 9s 2p 2p')
+    const readings = composeHands(two)
+    // both, 1m only, 9s only, none
+    expect(readings).toHaveLength(4)
+    expect(readings.map((r) => r.melds!.length)).toEqual([2, 1, 1, 0])
+    const sizes = readings.map((r) => r.concealed.split(/\s+/).filter(Boolean).length)
+    expect(sizes).toEqual([2, 6, 6, 10])
+  })
+
+  it('reads a hand that kongs one quad and not the other', () => {
+    // 1m1m1m1m as a kong; 9s9s9s9s as a pong plus a 9s that never gets used —
+    // fifteen tiles, and before Run 6 there was no reading of this size at all.
+    const h = keyed('1m 1m 1m 1m 9s 9s 9s 9s 7s 8s 9s 2p 3p 4p 5p')
+    expect(handIsComplete(h)).toBe(true)
+    const sizes = composeHands(h).map(
+      (r) => r.concealed.split(/\s+/).filter(Boolean).length + r.melds!.length * 4)
+    expect(sizes).toContain(15)
+  })
+
+  /**
+   * KEY ORDER CANNOT CHANGE THE SCORE.
+   *
+   * The four copies of a tile can be tapped first, last, or scattered through
+   * the hand, and a player at a table does all three. The keyed hand is a
+   * multiset; anything that reads it positionally is a bug that only shows up
+   * for whoever taps in an unusual order.
+   */
+  it('scores the same however the four copies were tapped', () => {
+    const rest = '2p 3p 4p 6p 7p 8p 1s 2s 3s 9m 9m'.split(' ')
+    const quad = ['5s', '5s', '5s', '5s']
+    const orders: Record<string, TileId[]> = {
+      first: [...quad, ...rest],
+      last: [...rest, ...quad],
+      middle: [...rest.slice(0, 5), ...quad, ...rest.slice(5)],
+      scattered: rest.flatMap((t, i) => (i < 4 ? [quad[i]!, t] : [t])),
+    }
+    const ctx = { seat: 'E', prevailing: 'E', win: 'selfDraw', winningTile: '5s' } as const
+    const scores = Object.entries(orders).map(([name, concealed]) => {
+      const h = { concealed, melds: [], bonus: [] }
+      expect(h.concealed, `${name} is not fifteen tiles`).toHaveLength(15)
+      expect(handIsComplete(h), `${name} is not complete`).toBe(true)
+      return [name, scoreKeyedHand(singapore, h, ctx).result] as const
+    })
+    const [, first] = scores[0]!
+    for (const [name, r] of scores) {
+      expect(r.valid, `${name} did not score`).toBe(first.valid)
+      if (r.valid && first.valid) {
+        expect(r.totalTai, `${name} scored differently`).toBe(first.totalTai)
+        expect([...r.patterns].sort(), `${name} read differently`)
+          .toEqual([...first.patterns].sort())
+      }
+    }
   })
 
   it('offers a single reading when there is no kong', () => {
@@ -485,5 +553,105 @@ describe('the score button only lights for tiles the engine can read', () => {
     const { result } = scoreKeyedHand(singapore, junk, ctx)
     expect(result.valid).toBe(false)
     if (!result.valid) expect(result.reason).not.toBe('wrongTileCount')
+  })
+})
+
+describe('the signed ledger', () => {
+  const pay = (fromDiscarder: number | null, fromEachOther: number, winnerTotal: number) =>
+    ({ fromDiscarder, fromEachOther, winnerTotal })
+
+  it('shows four players and balances to zero on a self-draw', () => {
+    const d = settleHand({
+      playerCount: 4, winnerIndex: 3, pay: pay(null, 32, 96),
+      win: 'selfDraw', discarderIndex: null,
+    })
+    expect(d).toEqual([-32, -32, -32, 96])
+    expect(d.reduce((a, b) => a + b, 0)).toBe(0)
+  })
+
+  it('balances when the thrower pays double', () => {
+    // The owner's own example: P1 -10, P2 -10, P3 -20, P4 +40.
+    const d = settleHand({
+      playerCount: 4, winnerIndex: 3, pay: pay(20, 10, 40),
+      win: 'discard', discarderIndex: 2,
+    })
+    expect(d).toEqual([-10, -10, -20, 40])
+    expect(d.reduce((a, b) => a + b, 0)).toBe(0)
+  })
+
+  it('balances when the thrower pays the lot and the others pay nothing', () => {
+    const d = settleHand({
+      playerCount: 4, winnerIndex: 0, pay: pay(96, 0, 96),
+      win: 'discard', discarderIndex: 2,
+    })
+    expect(d).toEqual([96, 0, -96, 0])
+    expect(d.reduce((a, b) => a + b, 0)).toBe(0)
+  })
+
+  it('folds instant payouts in and still balances', () => {
+    const d = settleHand({
+      playerCount: 4, winnerIndex: 1, pay: pay(null, 8, 24),
+      win: 'selfDraw', discarderIndex: null,
+      instants: [{ key: 'catAndRat', fromEachPlayer: 2, total: 6 }],
+    })
+    expect(d).toEqual([-10, 30, -10, -10])
+    expect(d.reduce((a, b) => a + b, 0)).toBe(0)
+  })
+
+  it('cannot be made to invent money, whatever the engine hands it', () => {
+    // Property check across the shapes a variant can actually produce.
+    for (const winner of [0, 1, 2, 3]) {
+      for (const disc of [0, 1, 2, 3]) {
+        if (disc === winner) continue
+        for (const [fd, fe] of [[20, 10], [96, 0], [48, 24], [0, 0]] as const) {
+          const d = settleHand({
+            playerCount: 4, winnerIndex: winner, pay: pay(fd, fe, 0),
+            win: 'discard', discarderIndex: disc,
+            instants: [{ key: 'x', fromEachPlayer: 3, total: 9 }],
+          })
+          expect(d.reduce((a, b) => a + b, 0), `winner ${winner} discarder ${disc}`).toBe(0)
+          expect(d[winner]!).toBeGreaterThanOrEqual(0)
+        }
+      }
+    }
+  })
+
+  it('sums a night into one signed figure per player', () => {
+    const hands = [
+      { handNumber: 1, round: 1, winnerIndex: 3, deltas: [-10, -10, -20, 40] },
+      { handNumber: 2, round: 1, winnerIndex: 0, deltas: [96, -32, -32, -32] },
+      { handNumber: 3, round: 1, winnerIndex: null, deltas: [0, 0, 0, 0] },
+    ]
+    const total = runningTotal(hands, 4)
+    expect(total).toEqual([86, -42, -52, 8])
+    expect(total.reduce((a, b) => a + b, 0)).toBe(0)
+  })
+})
+
+describe('the round is a round', () => {
+  it('is 1 to 4, never the deal counter', () => {
+    let t = newTable(['A', 'B', 'C', 'D'])
+    expect(roundNumber(t)).toBe(1)
+    expect(dealInRound(t)).toBe(1)
+    // Eight hands where the deal keeps passing: two full circuits, so the
+    // prevailing wind moves twice and the round reads 3 — never 8.
+    for (let i = 0; i < 8; i++) t = advanceTable(t, (t.dealerIndex + 1) % 4)
+    expect(t.handNumber).toBe(9)
+    expect(roundNumber(t)).toBe(3)
+    expect(roundNumber(t)).toBeLessThanOrEqual(4)
+  })
+
+  it('wraps at four rather than counting on', () => {
+    let t = newTable(['A', 'B', 'C', 'D'])
+    for (let i = 0; i < 40; i++) t = advanceTable(t, (t.dealerIndex + 1) % 4)
+    expect(roundNumber(t)).toBeGreaterThanOrEqual(1)
+    expect(roundNumber(t)).toBeLessThanOrEqual(4)
+  })
+
+  it('keeps the deal number inside the round', () => {
+    let t = newTable(['A', 'B', 'C', 'D'])
+    const seen: number[] = []
+    for (let i = 0; i < 5; i++) { seen.push(dealInRound(t)); t = advanceTable(t, (t.dealerIndex + 1) % 4) }
+    expect(seen).toEqual([1, 2, 3, 4, 1])
   })
 })
