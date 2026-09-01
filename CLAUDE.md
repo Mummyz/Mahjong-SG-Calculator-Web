@@ -174,11 +174,22 @@ lands in Run 5.
   it disappears, the domain breaks and the site goes down. There are guards for
   this in both `npm test` and the deploy workflow — do not remove them, do not
   route around them.
+- **`/` IS THE APP** since **v3.0.0**. Its UI is `src/v3/`. The Run 3 app that
+  used to sit here, and the `/app/` engine harness, were retired in the
+  promotion and are preserved at the **`v2-legacy`** tag.
+- **`/v3/` forwards to the root.** It was the preview address for four runs, so
+  it is in bookmarks and in every report written before the promotion; it must
+  never 404 and must never serve a second copy of the app.
 - **`/v1/` serves the legacy single-file calculator permanently.** It is
   byte-frozen at the `v1-final` tag and pinned by hash in
   `src/test/scaffold.test.ts`. It never changes.
-- Until Run 2 ships the new UI, **`/` also serves v1, unchanged.** This is done
-  by the `serveV1AtRoot()` shim in `vite.config.ts`, which Run 2 deletes.
+
+**The guard set, enforced in `npm test` AND in the deploy workflow:** CNAME is
+`mahjongyuk.com`; `/v1/` matches its sha256; the root serves the app and loads
+its bundle; `/v3/` forwards and ships no bundle. The two guards that pinned the
+OLD frozen root — its source manifest and its string hash — retired with the
+app they protected, and the note explaining why is at the top of
+`src/test/scaffold.test.ts`.
 
 Deployment is automatic: push to `main` → test → build → deploy. Nothing is
 deployed that fails a test.
@@ -279,7 +290,8 @@ All blocking:
 | **Run 6** | ✅ Concealed kong fix, signed ledger, End Game, ghost-tile prediction — built AFTER Run 7 (`2839584`, `424d3b8`) |
 | **Run 7** | ✅ Bahasa Indonesia localisation, meaning-first — 188 strings, `/v3/` |
 | **Run 6B** | ✅ Masthead spacing token, American teaser card (permanent — see VARIANTS) |
-| **Run 8** | Owner review of `/v3/`, then promote to root |
+| **Run 6C** | ✅ Silent concealed kong, requirement-based ghosts, ledger footers, lost-hand settlement |
+| **v3.0.0** | ✅ **Owner review passed. `/v3/` promoted to `mahjongyuk.com`; Run 3 app and `/app/` harness retired to `v2-legacy`** |
 
 The rows are in the order the owner briefed them, which is **not** the order
 they landed: Run 7 shipped before Run 6, and Run 6B after both. Read the run
@@ -293,12 +305,44 @@ the fact.
 
 ---
 
+## THE ROADMAP IS COMPLETE. THE PROJECT IS IN MAINTENANCE.
+
+**v3.0.0 shipped the product the roadmap was for.** There is no next run
+waiting, and no future work is implied by anything in this file. A run happens
+only when the owner asks for one.
+
+**What that changes for a run that does start:**
+
+- **Nothing is a to-do because it is written down here.** The American teaser
+  (see VARIANTS) is the standing example, and that rule is unchanged and still
+  binding. The *Known limits* below are the same: they are documented so a
+  player is not misled, not queued.
+- **The GAUNTLET still applies in full.** Maintenance is not a lower bar. A
+  field fix to the engine still needs the Mahjong Rules Critic and a green
+  corpus; a UI change still needs the Design Critic; new Indonesian still needs
+  the Language Critic reading it blind.
+- **Critic runs are READ-ONLY.** A Run 6B audit agent edited a source file to
+  test whether a guard would catch it, and corrupted the working tree of a live
+  project. Every critic run since has been read-only with a tamper watch, and
+  every one to come must be.
+
+### Known limits, documented rather than queued
+
+- **Pao and the special-hand payouts do not apply to a hand somebody else won.**
+  That flow learns the winner's fan and never their tiles, so the rules keyed to
+  a named hand — Singapore R12's thirteen-wonders payout, both variants' pao —
+  cannot be reached from it. Fixing this means asking the player a fourth
+  question, and the owner has not asked for it.
+- **A washout moves no money**, which is correct, and it stays the one hand type
+  absent from the running total.
+
+---
+
 ## REPO LAYOUT
 
 ```
-index.html                `/` — the Run 3 app. FROZEN in Run 4; its UI is src/ui/
-v3/index.html             `/v3/` — the Run 4 preview. Its UI is src/v3/
-app/index.html            `/app/` — the plain engine harness
+index.html                `/` — THE APP since v3.0.0. Its UI is src/v3/
+v3/index.html             `/v3/` — a static forward to `/`. No bundle, ever
 public/CNAME              mahjongyuk.com — copied into every build
 public/v1/index.html      the permanent /v1/ calculator (hash-pinned)
 public/brand/             the owner's logo, served
@@ -307,10 +351,9 @@ src/engine/core/          tiles, hand parser, set decomposition
 src/engine/variants/      singapore/, hongkong/, and the registry both are in
 src/engine/session/       the table: seats, rotation, declaring, submitting
 src/engine/corpus/        golden test corpus — see its README
-src/engine/predict/       prediction: distance to win, candidates, tiles needed
+src/engine/predict/       prediction: distance to win, candidates, requirements
 docs/sources/             archived rule sources + the ruling log
-src/ui/                   Preact components for `/` — Run 3, frozen
-src/v3/                   Preact components for `/v3/` — Run 4, Run 5
+src/v3/                   Preact components for the app. The only UI there is
 src/v3/tiles/             the 46 tile faces: palette, layouts, parts, Face
 src/i18n/                 en.json, id.json, t()/tv(), the locale switch
 src/i18n/scope.ts         WHICH strings the switch reaches — the whole policy

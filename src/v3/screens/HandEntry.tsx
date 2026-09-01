@@ -532,10 +532,7 @@ export function HandEntry({
             : (
               /* Built from the variant's OWN bonus groups. As a fixed string
                  it said "Flowers, seasons, animals" on a Hong Kong table,
-                 which is the Run 4 leakage bug in words instead of tiles.
-                 Its own key, because the FROZEN root at / still renders
-                 hand.bonusNone with no variables and would have printed the
-                 placeholder verbatim. */
+                 which is the Run 4 leakage bug in words instead of tiles. */
               <span class="bonusheld__none">{t('hand.bonusNoneIn', {
                 groups: inv.bonusGroups
                   .map((g) => t(`tileinfo.group.${g.key}`))
@@ -570,10 +567,10 @@ export function HandEntry({
         )}
         {tab === BONUS_TAB && (
           <>
-            {/* Its own key. The seat badge is a NUMBER only in v3; the frozen
-                root at / still draws a letter, and it renders hand.bonusHint
-                too — it would have told a player to read a number that is not
-                there. Third time this run that the shared bundle bit. */}
+            {/* The seat badge on a bonus tile is a NUMBER, so the hint says
+                so. It has its own key because the app that used to sit at /
+                drew a letter there and shared this bundle — the third time in
+                Run 5 that one string served two screens badly. */}
             <p class="sub" style="margin:10px 0 6px">{t('hand.bonusHintSeats')}</p>
             {inv.bonusGroups.map((g) => (
               <section key={g.key}>

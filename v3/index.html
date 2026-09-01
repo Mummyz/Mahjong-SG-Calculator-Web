@@ -2,33 +2,45 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#13241E" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#FFEEDC" media="(prefers-color-scheme: light)">
-<meta name="description" content="Mahjong scoring calculator for Singapore and Hong Kong Old Style. Work out the fan and exactly who pays whom.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://mahjongyuk.com/">
-<meta property="og:title" content="Mahjongyuk">
-<meta property="og:description" content="Mahjong scoring calculator. Work out the fan and exactly who pays whom.">
-<meta name="twitter:card" content="summary">
-<!-- Brand name only. Every translatable string belongs in src/i18n — see CLAUDE.md. -->
-<!-- The masthead is created by Preact, so without this the request cannot
-     start until the bundle has downloaded, parsed and rendered. -->
-<link rel="preload" as="image" href="/brand/logo-mahjongyuk.png" fetchpriority="high">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-<!-- Only the CJK actually carved on a tile or printed in a hand name, as a
-     subset. Run 5 made the glyph the FACE of twenty-five tiles, so leaving it
-     to whatever the device happens to have installed stopped being a small
-     risk. Meaning still never depends on it: every wind, dragon, flower and
-     season also carries a written caption, and the suits stay apart by pip
-     SHAPE. src/v3/tiles/subset.test.ts keeps this list honest. -->
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap&text=%E4%B8%80%E4%B8%83%E4%B8%89%E4%B8%AD%E4%B9%9D%E4%BA%8C%E4%BA%94%E5%85%AB%E5%85%AD%E5%86%AC%E5%8C%97%E5%8D%97%E5%9B%9B%E5%A4%8F%E5%AD%A3%E6%98%A5%E6%9D%B1%E6%A2%85%E7%8D%B8%E7%99%BC%E7%99%BD%E7%A7%8B%E7%AB%B9%E7%AD%92%E7%AE%AD%E7%B4%A2%E8%8A%B1%E8%8F%8A%E8%90%AC%E8%98%AD%E8%9C%88%E8%A5%BF%E8%B2%93%E9%9B%9E%E9%A2%A8%E9%BC%A0" rel="stylesheet">
-<title>Mahjongyuk</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- /v3/ WAS THE APP. It is the root now, and this page only forwards.
+
+     Kept forever rather than deleted: /v3/ was the preview address for four
+     runs, so it is in bookmarks, in the owner's review notes and in every
+     report written before the promotion. A 404 there would be a broken link
+     to the product's own front door.
+
+     Three mechanisms, because GitHub Pages serves static files and cannot
+     issue a real 301: the canonical link tells crawlers where the page lives,
+     the refresh forwards a browser with JavaScript off, and the script
+     REPLACES the history entry so Back does not bounce the player straight
+     back here. -->
+<link rel="canonical" href="https://mahjongyuk.com/">
+<meta name="robots" content="noindex, follow">
+<meta http-equiv="refresh" content="0; url=/">
+<title>Mahjongyuk — Mahjong Calculator</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    margin: 0; min-height: 100dvh; display: grid; place-items: center;
+    padding: 24px; text-align: center;
+    font: 400 16px/1.6 "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    background: #FFEEDC; color: #13241E;
+  }
+  @media (prefers-color-scheme: dark) { body { background: #13241E; color: #EAF2EC; } }
+  img { width: 168px; height: auto; margin-bottom: 8px; }
+  a { color: inherit; font-weight: 600; }
+</style>
 </head>
 <body>
-<div id="app"></div>
-<script type="module" src="/src/v3-main.tsx"></script>
+<main>
+  <img src="/brand/logo-mahjongyuk.png" alt="Mahjongyuk" width="560" height="511">
+  <p>Mahjongyuk has moved to <a href="/">mahjongyuk.com</a>.</p>
+</main>
+<script>
+  // replace(), not assign(): the player pressed Back to leave the app, and
+  // an extra history entry here would send them forward into it again.
+  location.replace('/')
+</script>
 </body>
 </html>

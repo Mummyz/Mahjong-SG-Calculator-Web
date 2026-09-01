@@ -44,13 +44,14 @@ for (const f of files) {
 
 const keys = new Set(Object.keys(en))
 
-// Both app surfaces: src/ui/ is the frozen Run 3 app still served at `/`, and
-// src/v3/ is the Run 4 preview at `/v3/`. A string is live if EITHER renders it.
+// ONE app surface since v3.0.0. src/ui/ was the Run 3 app served at `/` and
+// is retired — preserved at the v2-legacy tag — so src/v3/ is now simply the
+// app, and every string it renders is a string the live site renders.
 const walk = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? walk(`${dir}${e.name}/`) : [`${dir}${e.name}`],
   )
-const uiFiles = ['../ui/', '../v3/']
+const uiFiles = ['../v3/']
   .flatMap((d) => walk(fileURLToPath(new URL(d, import.meta.url))))
   .filter((f) => /\.tsx?$/.test(f) && !f.endsWith('.test.ts'))
 
@@ -115,11 +116,16 @@ describe('i18n coverage', () => {
   /**
    * THE SHARED-BUNDLE TRAP, and Run 5 walked straight into it.
    *
-   * src/ui/ is the FROZEN Run 3 app still served at `/`. Its components
-   * cannot be edited — but it reads the SAME en.json as the app being built.
-   * Run 5 gave hand.bonusNone a {groups} placeholder for the new screen, and
-   * the frozen screen, which calls it with no variables, would have printed
-   * "{groups} — none" to a player at `/`.
+   * The guard was written when two apps shared one en.json and a placeholder
+   * added for the new screen printed raw braces on the old one: Run 5 gave
+   * hand.bonusNone a {groups} placeholder, and the frozen screen, which
+   * called it with no variables, would have shown "{groups} — none" to a
+   * player at `/`.
+   *
+   * That second app is retired, and the guard is kept anyway — one screen
+   * calling a key with variables and another calling it without is a shape
+   * this app has plenty of on its own, and "{n} more to go" rendered
+   * literally is just as broken with one surface as with two.
    *
    * So: a key called WITHOUT a variables object must have no placeholder in
    * it. That is checkable, and now it is checked.
@@ -295,11 +301,17 @@ describe('Bahasa Indonesia', () => {
     // actions — `lost.title`, `lost.settle`, `lost.fanUp`, `lost.fanDown`.
     // Its seventeen questions, hints and explanations are all translated,
     // which is where the run's new Indonesian went.
+    //
+    // 227 -> 179 at v3.0.0, and this is a DELETION, not a scope decision.
+    // Retiring the Run 3 root app and the /app/ harness left 64 strings that
+    // nothing renders; 48 of them were English-always — the harness's own 45,
+    // plus variant.subtitle, variant.tiles and menu.title. The dead-string
+    // guard found them and they are gone from both bundles.
     // 220 -> 227 in Run 6C: the seven `need.klass.*` words a ghost group
     // wears — Characters, Dots, Bamboo, Dragon, Wind, Honour, tile. They are
     // TILE NAMES, which are English in both modes by the standing rule; the
     // sentence around them ("any {klass} pair") is Indonesian.
-    expect(ENGLISH.length, 'the English side changed size').toBe(227)
+    expect(ENGLISH.length, 'the English side changed size').toBe(179)
   })
 
   it('leaves every word a thumb lands on in English', () => {
@@ -317,7 +329,7 @@ describe('Bahasa Indonesia', () => {
   it('translates every sentence that explains, warns, counts or settles', () => {
     for (const k of ['hand.needTiles', 'hand.notAHand', 'predict.need',
       'predict.drop', 'predict.awayFan', 'result.payments', 'result.tabThis',
-      'result.tabTotal', 'result.youCollect', 'wizard.whichTile',
+      'result.tabTotal', 'result.grandTotal', 'wizard.whichTile',
       'wizard.howWon', 'hand.threwIt', 'hand.notAHand', 'info.round',
       'pattern.selfDraw', 'pattern.noFlowers', 'pattern.seatWind',
       'pattern.seatFlower', 'flag.heavenly.sub', 'flag.heavenly.detail',

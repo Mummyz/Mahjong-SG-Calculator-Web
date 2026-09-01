@@ -120,7 +120,7 @@ describe('the masthead', () => {
   })
 
   it('is preloaded, since Preact creates the <img> and not the HTML', () => {
-    const html = readFileSync(fileURLToPath(new URL('../../v3/index.html', import.meta.url)), 'utf8')
+    const html = readFileSync(fileURLToPath(new URL('../../index.html', import.meta.url)), 'utf8')
     expect(html).toMatch(/rel="preload" as="image" href="\/brand\/logo-mahjongyuk\.png"/)
   })
 })

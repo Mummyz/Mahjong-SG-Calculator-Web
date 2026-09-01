@@ -13,15 +13,14 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        // `/` — the Run 3 app. FROZEN this run: Run 4 ships to /v3/ only, so
-        // the root keeps serving exactly what the owner left it serving.
-        // Its UI lives in src/ui/ and nothing in Run 4 touches it.
+        // `/` — THE APP. v3.0.0 promoted it here from /v3/; its UI is src/v3/.
         main: fromRoot('index.html'),
-        // `/v3/` — the Run 4 preview. Its UI lives in src/v3/.
+        // `/v3/` — no longer the app. A static forward to the root, kept
+        // because /v3/ was the preview address for four runs and is in
+        // bookmarks and in every report written before the promotion.
         v3: fromRoot('v3/index.html'),
-        // `/app/` — the plain Run 1 engine harness, kept for driving the
-        // engine by hand. Not the product.
-        harness: fromRoot('app/index.html'),
+        // The Run 3 root app (src/ui/) and the /app/ engine harness were
+        // retired here. They are preserved at the v2-legacy tag.
       },
     },
   },

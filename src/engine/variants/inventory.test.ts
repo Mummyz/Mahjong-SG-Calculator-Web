@@ -170,9 +170,11 @@ describe('no screen decides for itself which tiles exist', () => {
     )) as Record<string, string>
     expect(en['hand.bonusNoneIn'], 'must take the groups as a placeholder')
       .toMatch(/\{groups\}/)
-    // The frozen root at / renders hand.bonusNone with no variables, so that
-    // one must stay placeholder-free — and variant-neutral, which is why it
-    // no longer lists the groups at all.
-    expect(en['hand.bonusNone']).not.toMatch(/\{/)
+    // `hand.bonusNone` — the variant-neutral form the frozen root rendered
+    // with no variables — went with that app at v3.0.0. What has to stay true
+    // is that the summary names the groups the VARIANT has, never a list
+    // written into English: Hong Kong has no animals.
+    expect(en['hand.bonusNoneIn']).not.toMatch(/\bAnimals?\b/)
+    expect(en['hand.bonusNone'], 'retired with the Run 3 app').toBeUndefined()
   })
 })

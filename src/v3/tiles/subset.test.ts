@@ -1,7 +1,7 @@
 /**
  * Every CJK glyph the app can draw is in the webfont subset it loads.
  *
- * v3/index.html asks Google Fonts for Noto Sans TC with an explicit `text=`
+ * index.html asks Google Fonts for Noto Sans TC with an explicit `text=`
  * list. That is what makes a 東 look the same on an iPhone and on a cheap
  * Android — but a subset is a promise, and a glyph added later without
  * updating the URL silently falls back to whatever the device has, or to
@@ -51,7 +51,7 @@ for (const ch of src + rendered.map((k) => bundle[k]).join('')) {
   if (CJK.test(ch)) used.add(ch)
 }
 
-const html = readFileSync(fileURLToPath(new URL('../../../v3/index.html', import.meta.url)), 'utf8')
+const html = readFileSync(fileURLToPath(new URL('../../../index.html', import.meta.url)), 'utf8')
 
 it('loads a CJK subset at all', () => {
   expect(html, 'the tile faces are CJK and the page must ask for it')

@@ -14,165 +14,134 @@ const sha256 = (b: Buffer) => createHash('sha256').update(b).digest('hex')
  */
 const V1_SHA256 = '88240d1e0a7ab8fa9e0a78fa4b29142efdc90e6e2c04c5388f7b02b10108344a'
 
+/**
+ * THE GUARDS CHANGED AT v3.0.0, and it is worth saying what went and why.
+ *
+ * Two guards are GONE:
+ *
+ *   - the root-source manifest, which hashed the eighteen files of src/ui/
+ *     and failed if any of them moved;
+ *   - the root-string hash, which pinned every en.json value the old root
+ *     rendered.
+ *
+ * Both existed for one reason: while Runs 4 to 6C built the new app at /v3/,
+ * the OLD app was still the live front door, and nothing done to the preview
+ * was allowed to disturb it. They earned their keep — between them they
+ * caught five accidental changes to the frozen app, four of them shared
+ * i18n strings that no test of the new app would have noticed.
+ *
+ * That app is retired now. src/ui/ is deleted and preserved at the v2-legacy
+ * tag, so there is no longer a frozen surface to protect, and a guard that
+ * hashes a directory which does not exist is not a guard.
+ *
+ * What replaces them is below, and it protects the thing that is now true:
+ * the ROOT is the app, /v3/ forwards to it, and /v1/ never changes.
+ */
 describe('scaffold', () => {
   it('runs the test suite', () => {
     expect(true).toBe(true)
   })
 
-  // "The CNAME file is sacred" — CLAUDE.md. This is the tripwire.
   it('ships a CNAME pointing at mahjongyuk.com', () => {
     expect(read('public/CNAME').toString().trim()).toBe('mahjongyuk.com')
   })
 
   it('preserves the v1 calculator byte-for-byte', () => {
-    expect(sha256(read('public/v1/index.html'))).toBe(V1_SHA256)
-  })
-
-  // Run 2 took the root. The v1 copy is no longer there and must not come back,
-  // or the shim would be silently resurrected and the app would stop shipping.
-  it('serves the v2 app from the root', () => {
-    const root = read('index.html').toString()
-    expect(root).toContain('/src/main.tsx')
-    expect(sha256(read('index.html'))).not.toBe(V1_SHA256)
-  })
-
-  it('keeps the engine harness at /app/', () => {
-    expect(read('app/index.html').toString()).toContain('/src/harness-main.tsx')
+    expect(sha256(read('public/v1/index.html')), 'v1 is frozen — see CLAUDE.md')
+      .toBe(V1_SHA256)
   })
 })
 
-/**
- * Run 4 ships to /v3/ and NOWHERE ELSE.
- *
- * The owner is away. They left the root serving the Run 3 app and asked for
- * the whole of Run 4 to arrive as a preview they can look at on their return,
- * with the live site unchanged underneath them. These are the guards that
- * make that a fact rather than an intention.
- */
-describe('the /v3/ preview, and the root it must not disturb', () => {
-  it('ships a /v3/ entry that mounts the Run 4 app', () => {
-    const v3 = read('v3/index.html').toString()
-    expect(v3).toContain('/src/v3-main.tsx')
-    expect(read('src/v3-main.tsx').toString()).toContain("from './v3/App'")
+describe('the front door', () => {
+  const root = read('index.html').toString()
+
+  it('serves the app from the root', () => {
+    // The app IS the root since v3.0.0. Its entry is the v3 bundle, and the
+    // old /src/main.tsx went with the app it booted.
+    expect(root).toContain('/src/v3-main.tsx')
+    expect(root).not.toContain('/src/main.tsx')
+    expect(root).toContain('<div id="app">')
   })
 
-  it('builds /v3/ as its own page', () => {
-    // vite.config.ts must list it as an entry, or nothing is deployed there.
-    expect(read('vite.config.ts').toString()).toContain("v3: fromRoot('v3/index.html')")
-  })
-
-  /**
-   * The Run 3 app, exactly as the owner left it. A manifest hash over every
-   * file in src/ui/ plus the root entry: if Run 4 leaks into either, this
-   * fails and the preview is no longer a preview.
-   *
-   * To change this deliberately — promoting v3 to the root, say — recompute
-   * both hashes in the same commit that moves them, and say so in the message.
-   */
-  it('leaves the Run 3 app at the root untouched', () => {
-    const walk = (dir: string): string[] =>
-      readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
-        e.isDirectory() ? walk(`${dir}/${e.name}`) : [`${dir}/${e.name}`])
-    const files = walk(abs('src/ui')).sort()
-    const h = createHash('sha256')
-    for (const f of files) {
-      h.update(f.slice(f.indexOf('src/ui')))
-      h.update(readFileSync(f))
+  it('names itself on the front door and in a share card', () => {
+    expect(root).toContain('<title>Mahjongyuk — Mahjong Calculator</title>')
+    expect(root).toMatch(/property="og:title" content="Mahjongyuk — Mahjong Calculator"/)
+    // Both games, on the card somebody sees before they ever open it.
+    for (const meta of ['name="description"', 'property="og:description"']) {
+      const m = new RegExp(`${meta} content="([^"]*)"`).exec(root)
+      expect(m, `${meta} is missing`).toBeTruthy()
+      expect(m![1], `${meta} does not name Singapore`).toContain('Singapore')
+      expect(m![1], `${meta} does not name Hong Kong`).toContain('Hong Kong')
     }
-    expect(files.length, 'src/ui gained or lost a file').toBe(18)
-    expect(h.digest('hex'), 'src/ui changed — Run 4 must ship to /v3/ only')
-      .toBe('821229fe7d379a2376e531451a75ecd6aeb5aeb5f8a6d7aee73bbf6ecf13edb1')
-    expect(sha256(read('index.html')), 'the root entry changed')
-      .toBe('cd9a9680f55fba4890d1cea698e85dfd737583c2049dab12b857492d79a368e6')
+    expect(root).toContain('property="og:image"')
+    expect(root).toContain('rel="canonical" href="https://mahjongyuk.com/"')
   })
 
-  it('keeps the two app surfaces from importing each other', () => {
-    // A shared import is how "untouched" quietly stops being true.
+  it('preloads the masthead the front door is built around', () => {
+    expect(root).toContain('/brand/logo-mahjongyuk.png')
+  })
+})
+
+describe('/v3/ forwards rather than serving a second copy', () => {
+  const v3 = read('v3/index.html').toString()
+
+  it('is a redirect, not the app', () => {
+    // /v3/ was the address for four runs, so it must not 404 — but it must
+    // also not boot a second copy of the app at a second URL.
+    expect(v3).not.toContain('/src/v3-main.tsx')
+    expect(v3).not.toContain('<div id="app">')
+  })
+
+  it('forwards with or without JavaScript, and does not trap Back', () => {
+    expect(v3).toContain('http-equiv="refresh"')
+    expect(v3).toMatch(/content="0;\s*url=\/"/)
+    // replace(), never assign(): an extra history entry would send a player
+    // who pressed Back straight forward into the app again.
+    expect(v3).toContain("location.replace('/')")
+    expect(v3).not.toMatch(/location\.(href\s*=|assign)/)
+  })
+
+  it('tells crawlers where the page actually lives', () => {
+    expect(v3).toContain('rel="canonical" href="https://mahjongyuk.com/"')
+    expect(v3).toContain('name="robots" content="noindex, follow"')
+  })
+})
+
+describe('the retired surfaces are gone, not half-gone', () => {
+  const listed = (p: string): string[] => {
+    try { return readdirSync(abs(p)) } catch { return [] }
+  }
+
+  it('the Run 3 app and the engine harness left no files behind', () => {
+    // Preserved at the v2-legacy tag; a stray file here would be dead code
+    // that still typechecks and still ships.
+    expect(listed('src/ui'), 'src/ui/ still exists').toEqual([])
+    expect(listed('app'), 'app/ still exists').toEqual([])
+    for (const f of ['src/main.tsx', 'src/harness-main.tsx']) {
+      expect(() => read(f), `${f} still exists`).toThrow()
+    }
+  })
+
+  it('nothing still imports them', () => {
     const walk = (dir: string): string[] =>
       readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
-        e.isDirectory() ? walk(`${dir}/${e.name}`) : [`${dir}/${e.name}`])
+        (e.isDirectory() ? walk(`${dir}${e.name}/`) : [`${dir}${e.name}`]))
     const bad: string[] = []
-    for (const [dir, forbidden] of [['src/ui', '/v3/'], ['src/v3', '/ui/']] as const) {
-      for (const f of walk(abs(dir))) {
-        if (!/\.tsx?$/.test(f)) continue
-        const src = readFileSync(f, 'utf8')
-        for (const m of src.matchAll(/from\s+'([^']+)'/g)) {
-          if (m[1]!.includes(forbidden)) bad.push(`${f.split('/').slice(-2).join('/')} → ${m[1]}`)
+    for (const f of walk(abs('src/')).filter((f) => /\.tsx?$/.test(f))) {
+      const src = readFileSync(f, 'utf8')
+      for (const m of src.matchAll(/from\s+'([^']+)'/g)) {
+        if (/(^|\/)ui\//.test(m[1]!) || /harness-main|(^|\/)main$/.test(m[1]!)) {
+          bad.push(`${f.split('/').slice(-2).join('/')} → ${m[1]}`)
         }
       }
     }
-    expect(bad, 'one app surface importing the other').toEqual([])
+    expect(bad, 'an import of a retired surface').toEqual([])
   })
 
-  /**
-   * THE ROOT'S STRINGS ARE PART OF THE ROOT.
-   *
-   * The manifest above hashes the eighteen files under src/ui/ — and every
-   * one of them imports src/i18n/en.json, which is NOT frozen and which Run 5
-   * edited heavily. Three times in one run a shared key was changed in a way
-   * that reached the frozen app: a {groups} placeholder it never passes, a
-   * {wind} placeholder it never passes, and a hint describing a badge only
-   * the new screen draws.
-   *
-   * So the STRINGS the root renders are pinned too. Changing one is allowed —
-   * it is sometimes a strict improvement, and Run 5 made two on purpose — but
-   * it has to be a decision, which means updating this hash and saying why.
-   */
-  it('pins every string the frozen root renders', () => {
-    const uiDir = fileURLToPath(new URL('../ui/', import.meta.url))
-    const walk = (d: string): string[] =>
-      readdirSync(d, { withFileTypes: true })
-        .flatMap((e) => (e.isDirectory() ? walk(`${d}${e.name}/`) : [`${d}${e.name}`]))
-    const src = walk(uiDir).filter((f) => /\.tsx?$/.test(f))
-      .map((f) => readFileSync(f, 'utf8')).join('\n')
-    const en = JSON.parse(readFileSync(
-      fileURLToPath(new URL('../i18n/en.json', import.meta.url)), 'utf8')) as Record<string, string>
-
-    const keys = new Set<string>()
-    // t('key') and tv(variant, 'key'), plus the per-variant siblings tv() can
-    // reach, and the template families the root builds by interpolation.
-    for (const m of src.matchAll(/\b(?:t|tv)\(\s*(?:[A-Za-z]+\s*,\s*)?'([^']+)'/g)) keys.add(m[1]!)
-    for (const m of src.matchAll(/`([a-z][a-zA-Z.]*)\.\$\{/g)) {
-      for (const k of Object.keys(en)) if (k.startsWith(`${m[1]!}.`)) keys.add(k)
-    }
-    for (const k of [...keys]) {
-      for (const v of ['singapore', 'hongkong']) if (en[`${k}.${v}`] !== undefined) keys.add(`${k}.${v}`)
-    }
-
-    const pinned = [...keys].filter((k) => en[k] !== undefined).sort()
-      .map((k) => `${k}\u0000${en[k]}`).join('\u0001')
-    const hash = createHash('sha256').update(pinned).digest('hex')
-    expect(pinned.length, 'found no root strings to pin — the scan broke').toBeGreaterThan(2000)
-    /**
-     * RE-PINNED IN RUN 7, deliberately, and twice.
-     *
-     * 1. `flag.lastTile.detail.hongkong` lost the two Chinese hand names it
-     *    carried inline. The owner's instruction was to take the Chinese
-     *    names off every surface, and "everywhere" includes the copy the
-     *    frozen app shares.
-     * 2. `result.basePoints.hongkong` was ADDED, so /v3/ can say "Nilai
-     *    dasar" in Singapore and "Poin dasar" in Hong Kong, where the figure
-     *    really is the point table. It is inert at the root, which reads the
-     *    base key through t() and never resolves a variant sibling — but the
-     *    hash covers siblings on purpose, so a new one has to be noticed.
-     *
-     * Nothing else the root renders moved: `menu.language*` and
-     * `predict.away*` changed too, and src/ui/ renders neither.
-     *
-     * RE-PINNED IN RUN 6B, and this one is a SIBLING, not a change.
-     *
-     * The three `variant.american.*` strings joined a family the root builds
-     * by interpolation, so the scan sweeps them in and the count went 353 to
-     * 356. The root cannot render any of them: src/ui/screens/VariantSelect
-     * has its own `ORDER: VariantId[] = ['singapore', 'hongkong']`, and
-     * `VariantId` has no 'american' member, so there is no id to interpolate
-     * and no card to render it on. Inert at the root, exactly like
-     * `result.basePoints.hongkong` above — and the hash covers siblings on
-     * purpose, so a new one has to be seen rather than absorbed.
-     *
-     * NOT ONE VALUE THE ROOT ACTUALLY RENDERS CHANGED in Run 6 or Run 6B.
-     */
-    expect(hash, `${keys.size} keys reach the frozen root; one of their values changed`)
-      .toBe('2786910283d6c40bcd7f73583ba21986af7e9da261d8d716dac05bef91916d83')
+  it('the build only has the two entries left', () => {
+    const cfg = read('vite.config.ts').toString()
+    expect(cfg).toContain("main: fromRoot('index.html')")
+    expect(cfg).toContain("v3: fromRoot('v3/index.html')")
+    expect(cfg, 'the harness entry is still built').not.toContain('app/index.html')
   })
 })

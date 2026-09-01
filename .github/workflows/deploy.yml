@@ -35,12 +35,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Three things must hold on every deploy:
+      # FOUR THINGS MUST HOLD ON EVERY DEPLOY, and they changed at v3.0.0.
       #   1. the CNAME file is sacred - without it the domain breaks
       #   2. /v1/ serves the legacy calculator byte-for-byte, forever
-      #   3. the root actually ships a working v2 bundle
-      # The root itself is no longer pinned - since Run 2 it legitimately
-      # changes. /v1/ is what stays frozen.
+      #   3. the ROOT is the app now, and it must load a bundle of its own
+      #   4. /v3/ answers, and forwards to the root rather than serving a
+      #      second copy of the app at a second URL
+      # The guards that pinned the OLD root - its source manifest and its
+      # string hash - are gone with the app they protected. See the note at
+      # the top of src/test/scaffold.test.ts.
       - name: Verify deploy artifact
         run: |
           set -e
@@ -54,43 +57,42 @@ jobs:
           test -f dist/index.html || { echo "::error::dist/index.html is missing"; exit 1; }
           BUNDLE=$(grep -o 'src="/assets/[^"]*\.js"' dist/index.html | head -1 | sed 's|src="||;s|"||')
           [ -n "$BUNDLE" ] \
-            || { echo "::error::the root page references no JS bundle - v2 did not build"; exit 1; }
+            || { echo "::error::the root page references no JS bundle - the app did not build"; exit 1; }
           test -f "dist${BUNDLE}" \
             || { echo "::error::the root page references ${BUNDLE}, which is not in the build"; exit 1; }
 
-          test -f dist/app/index.html \
-            || { echo "::error::the /app/ engine harness is missing"; exit 1; }
-
-          # Run 4 ships to /v3/ only. The preview must exist and must load a
-          # bundle of its own; the root above must keep loading its own.
+          # /v3/ FORWARDS. It must exist, because it was the address for four
+          # runs and is in bookmarks - and it must NOT boot the app again.
           test -f dist/v3/index.html \
-            || { echo "::error::the /v3/ preview is missing"; exit 1; }
-          V3=$(grep -o 'src="/assets/[^"]*\.js"' dist/v3/index.html | head -1 | sed 's|src="||;s|"||')
-          [ -n "$V3" ] \
-            || { echo "::error::the /v3/ page references no JS bundle"; exit 1; }
-          test -f "dist${V3}" \
-            || { echo "::error::the /v3/ page references ${V3}, which is not in the build"; exit 1; }
-          [ "$V3" != "$BUNDLE" ] \
-            || { echo "::error::/v3/ and the root are serving the same bundle"; exit 1; }
+            || { echo "::error::/v3/ is missing - old bookmarks would 404"; exit 1; }
+          grep -q 'http-equiv="refresh"' dist/v3/index.html \
+            || { echo "::error::/v3/ does not forward to the root"; exit 1; }
+          grep -q "location.replace('/')" dist/v3/index.html \
+            || { echo "::error::/v3/ has no scripted forward"; exit 1; }
+          grep -q 'src="/assets/' dist/v3/index.html \
+            && { echo "::error::/v3/ is serving a bundle - it must only forward"; exit 1; }
 
-          # Run 5. The front door IS the logo now — if the asset does not ship,
+          # The retired surfaces must not come back in a build.
+          test -e dist/app \
+            && { echo "::error::the /app/ harness was retired but still ships"; exit 1; }
+
+          # Run 5. The front door IS the logo - if the asset does not ship,
           # the masthead is alt text on an empty page.
           test -f dist/brand/logo-mahjongyuk.png \
             || { echo "::error::the brand logo is missing from the build"; exit 1; }
-          grep -q '/brand/logo-mahjongyuk.png' "dist${V3}" \
-            || { echo "::error::/v3/ no longer references the brand logo"; exit 1; }
+          grep -q '/brand/logo-mahjongyuk.png' "dist${BUNDLE}" \
+            || { echo "::error::the root no longer references the brand logo"; exit 1; }
 
           # Run 7. The locale bundles are imported, not fetched, so a build
           # that tree-shook one would ship an app whose language switch does
-          # nothing — and every test would still pass, because the tests read
-          # the source. Both surfaces import them, so Vite hoists them into a
-          # shared chunk: check the whole assets directory, not one entry.
+          # nothing - and every test would still pass, because the tests read
+          # the source.
           grep -rq 'Kartunya sudah jadi' dist/assets/ \
             || { echo "::error::the build shipped without the Indonesian bundle"; exit 1; }
           grep -rq 'Score this hand' dist/assets/ \
             || { echo "::error::the build shipped without the English bundle"; exit 1; }
 
-          echo "CNAME ok; /v1/ byte-identical; root ships ${BUNDLE}; /v3/ ships ${V3}; logo present; both locales present; /app/ present"
+          echo "CNAME ok; /v1/ byte-identical; root ships ${BUNDLE}; /v3/ forwards; logo present; both locales present"
 
       - uses: actions/configure-pages@v6
 

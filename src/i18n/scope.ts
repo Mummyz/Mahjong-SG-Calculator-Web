@@ -22,7 +22,7 @@ const ENGLISH_ALWAYS: readonly string[] = [
   // The landing is the brand's own voice. "Mahjong, yuk!" is already the
   // invitation; the tagline under it is the promise, and the owner keeps
   // both in English so the front door reads the same to everyone.
-  'app.', 'variant.title', 'variant.subtitle', 'variant.play',
+  'app.', 'variant.title', 'variant.play',
   'variant.singapore.name', 'variant.hongkong.name',
   // The American teaser's NAME and its badge. The card name is a name like
   // the other two, and "Under Development" wears the badge slot the other
@@ -67,7 +67,7 @@ const ENGLISH_ALWAYS: readonly string[] = [
   // instructions addressed to the player, not labels — and an English
   // question standing over an entirely Indonesian form is the one place the
   // split stopped reading as a design and started reading as an oversight.
-  'menu.title', 'table.settingsTitle',
+  'table.settingsTitle',
   'wizard.title', 'result.title', 'hand.yourHand',
   'predict.title', 'hand.pickerSuits',
 
@@ -120,8 +120,8 @@ const ENGLISH_ALWAYS: readonly string[] = [
 
   // ── NOT THE PRODUCT ───────────────────────────────────────────────────
   // /app/ is the bare engine harness, kept for driving the engine by hand.
-  // variant.tiles is one of its strings that never got a harness. prefix.
-  'harness.', 'variant.tiles',
+  // The /app/ engine harness and its 45 strings were retired at v3.0.0, and
+  // 'variant.tiles' went with the screen that rendered it.
 ]
 
 /** The `.hongkong` / `.singapore` sibling of an English key is English too. */
