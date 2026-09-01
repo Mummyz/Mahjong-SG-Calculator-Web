@@ -274,13 +274,24 @@ export function Results({
                 })}
               </tbody>
             </table>
-            <div class="totalband">
-              <span class="totalband__k">{t('result.balanced')}</span>
-              <span class="totalband__v">
-                {formatMoney((tab === 'this' ? deltas : totals)
-                  .reduce((a, b) => a + b, 0), stake)}
-              </span>
-            </div>
+            {/* THE PLAYER'S OWN LINE, and only on the running total. Run 6C.
+                Both tabs used to end on "Balances to zero." over a permanent
+                0 — true, and a proof of the settlement rather than an answer
+                to anything a player came here with. Per-hand it said nothing
+                the four rows above it had not; cumulatively it displaced the
+                one number they actually want, which is where THEY stand on
+                the night. Zero-sum is still enforced, in settleHand's own
+                arithmetic and in the ledger tests — it is just not news. */}
+            {tab === 'total' && (
+              <div class="totalband totalband--grand">
+                <span class="totalband__k">{t('result.grandTotal')}</span>
+                <span class={`totalband__v ledger__amt ${
+                  (totals[table.youIndex] ?? 0) === 0 ? 'zero'
+                    : (totals[table.youIndex] ?? 0) > 0 ? 'collect' : 'pay'}`}>
+                  {formatMoney(totals[table.youIndex] ?? 0, stake, true)}
+                </span>
+              </div>
+            )}
           </div>
         )}
 

@@ -17,8 +17,9 @@
 import { WINDS, tally, type TileId, type Wind } from '../core/tiles'
 import type { HandInput, MeldInput } from '../core/hand'
 import type {
-  InstantPayout, PaymentBreakdown,
+  FanComponent, InstantPayout, PaymentBreakdown,
   RuleOptions, ScoreOk, ScoreRejected, ScoreResult, VariantPlugin, WinContext,
+  WinMethod,
 } from '../core/variant'
 
 export interface TableState {
@@ -417,6 +418,148 @@ export function handIsReadable(plugin: VariantPlugin, hand: KeyedHand): boolean 
     if (r.valid || r.reason === 'belowMinimum') return true
   }
   return false
+}
+
+/**
+ * THE FAN A PLAYER MAY BE ASKED TO ENTER for a hand somebody else won.
+ *
+ * Bounded below by the variant's minimum — RULING R14 (Singapore, 1 tai) and
+ * RULING HK2 (Hong Kong, three faan), since a hand under it is not a legal
+ * win; HK3 is the CAP, and it is the other end of this range —
+ * and above by the limit the table agreed in setup, since nothing above it
+ * can be paid.
+ */
+export function fanBounds(
+  plugin: VariantPlugin,
+  opts?: Partial<RuleOptions>,
+): { min: number; max: number } {
+  const o = { ...plugin.defaults, ...opts }
+  const min = Math.max(1, o.minTai)
+  return { min, max: Math.max(min, o.limit) }
+}
+
+/**
+ * SETTLING A HAND THE APP NEVER SAW.
+ *
+ * "Someone else won this one" used to move the deal on and no money at all,
+ * which quietly made the running total a record of the hands this player
+ * happened to win rather than of the night. It is a settlement now, and it
+ * goes through the SAME `plugin.payments` the player's own wins do — the only
+ * difference is that the winner's hand is described by its fan instead of by
+ * its tiles, because that is all anybody at the table is going to tell you.
+ *
+ * The score handed to `payments` is synthetic but honest: `patterns` is empty
+ * because no special hand is being claimed, and the fan the player entered is
+ * both the raw and the total, having already been bounded by `fanBounds`.
+ */
+export function settleLostHand(args: {
+  plugin: VariantPlugin
+  playerCount: number
+  /** Who won. Never the player keying it in. */
+  winnerIndex: number
+  /** Whose discard it was, `null` on a self-draw. May be the player. */
+  discarderIndex: number | null
+  fan: number
+  opts?: Partial<RuleOptions>
+}): { pay: PaymentBreakdown; deltas: number[] } | null {
+  const { plugin, playerCount, winnerIndex, discarderIndex, fan, opts } = args
+  const { min, max } = fanBounds(plugin, opts)
+  if (!Number.isInteger(fan) || fan < min || fan > max) return null
+  if (winnerIndex < 0 || winnerIndex >= playerCount) return null
+  if (discarderIndex === winnerIndex) return null
+
+  const win: WinMethod = discarderIndex === null ? 'selfDraw' : 'discard'
+  const synthetic = {
+    valid: true as const,
+    patterns: [] as readonly string[],
+    fan: [] as readonly FanComponent[],
+    rawTai: fan,
+    totalTai: fan,
+    limitApplied: false,
+    base: plugin.baseForFan(fan),
+    // `payments` reads valid, base, patterns and totalTai and never the tiles.
+    hand: undefined as unknown as ScoreOk['hand'],
+  }
+  const pay = plugin.payments(synthetic, {
+    seat: 'E', prevailing: 'E', win,
+  }, opts)
+  if (!pay) return null
+
+  return {
+    pay,
+    deltas: settleHand({
+      playerCount, winnerIndex, pay, win, discarderIndex,
+    }),
+  }
+}
+
+/**
+ * HOW MANY TILES THIS HAND IS AIMING AT, resolved from the tiles themselves.
+ *
+ * Run 6C. Four concealed copies of a tile are AMBIGUOUS, and the ambiguity is
+ * settled by counting, not by asking:
+ *
+ *   - At fourteen, `1m 1m 1m 1m 2m 3m …` is an ordinary hand — the four are a
+ *     pong and a chow, and nothing is a kong. The target stays fourteen.
+ *   - If the same fourteen tiles do NOT decompose, the four can only be a
+ *     concealed kong, and a kong hand is one tile longer. The target becomes
+ *     fifteen and the wall must accept the fifteenth tile.
+ *   - Two four-copy sets that both have to be kongs reach sixteen the same
+ *     way, one tile at a time.
+ *
+ * The player is never asked which it is, because the tiles already say. This
+ * replaces Run 6's chip-and-decline, which put the question on screen — and
+ * scrolled the tray away to do it.
+ *
+ * Grows by ONE at a time rather than jumping to `max`: at fourteen with two
+ * quads held we know a fifteenth tile is needed, but not yet whether a
+ * sixteenth is, and "2 more to go" would be a guess. Re-resolved on every tap.
+ */
+export function resolveTarget(plugin: VariantPlugin, hand: KeyedHand): number {
+  const { min, max } = concealedTargets(hand)
+  const len = hand.concealed.length
+  if (len < min) return min
+  // Reads as a hand at the size it already is: that IS the resolution, and it
+  // is what keeps 1m 1m 1m 1m 2m 3m at fourteen.
+  if (handIsReadable(plugin, hand)) return len
+  // It does not read yet. If a longer reading is still available, the hand
+  // wants one more tile; otherwise this is the size, and it is not a hand.
+  return len < max ? len + 1 : len
+}
+
+/**
+ * WHICH held quads the resolved reading is treating as concealed kongs.
+ *
+ * Presentation needs this and only this: a quad that is a kong sits in the
+ * tray as its own face-down group, and a quad that is a pong plus a floater
+ * does not. The count follows from the size — a hand `n` tiles above its
+ * minimum is carrying exactly `n` concealed kongs — and WHICH quads those are
+ * is taken from the first structurally valid reading with that many, so the
+ * tray shows the reading the scorer will actually use rather than a guess.
+ */
+export function readingKongs(plugin: VariantPlugin, hand: KeyedHand): TileId[] {
+  const quads = concealedKongs(hand.concealed)
+  if (quads.length === 0) return []
+  const want = hand.concealed.length - concealedTargets(hand).min
+  if (want <= 0) return []
+
+  const ctx: WinContext = { seat: 'E', prevailing: 'E', win: 'selfDraw' }
+  const kongsOf = (input: HandInput): TileId[] =>
+    (input.melds ?? []).filter((m) => m.t === 'kong' && m.open !== true)
+      .map((m) => m.tiles.trim().split(/\s+/)[0] as TileId)
+      .filter((k) => quads.includes(k))
+
+  let sized: TileId[] | null = null
+  for (const input of composeHands(hand)) {
+    const ks = kongsOf(input)
+    if (ks.length !== want) continue
+    sized ??= ks
+    const r = plugin.score(input, ctx)
+    if (r.valid || r.reason === 'belowMinimum') return ks
+  }
+  // Nothing scored — the tiles are not a hand yet. Still show the right NUMBER
+  // of kongs, so the tray does not silently disagree with the count above it.
+  return sized ?? quads.slice(0, want)
 }
 
 /**

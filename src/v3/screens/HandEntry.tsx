@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { t } from '../../i18n'
-import { Tile, BonusTile, tileName } from '../components/Tile'
+import { Tile, BonusTile } from '../components/Tile'
 import { Signboard } from '../components/Signboard'
-import { Prediction } from '../components/Prediction'
-import { isHonour, type BonusId, type TileId, tally } from '../../engine/core/tiles'
+import { Prediction, SUIT_MARK } from '../components/Prediction'
+import { needLabel } from '../components/needLabel'
+import type { Requirement } from '../../engine/predict/requirements'
+import {
+  DRAGONS, WINDS, isHonour, type BonusId, type TileId, tally,
+} from '../../engine/core/tiles'
 import type { MeldInput } from '../../engine/core/hand'
 import {
-  buildMeld, concealedKongs, concealedTargets,
-  handIsReadable, legalNextTiles, playerOnWind, prevailingWind, tilesRemaining,
-  yourSeat,
+  buildMeld, concealedTargets, handIsReadable, legalNextTiles, playerOnWind,
+  prevailingWind, readingKongs, resolveTarget, tilesRemaining, yourSeat,
   type MeldKind, type TableState,
 } from '../../engine/session/table'
 import { VARIANTS, inventoryOf, type VariantId } from '../../engine/variants'
@@ -27,25 +30,17 @@ export interface HandState {
   bonus: BonusId[]
   log: ('tile' | 'meld')[]
   /**
-   * Tiles held four times over that the player has said are NOT a kong.
-   *
-   * Four of a tile is a concealed kong nearly always — but a pong plus a
-   * floater waiting to be discarded is a real hand too, and only the player
-   * knows which they have. So the kong is taken by default and this is how it
-   * is given back.
-   */
-  declined?: TileId[]
-  /**
-   * Tiles a prediction card is showing as GHOSTS in the empty slots.
+   * The REQUIREMENTS a prediction card is showing as ghost groups in the empty
+   * slots — "any Bamboo pair", not two invented 5 Bamboo faces.
    *
    * Presentation only. Nothing here is ever part of the hand: not counted, not
    * scored, not submitted. See the guards in ghost.test.ts.
    */
-  ghost?: TileId[]
+  ghost?: Requirement[]
 }
 
 export const EMPTY_HAND: HandState = {
-  concealed: [], melds: [], bonus: [], log: [], declined: [], ghost: [],
+  concealed: [], melds: [], bonus: [], log: [], ghost: [],
 }
 
 /**
@@ -68,6 +63,15 @@ const toggle = <T,>(list: T[], v: T): T[] =>
   list.includes(v) ? list.filter((x) => x !== v) : [...list, v]
 
 const meldTiles = (m: MeldInput): TileId[] => m.tiles.trim().split(/\s+/)
+
+/** Does a tile satisfy a generic requirement of this class? */
+const classMatches = (klass: string, tile: TileId): boolean => {
+  if (klass === 'dragon') return DRAGONS.includes(tile as never)
+  if (klass === 'wind') return WINDS.includes(tile as never)
+  if (klass === 'honour') return isHonour(tile)
+  if (klass === 'tile') return true
+  return tile.length === 2 && tile[1] === klass
+}
 
 export function HandEntry({
   variant, table, stake, limit, halfPayment, hand, setHand, onMenu, onScore,
@@ -133,44 +137,32 @@ export function HandEntry({
     () => tally([...hand.concealed, ...hand.melds.flatMap(meldTiles)]),
     [hand.concealed, hand.melds],
   )
-  const found = useMemo(() => concealedKongs(hand.concealed), [hand.concealed])
-  const declined = hand.declined ?? []
   /**
-   * THE KONG IS TAKEN BY DEFAULT. This is the Run 6 fix.
+   * THE TILES ANSWER THE KONG QUESTION. Run 6C.
    *
-   * It used to be taken only once the hand had already reached the longer
-   * size — which meant a player who tapped a tile four times and stopped at
-   * fourteen was told the hand was complete, told it was not a hand, and
-   * offered nothing: no empty slot, no prompt, no reason. The fifteenth tile
-   * that makes the kong reading work was reachable and never mentioned.
+   * Run 6 put the question on screen: four copies grew the target at once and
+   * a chip offered "Not a kong". It was the wrong shape — it interrupted the
+   * one thing the screen is for, it scrolled the tray away to do it, and with
+   * two quads held there were two of them.
    *
-   * Now four of a tile grows the target the moment it appears, a chip says
-   * why, and the chip can be answered "not a kong" — because a pong plus a
-   * floater is a real hand and only the player knows which they have.
+   * The count settles it instead. A hand is fourteen tiles plus one per kong,
+   * so `1m 1m 1m 1m 2m 3m` at fourteen is a pong and a chow, and the same
+   * quad at fifteen can only be a kong. The engine resolves it on every tap
+   * and the player is never asked.
    */
-  const autoKongs = useMemo(
-    () => found.filter((k) => !declined.includes(k)),
-    [found, declined.join(',')],
+  const kongs = useMemo(
+    () => readingKongs(plugin, hand),
+    [plugin, hand.concealed.join(','), hand.melds.length],
   )
-  const { min: targetMin } = concealedTargets(hand)
-  const shownTarget = targetMin + autoKongs.length
+  const shownTarget = useMemo(
+    () => resolveTarget(plugin, hand),
+    [plugin, hand.concealed.join(','), hand.melds.length],
+  )
   const complete = shownTarget >= 2 && hand.concealed.length === shownTarget
   const readable = complete && handIsReadable(plugin, hand)
-  const kongCount = hand.melds.filter((m) => m.t === 'kong').length + autoKongs.length
-  const kongsInPlay = autoKongs.length > 0
+  const kongCount = hand.melds.filter((m) => m.t === 'kong').length + kongs.length
+  const kongsInPlay = kongs.length > 0
   const slotsLeft = Math.max(0, shownTarget - hand.concealed.length)
-  /**
-   * TILES ABOVE THE TARGET, which only declining a kong can produce: the
-   * wall's ceiling is the MAX reading, so a hand keyed to fifteen with a quad
-   * stays at fifteen when the player says it is not a kong, while the target
-   * it is measured against drops to fourteen.
-   *
-   * Without this the dock read "1 more to go" — Math.max(1, 14 - 15) — beside
-   * a wall that answered every tap with "Hand is full". One screen telling a
-   * player to add a tile and refusing to let them is the dead end this run
-   * exists to remove, and the decline button was a new way back into it.
-   */
-  const over = Math.max(0, hand.concealed.length - shownTarget)
 
   /**
    * The ghost tiles, clamped to the slots there are.
@@ -179,7 +171,25 @@ export function HandEntry({
    * down; painting more ghosts than slots would put tiles in the tray that
    * correspond to nothing. Presentation only, in every direction.
    */
-  const ghosts = (hand.ghost ?? []).slice(0, slotsLeft)
+  /**
+   * Clamped to the slots there are, GROUP BY GROUP: a plan can want more than
+   * the hand has room for once melds are down, and half a group is not a
+   * requirement. Presentation only, in every direction.
+   */
+  const ghosts = useMemo(() => {
+    const out: Requirement[] = []
+    let room = slotsLeft
+    for (const g of hand.ghost ?? []) {
+      // SKIP, do not stop. Breaking on the first group too big for the room
+      // left threw away every smaller one behind it, so a plan whose first
+      // requirement was a pong showed nothing at all once the tray was three
+      // slots from full.
+      if (g.count > room) continue
+      out.push(g); room -= g.count
+    }
+    return out
+  }, [hand.ghost, slotsLeft])
+  const ghostSlots = ghosts.reduce((n, g) => n + g.count, 0)
 
   const legal = declare ? legalNextTiles(declare.kind, declare.chosen, used) : null
   /**
@@ -193,14 +203,14 @@ export function HandEntry({
   const loose = useMemo(() => {
     if (!kongsInPlay) return [...hand.concealed]
     const rest = [...hand.concealed]
-    for (const k of autoKongs) {
+    for (const k of kongs) {
       for (let i = 0; i < 4; i++) {
         const at = rest.indexOf(k)
         if (at >= 0) rest.splice(at, 1)
       }
     }
     return rest
-  }, [hand.concealed, autoKongs, kongsInPlay])
+  }, [hand.concealed, kongs, kongsInPlay])
 
   /**
    * A GHOST CANNOT OUTLIVE THE HAND IT WAS DRAWN FOR.
@@ -222,8 +232,18 @@ export function HandEntry({
       ? hand.concealed.find((t, i) => was.tiles[i] !== t) ?? hand.concealed[hand.concealed.length - 1]
       : null
     const ghost = hand.ghost ?? []
-    const at = added === undefined || added === null ? -1 : ghost.indexOf(added)
-    if (at >= 0) { setHand({ ghost: ghost.filter((_, i) => i !== at) }); return }
+    // A tile that SATISFIES a requirement takes a slot off that group rather
+    // than clearing the plan: a specific group wants that exact tile, a
+    // generic one wants anything of its class.
+    const at = added === undefined || added === null ? -1 : ghost.findIndex((g) =>
+      g.kind === 'specific' ? g.tile === added : classMatches(g.klass, added))
+    if (at >= 0) {
+      setHand({
+        ghost: ghost.flatMap((g, i) =>
+          (i === at ? (g.count > 1 ? [{ ...g, count: g.count - 1 }] : []) : [g])),
+      })
+      return
+    }
     setGhostKey(null); setHand({ ghost: [] })
   }, [shape])
 
@@ -310,18 +330,7 @@ export function HandEntry({
    * a kong is being read and the hand is one short, say so. If a kong is being
    * read and it is wrong, point at the chip that undoes it.
    */
-  const notAHandWhy = (): string => {
-    // Over the target first: it is the only one of these the player cannot
-    // fix by keying more tiles, so it has to name its own way out.
-    if (over > 0) {
-      return found.length > 0 && declined.length > 0
-        ? t('hand.overTargetKong', { have: hand.concealed.length, want: shownTarget })
-        : t('hand.overTarget', { have: hand.concealed.length, want: shownTarget })
-    }
-    if (kongsInPlay) return t('hand.notAHandKong')
-    if (found.length > 0 && declined.length > 0) return t('hand.notAHandDeclined')
-    return t('hand.notAHand')
-  }
+  const notAHandWhy = (): string => t('hand.notAHand')
 
   const tapWall = (id: TileId) => {
     // The kind chooser is open: the wall is scenery until it is answered.
@@ -344,10 +353,11 @@ export function HandEntry({
     // and grows the hand by one, so the tap has to be measured against the hand
     // it would produce, not the one before it.
     const next = [...hand.concealed, id]
-    // The ceiling follows the DECLINE: a player who said "not a kong" is
-    // building a fourteen-tile hand and must be stopped at fourteen.
-    const ceiling = concealedTargets({ ...hand, concealed: next }).min
-      + concealedKongs(next).filter((k) => !declined.includes(k)).length
+    // THE CEILING IS THE LONGEST READING THE TILES COULD STILL NEED. The
+    // resolver may raise the target by one at a time; the wall must never
+    // refuse a tile that resolution is asking for, so it is measured against
+    // the maximum rather than the current resolution.
+    const ceiling = concealedTargets({ ...hand, concealed: next }).max
     if (next.length > ceiling) {
       setRefused(true)
       window.setTimeout(() => setRefused(false), 3000)
@@ -461,7 +471,7 @@ export function HandEntry({
           {/* A CONCEALED kong. Its own class of group — face-down at the ends,
               the way it sits on a real table — so it never reads as one of the
               melds claimed from the table above it. */}
-          {autoKongs.map((k) => (
+          {kongs.map((k) => (
             <div class="tray__group tray__group--concealed" key={`k${k}`}>
               <div class="tray__tiles">
                 {[0, 1, 2, 3].map((j) => (
@@ -476,50 +486,43 @@ export function HandEntry({
               <Tile id={id} mini removes onClick={focus ? undefined : () => removeOne(id)} />
             </div>
           ))}
-          {/* GHOSTS fill the empty slots and nothing else. They are drawn from
-              hand.ghost, which no other part of this screen reads: not the
-              count, not `complete`, not the score button, not the kong
-              detection. A slot with a ghost in it is still an empty slot. */}
-          {Array.from({ length: slotsLeft }, (_, i) => {
-            const g = ghosts[i]
-            return (
-              <div class="tray__one" key={`s${i}`}>
-                {g
-                  ? <Tile id={g} mini needed />
-                  : <div class="slot" aria-hidden="true" />}
+          {/* GHOST GROUPS. Bracketed like the meld blocks above, spanning the
+              slots they need and labelled with the REQUIREMENT — "any Bamboo
+              pair" — rather than a face the plan never actually asked for. A
+              specific tile still shows its face, because there the identity
+              really is forced.
+
+              Drawn from hand.ghost, which no other part of this screen reads:
+              not the count, not `complete`, not the score button, not the kong
+              resolution. A slot under a ghost is still an empty slot. */}
+          {ghosts.map((g, i) => (
+            <div class="tray__group tray__group--ghost" key={`g${i}`}>
+              <div class="tray__tiles">
+                {Array.from({ length: g.count }, (_, j) => (
+                  g.kind === 'specific'
+                    ? <Tile key={j} id={g.tile} mini needed />
+                    : <span class="ghostmark" key={j} aria-hidden="true">
+                        {SUIT_MARK[g.klass] ?? '?'}
+                      </span>
+                ))}
               </div>
-            )
-          })}
+              <span class="tray__tag tray__tag--ghost">{needLabel(g)}</span>
+            </div>
+          ))}
+          {Array.from({ length: Math.max(0, slotsLeft - ghostSlots) }, (_, i) => (
+            <div class="tray__one" key={`s${i}`}>
+              <div class="slot" aria-hidden="true" />
+            </div>
+          ))}
         </div>
 
-        {/* THE CHIP. It says plainly why the hand just got a tile longer, and
-            it offers the one answer the app cannot work out for itself: a pong
-            plus a floater is a real hand, and only the player knows. */}
-        {autoKongs.map((k) => (
-          <div class="chipnote chipnote--kong" key={`n${k}`}>
-            <span>{t('hand.concealedKongFound', { tile: tileName(k) })}</span>
-            <button type="button" class="linkbtn" disabled={focus}
-              onClick={() => setHand({ declined: [...declined, k] })}>
-              {t('hand.kongDecline')}
-            </button>
-          </div>
-        ))}
-        {/* WHY, and what to do — beside the tray, not in the dock's status
-            line. In the dock it was clamped to two lines of 12px and the
-            sentence that names the fix was cut off mid-word, which is the
-            dead end this run exists to remove wearing a different hat. */}
-        {((complete && !readable) || over > 0) && (
+        {/* NO KONG CHIP, and nothing to answer. The tray already shows the
+            resolution — a quad the count makes a kong sits in its own
+            face-down group — so the only note left is the one case the tiles
+            cannot resolve: the right number of tiles that are not a hand. */}
+        {complete && !readable && (
           <p class="chipnote chipnote--warn">{notAHandWhy()}</p>
         )}
-        {found.filter((k) => declined.includes(k)).map((k) => (
-          <div class="chipnote" key={`d${k}`}>
-            <span>{t('hand.kongDeclined', { tile: tileName(k) })}</span>
-            <button type="button" class="linkbtn" disabled={focus}
-              onClick={() => setHand({ declined: declined.filter((x) => x !== k) })}>
-              {t('hand.kongRestore')}
-            </button>
-          </div>
-        ))}
 
         <button type="button" class="bonusheld" disabled={focus} onClick={() => setTab('bonus')}>
           {hand.bonus.length > 0
@@ -660,9 +663,7 @@ export function HandEntry({
               ? t('hand.scoreReady')
               : complete
                 ? t('hand.notAHandShort')
-                : over > 0
-                  ? t('hand.tooMany', { n: over })
-                  : t('hand.needTiles', { n: shownTarget - hand.concealed.length })}
+                : t('hand.needTiles', { n: shownTarget - hand.concealed.length })}
           </button>
         </div>
       </div>

@@ -9,12 +9,14 @@ import { TableSetup, type Money } from './screens/TableSetup'
 import { HandEntry, EMPTY_HAND, type HandState } from './screens/HandEntry'
 import { Results } from './screens/Results'
 import { EndGame } from './screens/EndGame'
+import { LostResult } from './screens/LostResult'
+import { LostHand, type LostHandAnswer } from './components/LostHand'
 import { Sheet } from './components/Sheet'
 import { usePredictionPanel } from './components/Prediction'
 import { SubmitWizard } from './components/SubmitWizard'
 import {
   advanceTable, concealedKongs, dealInRound, newTable, prevailingWind, roundNumber,
-  seatWindOf, submissionMatchesHand, yourSeat,
+  seatWindOf, settleLostHand, submissionMatchesHand, yourSeat,
   type HandLedger, type TableState, type WinSubmission,
 } from '../engine/session/table'
 import type { WinFlag } from '../engine/core/variant'
@@ -22,8 +24,8 @@ import { VARIANTS, isVariantId, keepPlayable, type VariantId } from '../engine/v
 import './app.css'
 import './tile.css'
 
-type Screen = 'variant' | 'tileinfo' | 'setup' | 'hand' | 'result' | 'endgame'
-const SCREENS: Screen[] = ['variant', 'tileinfo', 'setup', 'hand', 'result', 'endgame']
+type Screen = 'variant' | 'tileinfo' | 'setup' | 'hand' | 'result' | 'endgame' | 'lost'
+const SCREENS: Screen[] = ['variant', 'tileinfo', 'setup', 'hand', 'result', 'endgame', 'lost']
 
 /**
  * Opening money settings per variant. The limit is each variant's own default
@@ -51,6 +53,12 @@ interface Saved {
   setupOrigin: Screen
   /** Every hand this table has SETTLED, signed per player. See HandLedger. */
   history?: HandLedger[]
+  /**
+   * A lost hand settled but not yet committed. PERSISTED, because 'lost' is a
+   * persisted screen: without it, reloading on that screen threw away money
+   * the app had already worked out and told the player they owed.
+   */
+  lost?: { winnerIndex: number; discarderIndex: number | null; fan: number; deltas: number[] }
 }
 
 /** What is carved on the seat's tile. Content, not copy — see CLAUDE.md. */
@@ -81,9 +89,30 @@ const restore = (): Saved | null => {
     const plugin = VARIANTS[v.variant]
     const bonus = keepPlayable(plugin, (v.hand.bonus ?? []) as string[])
     const concealed = keepPlayable(plugin, (v.hand.concealed ?? []) as string[])
+    /**
+     * A GHOST FROM AN OLDER APP IS NOT A GHOST NOW.
+     *
+     * Run 6C retyped hand.ghost from a list of tiles to a list of
+     * REQUIREMENTS, and the old shape is sitting in the storage of anyone who
+     * used the app before this run. A string where an object is expected
+     * would render a bracket with no slots and a label reading
+     * "need.klass.undefined". They are advice about a hand that is no longer
+     * on screen anyway, so the wrong shape is dropped rather than migrated.
+     */
+    const ghost = Array.isArray(v.hand.ghost)
+      ? v.hand.ghost.filter((g: unknown): boolean =>
+        typeof g === 'object' && g !== null
+        && typeof (g as { count?: unknown }).count === 'number'
+        && typeof (g as { tile?: unknown }).tile === 'string')
+      : []
     if (bonus.length !== (v.hand.bonus ?? []).length
-      || concealed.length !== (v.hand.concealed ?? []).length) {
-      return { ...v, hand: { ...v.hand, bonus, concealed }, submission: null } as Saved
+      || concealed.length !== (v.hand.concealed ?? []).length
+      || ghost.length !== (v.hand.ghost ?? []).length) {
+      return {
+        ...v,
+        hand: { ...v.hand, bonus, concealed, ghost },
+        submission: null,
+      } as Saved
     }
     return v as Saved
   } catch {
@@ -112,10 +141,12 @@ export function App() {
   /**
    * THE LEDGER. Every hand this table settled, signed and summing to zero.
    *
-   * Only hands the app actually scored are in here: a hand somebody else won
-   * moved money the app never saw, and inventing zeros for it would make the
-   * running total quietly wrong. The end-game summary says how many of the
-   * hands played are covered, so the number is never mistaken for the night.
+   * Since Run 6C this includes hands SOMEBODY ELSE won: the lost-hand flow
+   * settles them through the same payments table, so their four signed
+   * amounts are as real as a win's. What is still absent is a washout, which
+   * moves no money, and any hand passed over without settling — so the
+   * end-game summary says how many of the hands played are covered, and the
+   * number is never mistaken for the whole night.
    */
   const [ledger, setLedger] = useState<HandLedger[]>(saved?.history ?? [])
   /**
@@ -127,6 +158,15 @@ export function App() {
    * and pressing Next hand would then count it twice.
    */
   const [pending, setPending] = useState<readonly number[] | null>(null)
+  /**
+   * A hand somebody else won, settled but not yet moved on from. Same shape
+   * of state as `pending`: the money is decided, and it is committed to the
+   * ledger when the player leaves the screen.
+   */
+  const [lost, setLost] = useState<
+    { winnerIndex: number; discarderIndex: number | null; fan: number; deltas: number[] } | null
+  >(saved?.lost ?? null)
+  const [lostOpen, setLostOpen] = useState(false)
   const [explain, setExplain] = useState<WinFlag | 'pao' | null>(null)
   const [started, setStarted] = useState(saved?.started ?? false)
   const [predictOpen, togglePredict] = usePredictionPanel()
@@ -191,9 +231,14 @@ export function App() {
           hand: { ...hand, ghost: [] },
           submission, infoOrigin,
           setupOrigin, history: ledger,
+          // The settled lost hand travels WITH its screen. Unlike `pending`,
+          // which is recoverable from the result it sits on, this money exists
+          // nowhere else until finishLost commits it.
+          ...(lost ? { lost } : {}),
         }))
     } catch { /* private mode, quota — the app works, it just forgets */ }
-  }, [started, variant, screen, table, money, hand, submission, infoOrigin, setupOrigin, ledger])
+  }, [started, variant, screen, table, money, hand, submission, infoOrigin, setupOrigin,
+      ledger, lost])
 
   const patchTable = (p: Partial<TableState>) => setTable((s) => ({ ...s, ...p }))
   const patchMoney = (p: Partial<Money>) => setMoney((s) => ({ ...s, ...p }))
@@ -208,8 +253,56 @@ export function App() {
     setMenu(false); setWhoWon(false); setConfirmNew(false); setConfirmPass(null)
   }
 
-  /** Move the table on without scoring — someone else won, or nobody did. */
+  /**
+   * A hand somebody else won, settled through the SAME payments table a win
+   * of the player's own goes through. The winner's tiles are never known, so
+   * the fan the player entered stands in for them — bounded by the variant's
+   * minimum and this table's limit before it ever gets here.
+   */
+  const settleLost = (a: LostHandAnswer) => {
+    const r = settleLostHand({
+      plugin: VARIANTS[variant],
+      playerCount: table.players.length,
+      winnerIndex: a.winnerIndex,
+      discarderIndex: a.discarderIndex,
+      fan: a.fan,
+      opts: { limit: money.limit, minTai: VARIANTS[variant].defaults.minTai,
+              halfPayment: money.halfPayment },
+    })
+    setLostOpen(false)
+    if (!r) return
+    setLost({ ...a, deltas: r.deltas })
+    go('lost')
+  }
+
+  /**
+   * Leaving the lost-hand result: the money goes into the ledger and the
+   * table advances by the variant's own dealer rules — winner deals again if
+   * they were the dealer, otherwise the deal passes on. Exactly what a scored
+   * win does, because it is exactly the same event.
+   */
+  const finishLostInto = (l: NonNullable<typeof lost>) => {
+    setLedger((prev) => [...prev, {
+      handNumber: table.handNumber,
+      round: roundNumber(table),
+      winnerIndex: l.winnerIndex,
+      deltas: [...l.deltas],
+    }])
+    setTable((s) => advanceTable(s, l.winnerIndex))
+    setLost(null)
+  }
+
+  const finishLost = () => {
+    if (lost) finishLostInto(lost)
+    setHandState(EMPTY_HAND); setSubmission(null)
+    go('hand', true)
+  }
+
+  /** Move the table on without scoring — nobody won, so nothing settles. */
   const passHand = (winnerIndex: number | null) => {
+    // A settled lost hand must never be walked away from: the money is already
+    // decided and the player has been told what they owe. Commit it first.
+    if (lost) { finishLostInto(lost) }
     setTable((s) => advanceTable(s, winnerIndex))
     setHandState(EMPTY_HAND); setSubmission(null)
     closeMenu()
@@ -235,18 +328,20 @@ export function App() {
     <Sheet title={whoWon ? t('menu.whoWon') : t('info.title')} onClose={closeMenu}>
       {whoWon ? (
         <div class="menulist">
-          {table.players.map((_, i) => i).filter((i) => i !== table.youIndex).map((i) => (
-            <button type="button" class="menuitem" key={i}
-              aria-pressed={confirmPass === i ? 'true' : 'false'}
-              onClick={() => arm(i)}>
-              <span class="menuitem__k">
-                {table.players[i] || t('table.playerN', { n: i + 1 })}
-              </span>
-              {confirmPass === i && (
-                <span class="menuitem__s">{t('hand.whoWonConfirm')}</span>
-              )}
-            </button>
-          ))}
+          {/* SETTLING, not skipping. Run 6C: this used to be a list of names
+              that moved the deal on and no money — so the running total was a
+              record of the hands this player happened to win, and losing off
+              your own discard was free. It opens the three-question wizard
+              now, and the answers go through the same payments table a
+              scored win does. */}
+          <button type="button" class="menuitem"
+            onClick={() => { setMenu(false); setWhoWon(false); setLostOpen(true) }}>
+            <span class="menuitem__k">{t('menu.notMyHand')}</span>
+            <span class="menuitem__s">{t('lost.whoWonSub')}</span>
+          </button>
+          {/* A washout moves nothing, so it keeps the arm-then-confirm it had:
+              there is no money to undo, but there is a deal that cannot be
+              rotated back. */}
           <button type="button" class="menuitem"
             aria-pressed={confirmPass === 'washout' ? 'true' : 'false'}
             onClick={() => arm('washout')}>
@@ -408,6 +503,13 @@ export function App() {
               onExplain={setExplain}
               onSubmit={(s) => { setSubmission(s); setWizard(false); go('result') }} />
           )}
+          {lostOpen && (
+            <LostHand variant={variant} table={table}
+              opts={{ limit: money.limit, minTai: VARIANTS[variant].defaults.minTai,
+                      halfPayment: money.halfPayment }}
+              onCancel={() => setLostOpen(false)}
+              onSubmit={settleLost} />
+          )}
           {explain && (
             <Sheet title={t(`flag.${explain}`)} onClose={() => setExplain(null)}>
               {/* The explainers are variant rules, not general facts: Singapore
@@ -415,6 +517,33 @@ export function App() {
                   Kong pays it (HK22). tv() picks the right one. */}
               <p>{tv(variant, `flag.${explain}.detail`)}</p>
             </Sheet>
+          )}
+        </>
+      )
+
+    case 'lost':
+      // Nothing settled: the only way here is through the wizard, so an empty
+      // `lost` means a restored session pointing at a screen with no hand
+      // behind it. Go back to the tiles rather than render a blank result.
+      if (!lost) { go('hand', true); return null }
+      return (
+        <>
+          <LostResult table={table} stake={money.stake}
+            winnerIndex={lost.winnerIndex} discarderIndex={lost.discarderIndex}
+            fan={lost.fan} deltas={lost.deltas}
+            onMenu={() => setMenu(true)}
+            onNext={finishLost} />
+          {menuSheet}
+          {/* The menu is on this screen too, and it carries "Someone else won
+              this one". Without the wizard here that item set a flag nothing
+              rendered — a dead control on the one screen it is most likely to
+              be tapped from, by a player correcting what they just entered. */}
+          {lostOpen && (
+            <LostHand variant={variant} table={table}
+              opts={{ limit: money.limit, minTai: VARIANTS[variant].defaults.minTai,
+                      halfPayment: money.halfPayment }}
+              onCancel={() => setLostOpen(false)}
+              onSubmit={settleLost} />
           )}
         </>
       )

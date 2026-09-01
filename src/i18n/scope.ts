@@ -37,6 +37,17 @@ const ENGLISH_ALWAYS: readonly string[] = [
   'result.endGame', 'endgame.newGame', 'endgame.title', 'endgame.back',
   'predict.useThis', 'predict.useThisOff', 'info.title',
 
+  // Run 6C's lost-hand flow, under the same standing rule: the SCREEN'S NAME
+  // and the words a thumb lands on stay English. Every question it asks, and
+  // every line explaining what the money did, is Indonesian — including
+  // "You pay", which is a label on a figure rather than a control.
+  'lost.title', 'lost.settle', 'lost.fanUp', 'lost.fanDown',
+
+  // The ghost groups' CLASS words are tile names — Characters, Dots, Bamboo,
+  // Dragon, Wind — and tile names are English in both modes by the standing
+  // rule. The sentence they sit in ("any {klass} pair") is Indonesian.
+  'need.klass.',
+
   // ── ACTIONS ───────────────────────────────────────────────────────────
   // Every word a thumb lands on. A player learns six verbs once and then
   // stops reading them, so switching them buys nothing and costs the

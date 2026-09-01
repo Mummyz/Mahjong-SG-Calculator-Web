@@ -11,7 +11,7 @@ import type {
 } from '../../core/variant'
 import type { HandInput } from '../../core/hand'
 import { SINGAPORE_TILE_SET } from './tileset'
-import { SINGAPORE_DEFAULTS, handSize, score } from './score'
+import { SINGAPORE_DEFAULTS, baseForFan, handSize, score } from './score'
 import { instantPayouts, payments } from './payments'
 
 export const singapore: VariantPlugin = {
@@ -24,6 +24,7 @@ export const singapore: VariantPlugin = {
     'heavenly', 'earthly', 'humanly', 'kongOnKong',
   ],
   handSize,
+  baseForFan,
   score(hand: HandInput, ctx: WinContext, opts?: Partial<RuleOptions>): ScoreResult {
     return score(hand, ctx, opts)
   },
@@ -35,4 +36,7 @@ export const singapore: VariantPlugin = {
   },
 }
 
-export { SINGAPORE_TILE_SET, SINGAPORE_DEFAULTS, handSize, score, payments, instantPayouts }
+export {
+  SINGAPORE_TILE_SET, SINGAPORE_DEFAULTS, baseForFan, handSize, score, payments,
+  instantPayouts,
+}

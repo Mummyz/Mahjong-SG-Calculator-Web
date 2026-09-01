@@ -28,7 +28,13 @@ const TILES = '1s 2s 3s 4s 5s 6s 7s 8s 9s 2s 3s 4s 5s'.split(' ')
 const bare: HandState = { ...EMPTY_HAND, concealed: [...TILES] }
 const haunted: HandState = {
   ...bare,
-  ghost: ['5s', '1m', '1m', '9p', '9p', '9p'],
+  // Run 6C: ghosts are REQUIREMENTS, not tiles. A forced identity and a
+  // generic class, so both shapes are under the guard.
+  ghost: [
+    { count: 1, kind: 'specific', tile: '5s', shape: 'single', klass: 's' },
+    { count: 2, kind: 'specific', tile: '1m', shape: 'pair', klass: 'm' },
+    { count: 3, kind: 'any', tile: '9p', shape: 'pong', klass: 'p' },
+  ],
 }
 
 /** What the engine is actually handed. There is no ghost in this shape. */
@@ -72,10 +78,16 @@ describe('a ghost never reaches the engine', () => {
 
   it('cannot conjure or suppress a concealed kong', () => {
     // Three real 5s plus a GHOST 5s is not a kong, and must not be read as one.
-    const three: HandState = { ...EMPTY_HAND, concealed: ['5s', '5s', '5s'], ghost: ['5s'] }
+    const three: HandState = {
+      ...EMPTY_HAND, concealed: ['5s', '5s', '5s'],
+      ghost: [{ count: 1, kind: 'specific', tile: '5s', shape: 'single', klass: 's' }],
+    }
     expect(concealedKongs(asKeyed(three).concealed)).toEqual([])
     // Four real ones stay a kong however many ghosts sit beside them.
-    const four: HandState = { ...EMPTY_HAND, concealed: ['5s', '5s', '5s', '5s'], ghost: ['5s', '5s'] }
+    const four: HandState = {
+      ...EMPTY_HAND, concealed: ['5s', '5s', '5s', '5s'],
+      ghost: [{ count: 2, kind: 'specific', tile: '5s', shape: 'pair', klass: 's' }],
+    }
     expect(concealedKongs(asKeyed(four).concealed)).toEqual(['5s'])
   })
 })
@@ -97,8 +109,28 @@ describe('only one place in the app reads a ghost', () => {
         readers.push(f.split('/').slice(-2).join('/'))
       }
     }
-    expect([...new Set(readers)], 'a ghost read outside the tray')
-      .toEqual(['screens/HandEntry.tsx'])
+    // TWO readers, and the second one only ever THROWS GHOSTS AWAY. Run 6C
+    // retyped hand.ghost, so restore() has to recognise and drop the old
+    // shape — persistence is the one place that meets a ghost without the
+    // tray around it. It is held to a stricter rule than the tray below.
+    expect([...new Set(readers)].sort(), 'a ghost read outside the tray')
+      .toEqual(['screens/HandEntry.tsx', 'v3/App.tsx'])
+  })
+
+  it('and the persistence layer only ever discards them', () => {
+    const app = readFileSync(
+      fileURLToPath(new URL('./App.tsx', import.meta.url)), 'utf8')
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+    // It may recognise the shape and drop what does not match. It must never
+    // BUILD a requirement, read a tile out of one, or hand one to the engine.
+    expect(app, 'App.tsx builds a ghost').not.toMatch(/\{\s*count:\s*\d/)
+    expect(app, 'App.tsx reads a tile out of a ghost').not.toMatch(/ghost\w*\.tile\b/)
+    expect(app, 'App.tsx imports the requirement type').not.toContain('predict/requirements')
+    // And the tiles it hands the engine are never sourced from a ghost.
+    for (const line of app.split('\n').filter((l) => /\bghost\b/.test(l))) {
+      expect(line, `a ghost reaching the tiles: ${line.trim()}`)
+        .not.toMatch(/concealed:\s*\[?[^)]*ghost|ghost[^)]*=>\s*concealed/)
+    }
   })
 
   it('and nothing outside src/v3 knows the word at all', () => {
@@ -106,5 +138,41 @@ describe('only one place in the app reads a ghost', () => {
       .filter((f) => /\.tsx?$/.test(f) && !f.endsWith('.test.ts'))
       .filter((f) => /\bghost\b/i.test(readFileSync(f, 'utf8')))
     expect(engine, 'the engine has heard of ghosts').toEqual([])
+  })
+})
+
+/**
+ * A GHOST FROM AN OLDER APP IS NOT A GHOST NOW.
+ *
+ * Run 6C retyped hand.ghost from a list of tiles to a list of REQUIREMENTS,
+ * and the old shape is sitting in the storage of anyone who used the app
+ * before this run. Restoring one would draw a bracket with no slots under a
+ * label reading "need.klass.undefined".
+ */
+describe('a ghost saved by an older version is dropped, not restored', () => {
+  const looksLikeRequirement = (g: unknown): boolean =>
+    typeof g === 'object' && g !== null
+    && typeof (g as { count?: unknown }).count === 'number'
+    && typeof (g as { tile?: unknown }).tile === 'string'
+
+  it('rejects the Run 6 shape — bare tile ids', () => {
+    for (const stale of ['5s', '1m', '9p']) {
+      expect(looksLikeRequirement(stale), stale).toBe(false)
+    }
+  })
+
+  it('keeps the Run 6C shape', () => {
+    for (const g of haunted.ghost ?? []) {
+      expect(looksLikeRequirement(g)).toBe(true)
+    }
+  })
+
+  it('the check App.tsx runs is the one tested here', () => {
+    const app = readFileSync(
+      fileURLToPath(new URL('./App.tsx', import.meta.url)), 'utf8')
+    // If the guard moves or loosens, this test is measuring nothing.
+    expect(app).toContain('v.hand.ghost')
+    expect(app).toMatch(/count\?: unknown/)
+    expect(app).toMatch(/tile\?: unknown/)
   })
 })

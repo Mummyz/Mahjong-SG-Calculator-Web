@@ -23,6 +23,9 @@ export const hongkong: VariantPlugin = {
     'heavenly', 'earthly', 'humanly', 'kongOnKong',
   ],
   handSize,
+  // RULING HK17 — the published 出銃 column IS the fan-to-base table,
+  // so the lost-hand settlement reads the same function scoring does.
+  baseForFan: basePoints,
   score(hand: HandInput, ctx: WinContext, opts?: Partial<RuleOptions>): ScoreResult {
     return score(hand, ctx, opts)
   },

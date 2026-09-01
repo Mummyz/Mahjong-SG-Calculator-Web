@@ -3,6 +3,8 @@ import { t, tv } from '../../i18n'
 import { Tile, tileName } from './Tile'
 import { Cuit } from './Brand'
 import { predict, type Candidate } from '../../engine/predict'
+import { candidateRequirements, type Requirement } from '../../engine/predict/requirements'
+import { needLabel } from './needLabel'
 import { isHandPattern } from '../../engine/patterns'
 import { VARIANTS, type VariantId } from '../../engine/variants'
 import type { KeyedHand } from '../../engine/session/table'
@@ -23,6 +25,11 @@ import type { TileId } from '../../engine/core/tiles'
  */
 /** Beyond this, a list of every missing tile is the wall, not a plan. */
 const FAR = 6
+
+/** The mark a generic requirement wears instead of a numbered face. */
+export const SUIT_MARK: Record<string, string> = {
+  m: '萬', p: '筒', s: '索', dragon: '箭', wind: '風', honour: '風箭', tile: '?',
+}
 
 const HINT_TILES: Record<string, TileId[]> = {
   'flush:m': ['1m', '5m', '9m'],
@@ -49,8 +56,8 @@ export function Prediction({
    * by key — or null. PRESENTATION ONLY: see the guard in ghost.test.ts.
    */
   ghost?: string | null
-  /** Show this candidate's missing tiles as ghosts, or clear them. */
-  onGhost?: (key: string | null, tiles: TileId[]) => void
+  /** Show this candidate's REQUIREMENTS as ghost groups, or clear them. */
+  onGhost?: (key: string | null, groups: Requirement[]) => void
 }) {
   const p = useMemo(
     () => (open ? predict(VARIANTS[variant], hand, ctx, { rules }) : null),
@@ -121,7 +128,8 @@ export function Prediction({
           )}
 
           {p.candidates.map((c) => (
-            <CandidateCard key={c.key} variant={variant} c={c} ghost={ghost} onGhost={onGhost} />
+            <CandidateCard key={c.key} variant={variant} c={c} hand={hand}
+              ctx={ctx} rules={rules} ghost={ghost} onGhost={onGhost} />
           ))}
         </div>
       )}
@@ -129,12 +137,33 @@ export function Prediction({
   )
 }
 
-function CandidateCard({ variant, c, ghost, onGhost }: {
+function CandidateCard({ variant, c, hand, ctx, rules, ghost, onGhost }: {
   variant: VariantId
   c: Candidate
+  hand: KeyedHand
+  ctx: Pick<WinContext, 'seat' | 'prevailing'>
+  rules: Partial<RuleOptions>
   ghost?: string | null
-  onGhost?: (key: string | null, tiles: TileId[]) => void
+  onGhost?: (key: string | null, groups: Requirement[]) => void
 }) {
+  /**
+   * WHAT THIS PLAN REQUIRES, not one way of satisfying it. The card and the
+   * tray read the same groups through the same labels, so they can never
+   * describe the same plan differently.
+   */
+  const groups = useMemo(
+    () => candidateRequirements(
+      VARIANTS[variant], c.example,
+      [...hand.concealed, ...hand.melds.flatMap((m) => m.tiles.trim().split(/\s+/))] as TileId[],
+      // THE PLAYER'S OWN CONTEXT. Under a hardcoded East/East probe every plan
+      // whose fan comes from the seat or prevailing wind fell below the
+      // variant minimum and returned no requirements at all — an empty "You
+      // need" list under a "Use this" button that painted nothing.
+      { ...ctx, win: 'selfDraw' }, rules,
+    ),
+    [variant, c.key, hand.concealed.join(','), hand.melds.length,
+     ctx.seat, ctx.prevailing, rules.limit, rules.minTai],
+  )
   const names = [...new Set(c.patterns.filter(isHandPattern))]
   /**
    * A hand is not worth one number. Which of the missing tiles lands last, and
@@ -183,12 +212,22 @@ function CandidateCard({ variant, c, ghost, onGhost }: {
       {c.away <= FAR ? (
         <>
           <p class="cand__label">{t('predict.need')}</p>
-          <div class="cand__tiles">
-            {c.needed.flatMap((n) =>
-              Array.from({ length: n.count }, (_, i) => (
-                <Tile key={`${n.tile}-${i}`} id={n.tile} mini needed />
-              )))}
-          </div>
+          {/* REQUIREMENTS, not a shopping list of specific faces. A plan that
+              needs "any pair in this suit" used to be drawn as two copies of
+              whichever tile the search happened to reach for, which reads as
+              an instruction to go and get that tile. */}
+          <ul class="needlist">
+            {groups.map((g, i) => (
+              <li class="needchip" key={`${g.klass}-${g.shape}-${i}`}>
+                {g.kind === 'specific'
+                  ? <Tile id={g.tile} mini needed />
+                  : <span class="needchip__mark" aria-hidden="true">
+                      {SUIT_MARK[g.klass] ?? '?'}
+                    </span>}
+                <span class="needchip__t">{needLabel(g)}</span>
+              </li>
+            ))}
+          </ul>
         </>
       ) : (
         <p class="cand__label">{t('predict.stillFar', { n: c.away })}</p>
@@ -206,7 +245,7 @@ function CandidateCard({ variant, c, ghost, onGhost }: {
             aria-pressed={ghost === c.key ? 'true' : 'false'}
             onClick={() => onGhost(
               ghost === c.key ? null : c.key,
-              ghost === c.key ? [] : c.needed.flatMap((n) => Array<TileId>(n.count).fill(n.tile)),
+              ghost === c.key ? [] : groups,
             )}>
             {ghost === c.key ? t('predict.useThisOff') : t('predict.useThis')}
           </button>

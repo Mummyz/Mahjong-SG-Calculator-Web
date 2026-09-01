@@ -179,6 +179,10 @@ describe('i18n coverage', () => {
         `hand.declare${k}`, `hand.declare${k}Sub`, `hand.tag${k}`,
       ]),
       ...EXPLAINED.flatMap((f) => [`flag.${f}.sub`, `flag.${f}.detail`]),
+      // The ghost groups' class words, reached through need.klass.${klass} in
+      // needLabel.ts. Enumerated rather than waved through by prefix.
+      ...['m', 'p', 's', 'dragon', 'wind', 'honour', 'tile']
+        .map((k) => `need.klass.${k}`),
     ])
     // A key ending .singapore / .hongkong is reached through tv(), which
     // falls back to the un-suffixed key — so the base key appearing in the
@@ -286,7 +290,16 @@ describe('Bahasa Indonesia', () => {
     // badge sits in the slot the other two cards spend on "Play". Its BLURB
     // is deliberately not among them — the description line translates, the
     // same as the other two cards'.
-    expect(ENGLISH.length, 'the English side changed size').toBe(216)
+    //
+    // 216 -> 220 in Run 6C: the lost-hand flow's screen name and its three
+    // actions — `lost.title`, `lost.settle`, `lost.fanUp`, `lost.fanDown`.
+    // Its seventeen questions, hints and explanations are all translated,
+    // which is where the run's new Indonesian went.
+    // 220 -> 227 in Run 6C: the seven `need.klass.*` words a ghost group
+    // wears — Characters, Dots, Bamboo, Dragon, Wind, Honour, tile. They are
+    // TILE NAMES, which are English in both modes by the standing rule; the
+    // sentence around them ("any {klass} pair") is Indonesian.
+    expect(ENGLISH.length, 'the English side changed size').toBe(227)
   })
 
   it('leaves every word a thumb lands on in English', () => {
@@ -305,7 +318,7 @@ describe('Bahasa Indonesia', () => {
     for (const k of ['hand.needTiles', 'hand.notAHand', 'predict.need',
       'predict.drop', 'predict.awayFan', 'result.payments', 'result.tabThis',
       'result.tabTotal', 'result.youCollect', 'wizard.whichTile',
-      'wizard.howWon', 'hand.threwIt', 'hand.kongDecline', 'info.round',
+      'wizard.howWon', 'hand.threwIt', 'hand.notAHand', 'info.round',
       'pattern.selfDraw', 'pattern.noFlowers', 'pattern.seatWind',
       'pattern.seatFlower', 'flag.heavenly.sub', 'flag.heavenly.detail',
       'table.stakeHint', 'tileinfo.groupCount', 'reject.wrongTileCount']) {

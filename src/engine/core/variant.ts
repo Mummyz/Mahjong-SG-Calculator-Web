@@ -117,6 +117,15 @@ export interface VariantPlugin {
    */
   readonly flags: readonly WinFlag[]
   handSize(kongCount: number): number
+  /**
+   * The money figure a hand of `fan` is settled from, with no tiles involved.
+   *
+   * Needed because a hand SOMEBODY ELSE won is only ever known by its fan —
+   * the app never sees their tiles. Each variant owns its own table (RULING
+   * R11 for Singapore, RULING HK17 for Hong Kong), so the conversion lives
+   * beside the rules it comes from rather than in a settlement helper.
+   */
+  baseForFan(fan: number): number
   score(hand: HandInput, ctx: WinContext, opts?: Partial<RuleOptions>): ScoreResult
   payments(score: ScoreResult, ctx: WinContext, opts?: Partial<RuleOptions>): PaymentBreakdown | null
   /** Instant payouts triggered by the bonus tiles held. Empty where a variant has none. */

@@ -23,6 +23,16 @@ export const SINGAPORE_DEFAULTS: RuleOptions = {
 export const handSize = (kongCount: number): number => 14 + kongCount
 
 /**
+ * RULING R11 — payments are multiples of the agreed 1-tai stake, and the
+ * multiplier doubles with every tai: 1 tai is 1 unit, 3 tai is 4, 5 tai is 16.
+ *
+ * Exported because a hand SOMEBODY ELSE won is known only by its fan, and the
+ * lost-hand settlement has no tiles to score. Scoring calls the same function,
+ * so the two readings of the table can never drift apart.
+ */
+export const baseForFan = (fan: number): number => (fan >= 1 ? 2 ** (fan - 1) : 0)
+
+/**
  * Reporting precedence when two readings score the same. The more specific
  * named hand is the one the player should be told they have.
  */
@@ -295,7 +305,7 @@ export function score(
     rawTai,
     totalTai,
     limitApplied: rawTai > L,
-    base: totalTai >= 1 ? 2 ** (totalTai - 1) : 0,
+    base: baseForFan(totalTai),
     hand,
   }
 }

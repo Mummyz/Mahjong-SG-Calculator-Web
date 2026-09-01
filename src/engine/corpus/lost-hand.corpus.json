@@ -1,0 +1,347 @@
+{
+  "description": "Run 6C — settling a hand SOMEBODY ELSE won. The app never sees the winner's tiles, only who won, how, and for how much. Every figure below is derived from each variant's published payment table applied to that fan, before the settlement code existed. Amounts are in stake units.",
+  "cite": {
+    "singapore": "RULING R11 — payments are multiples of the agreed 1-tai stake, base = 2^(tai−1). Discard win: the discarder pays 2×base, the other two pay base each, winner collects 4×base. Self-draw: all three pay 2×base each, winner collects 6×base. (TT SS-Payment)",
+    "hongkong": "RULING HK4 / HK17 — base is the winner's total on a discard win, read off Family A's 出銃 column: 2^faan to 4 faan, then 16·2^((n−4)/2) even / 24·2^((n−5)/2) odd. Full payment 全銃制: the discarder pays base, the others nothing. Half payment 陪銃制: discarder base/2, others base/4. Self-draw: each of three pays base/2, winner collects 1.5×base.",
+    "minimum": "RULING R14 (Singapore, 1 tai) and RULING HK2 (Hong Kong, 'Minimum three faan, configurable' — 「have at least the minimum faan value agreed in advance (often 3)」). A hand below the minimum is not a legal win, so the fan a player can be asked to enter starts there. The CEILING is the table's agreed limit — RULING HK3 sets the Hong Kong default at 10 and makes it settable, and RULING R14 governs Singapore's."
+  },
+  "entries": [
+    {
+      "id": "lost-sg-selfdraw-1tai",
+      "variant": "singapore",
+      "title": "Singapore, someone self-drew at the 1-tai minimum",
+      "why": "base = 2^0 = 1. Self-draw: every other player pays 2×base = 2, winner collects 6.",
+      "fan": 1,
+      "win": "selfDraw",
+      "winner": 1,
+      "you": 0,
+      "discarder": null,
+      "opts": {
+        "limit": 5,
+        "minTai": 1
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 2,
+          "winnerTotal": 6
+        },
+        "deltas": [
+          -2,
+          6,
+          -2,
+          -2
+        ],
+        "youPay": 2
+      }
+    },
+    {
+      "id": "lost-sg-discard-other",
+      "variant": "singapore",
+      "title": "Singapore, won off ANOTHER player's discard at 3 tai",
+      "why": "base = 2^2 = 4. Discard: the discarder pays 2×base = 8, the other two — including me — pay base = 4 each, winner collects 16.",
+      "fan": 3,
+      "win": "discard",
+      "winner": 1,
+      "you": 0,
+      "discarder": 2,
+      "opts": {
+        "limit": 5,
+        "minTai": 1
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        },
+        "deltas": [
+          -4,
+          16,
+          -8,
+          -4
+        ],
+        "youPay": 4
+      }
+    },
+    {
+      "id": "lost-sg-discard-mine",
+      "variant": "singapore",
+      "title": "Singapore, won off MY discard at 3 tai — I pay double",
+      "why": "Same base of 4, but I am the discarder, so I pay 2×base = 8 and the other two pay 4 each. This is the case the old skip-the-hand flow charged me nothing for.",
+      "fan": 3,
+      "win": "discard",
+      "winner": 1,
+      "you": 0,
+      "discarder": 0,
+      "opts": {
+        "limit": 5,
+        "minTai": 1
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        },
+        "deltas": [
+          -8,
+          16,
+          -4,
+          -4
+        ],
+        "youPay": 8
+      }
+    },
+    {
+      "id": "lost-sg-limit",
+      "variant": "singapore",
+      "title": "Singapore at the agreed 5-tai limit, off my discard",
+      "why": "base = 2^4 = 16. Discarder pays 32, others 16 each, winner collects 64.",
+      "fan": 5,
+      "win": "discard",
+      "winner": 3,
+      "you": 0,
+      "discarder": 0,
+      "opts": {
+        "limit": 5,
+        "minTai": 1
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": 32,
+          "fromEachOther": 16,
+          "winnerTotal": 64
+        },
+        "deltas": [
+          -32,
+          -16,
+          -16,
+          64
+        ],
+        "youPay": 32
+      }
+    },
+    {
+      "id": "lost-hk-full-other-discard",
+      "variant": "hongkong",
+      "title": "Hong Kong FULL payment, won off another player's discard at 3 faan — I PAY NOTHING",
+      "why": "全銃制: the discarder pays the winner's whole total and the other two pay nothing. base = 2^3 = 8. This is a real outcome, and the screen has to be able to say 'You pay nothing' without it looking like a bug.",
+      "fan": 3,
+      "win": "discard",
+      "winner": 1,
+      "you": 0,
+      "discarder": 2,
+      "opts": {
+        "limit": 13,
+        "minTai": 3,
+        "halfPayment": false
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 0,
+          "winnerTotal": 8
+        },
+        "deltas": [
+          0,
+          8,
+          -8,
+          0
+        ],
+        "youPay": 0
+      }
+    },
+    {
+      "id": "lost-hk-full-my-discard",
+      "variant": "hongkong",
+      "title": "Hong Kong FULL payment, won off MY discard at 3 faan — I pay everything",
+      "why": "全銃制 puts the entire loss on the discarder. base = 8, so I pay all 8 and the other two pay nothing.",
+      "fan": 3,
+      "win": "discard",
+      "winner": 1,
+      "you": 0,
+      "discarder": 0,
+      "opts": {
+        "limit": 13,
+        "minTai": 3,
+        "halfPayment": false
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 0,
+          "winnerTotal": 8
+        },
+        "deltas": [
+          -8,
+          8,
+          0,
+          0
+        ],
+        "youPay": 8
+      }
+    },
+    {
+      "id": "lost-hk-half-other-discard",
+      "variant": "hongkong",
+      "title": "Hong Kong HALF payment, won off another player's discard at 4 faan",
+      "why": "陪銃制: base = 2^4 = 16; the discarder pays base/2 = 8 and the other two pay base/4 = 4 each. Winner collects 16.",
+      "fan": 4,
+      "win": "discard",
+      "winner": 1,
+      "you": 0,
+      "discarder": 2,
+      "opts": {
+        "limit": 13,
+        "minTai": 3,
+        "halfPayment": true
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": 8,
+          "fromEachOther": 4,
+          "winnerTotal": 16
+        },
+        "deltas": [
+          -4,
+          16,
+          -8,
+          -4
+        ],
+        "youPay": 4
+      }
+    },
+    {
+      "id": "lost-hk-selfdraw",
+      "variant": "hongkong",
+      "title": "Hong Kong, someone self-drew at 5 faan",
+      "why": "base = 24·2^0 = 24 (the odd branch above 4). Self-draw: each of the three pays base/2 = 12, winner collects 36.",
+      "fan": 5,
+      "win": "selfDraw",
+      "winner": 2,
+      "you": 0,
+      "discarder": null,
+      "opts": {
+        "limit": 13,
+        "minTai": 3,
+        "halfPayment": false
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 12,
+          "winnerTotal": 36
+        },
+        "deltas": [
+          -12,
+          -12,
+          36,
+          -12
+        ],
+        "youPay": 12
+      }
+    },
+    {
+      "id": "lost-hk-minimum",
+      "variant": "hongkong",
+      "title": "Hong Kong at the 3-faan MINIMUM — the lowest fan the flow may accept",
+      "why": "RULING HK2: three faan to win, so the number input cannot go below it. base = 8.",
+      "fan": 3,
+      "win": "selfDraw",
+      "winner": 1,
+      "you": 0,
+      "discarder": null,
+      "opts": {
+        "limit": 13,
+        "minTai": 3,
+        "halfPayment": false
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 4,
+          "winnerTotal": 12
+        },
+        "deltas": [
+          -4,
+          12,
+          -4,
+          -4
+        ],
+        "youPay": 4
+      }
+    },
+    {
+      "id": "lost-hk-cap",
+      "variant": "hongkong",
+      "title": "Hong Kong at a 13-faan cap, self-drawn",
+      "why": "base = 24·2^((13−5)/2) = 24·16 = 384. Self-draw: each pays 192, winner collects 576.",
+      "fan": 13,
+      "win": "selfDraw",
+      "winner": 3,
+      "you": 0,
+      "discarder": null,
+      "opts": {
+        "limit": 13,
+        "minTai": 3,
+        "halfPayment": false
+      },
+      "expect": {
+        "pay": {
+          "fromDiscarder": null,
+          "fromEachOther": 192,
+          "winnerTotal": 576
+        },
+        "deltas": [
+          -192,
+          -192,
+          -192,
+          576
+        ],
+        "youPay": 192
+      }
+    }
+  ],
+  "bounds": {
+    "description": "The fan a player may enter is bounded by the variant's own minimum and the table's agreed limit. Below the minimum is not a legal win; above the limit cannot be paid.",
+    "cases": [
+      {
+        "variant": "singapore",
+        "opts": {
+          "limit": 5,
+          "minTai": 1
+        },
+        "min": 1,
+        "max": 5
+      },
+      {
+        "variant": "singapore",
+        "opts": {
+          "limit": 10,
+          "minTai": 1
+        },
+        "min": 1,
+        "max": 10
+      },
+      {
+        "variant": "hongkong",
+        "opts": {
+          "limit": 13,
+          "minTai": 3
+        },
+        "min": 3,
+        "max": 13
+      },
+      {
+        "variant": "hongkong",
+        "opts": {
+          "limit": 8,
+          "minTai": 3
+        },
+        "min": 3,
+        "max": 8
+      }
+    ]
+  }
+}

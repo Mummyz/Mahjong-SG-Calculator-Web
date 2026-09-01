@@ -1,0 +1,228 @@
+{
+  "description": "Run 6C — resolving four concealed copies by TILE COUNT, not by asking the player. A winning hand is 14 tiles plus one for every kong, so whether a held quad is a concealed kong or a pong-plus-a-floater is decided by how many tiles the hand has. Written from the counting rule before the resolver existed.",
+  "cite": {
+    "singapore": "TT SS-Hand Structure (v1 reference) / TT SS-Eighteen Arhats: each kong adds one tile to the hand, so a winning hand is 14 + (number of kongs) tiles.",
+    "hongkong": "Hong Kong Old Style hand structure: the winning hand is 14 tiles, and each kong draws a replacement so a hand carrying k kongs is 14 + k tiles. The engine's own kong corpus (src/engine/corpus/hongkong/12-kongs.json, 'Hand sizes 14 to 18, and what a kong does and does not change') is written from Family A 香港蔴雀食糊牌型 / Family C 香港麻雀協會 official rules and is the archived source for it. NOT RULING HK1, which fixes the 144-tile SET."
+  },
+  "entries": [
+    {
+      "id": "res-001",
+      "title": "Four 1m at FOURTEEN are a pong and a chow, not a kong",
+      "why": "1m 1m 1m 1m 2m 3m decomposes as 111m + 123m. The hand is already fourteen tiles and already reads, so nothing is a kong and the target stays fourteen. This is the case the Run 6 chip got wrong by growing the target the moment a fourth copy appeared.",
+      "variants": [
+        "singapore",
+        "hongkong"
+      ],
+      "concealed": "1m 1m 1m 1m 2m 3m 4p 5p 6p 7s 8s 9s 5s 5s",
+      "expect": {
+        "length": 14,
+        "min": 14,
+        "max": 15,
+        "target": 14,
+        "readable": true,
+        "readingKongs": []
+      }
+    },
+    {
+      "id": "res-002",
+      "title": "The same four tiles at FIFTEEN can only be a concealed kong",
+      "why": "Fifteen tiles cannot be four sets and a pair. The only reading is 1111m as a concealed kong plus 234m, so the quad IS a kong and the target is fifteen.",
+      "variants": [
+        "singapore",
+        "hongkong"
+      ],
+      "concealed": "1m 1m 1m 1m 2m 3m 4m 4p 5p 6p 7s 8s 9s 5s 5s",
+      "expect": {
+        "length": 15,
+        "min": 14,
+        "max": 15,
+        "target": 15,
+        "readable": true,
+        "readingKongs": [
+          "1m"
+        ]
+      }
+    },
+    {
+      "id": "res-003",
+      "title": "A quad that cannot be a pong plus a floater asks for a fifteenth tile",
+      "why": "At fourteen these tiles do not decompose: 111m leaves a bare 1m that joins nothing. The resolver must therefore raise the target to fifteen so the wall accepts the tile the kong reading needs — the dead end Run 6 existed to remove, reached without ever asking the player.",
+      "variants": [
+        "singapore",
+        "hongkong"
+      ],
+      "concealed": "1m 1m 1m 1m 4p 5p 6p 7s 8s 9s 2p 2p 3s 3s",
+      "expect": {
+        "length": 14,
+        "min": 14,
+        "max": 15,
+        "target": 15,
+        "readable": false,
+        "readingKongs": []
+      }
+    },
+    {
+      "id": "res-004",
+      "title": "Two concealed kongs reach SIXTEEN",
+      "why": "Two quads that both have to be kongs put the hand two tiles above the base fourteen. Both are shown as kongs and the target is sixteen.",
+      "variants": [
+        "singapore",
+        "hongkong"
+      ],
+      "concealed": "1m 1m 1m 1m 9s 9s 9s 9s 2m 3m 4m 4p 5p 6p 5s 5s",
+      "expect": {
+        "length": 16,
+        "min": 14,
+        "max": 16,
+        "target": 16,
+        "readable": true,
+        "readingKongs": [
+          "1m",
+          "9s"
+        ]
+      }
+    },
+    {
+      "id": "res-005",
+      "title": "Fifteen tiles holding TWO quads read exactly one of them as a kong",
+      "why": "One tile above the minimum means exactly one kong. The other quad is a pong plus a tile that joins a chow — 9s 9s 9s as a pong with the fourth 9s in 789s.",
+      "variants": [
+        "singapore",
+        "hongkong"
+      ],
+      "concealed": "1m 1m 1m 1m 9s 9s 9s 9s 7s 8s 4p 5p 6p 5m 5m",
+      "expect": {
+        "length": 15,
+        "min": 14,
+        "max": 16,
+        "target": 15,
+        "readable": true,
+        "readingKongsCount": 1
+      }
+    },
+    {
+      "id": "res-006",
+      "title": "An EXPOSED kong already declared does not make the held quad a kong too",
+      "why": "The declared kong has moved four tiles out of the concealed hand and raised the minimum to fifteen concealed-plus-meld. The remaining held quad is judged on its own by the same counting rule.",
+      "variants": [
+        "singapore",
+        "hongkong"
+      ],
+      "concealed": "1m 1m 1m 1m 2m 3m 7s 8s 9s 5s 5s",
+      "melds": [
+        {
+          "t": "kong",
+          "tiles": "5p 5p 5p 5p",
+          "open": true
+        }
+      ],
+      "expect": {
+        "length": 11,
+        "min": 11,
+        "max": 12,
+        "target": 11,
+        "readable": true,
+        "readingKongs": []
+      }
+    },
+    {
+      "id": "res-007",
+      "title": "Below the minimum, the target is the minimum and nothing is resolved yet",
+      "why": "A hand still being keyed is not a resolution question. Four copies held at eight tiles say nothing about kongs, and the target must not jump ahead of the player.",
+      "variants": [
+        "singapore",
+        "hongkong"
+      ],
+      "concealed": "1m 1m 1m 1m 4p 5p 6p 7s",
+      "expect": {
+        "length": 8,
+        "min": 14,
+        "max": 15,
+        "target": 14,
+        "readable": false,
+        "readingKongs": []
+      }
+    },
+    {
+      "id": "res-008",
+      "title": "Sixteen tiles that are not a hand stop asking for tiles",
+      "why": "At the ceiling the resolver must stop growing the target, so the screen says 'not a hand' rather than asking for a seventeenth tile the wall would refuse.",
+      "variants": [
+        "singapore",
+        "hongkong"
+      ],
+      "concealed": "1m 1m 1m 1m 9s 9s 9s 9s 2m 3m 5m 4p 5p 6p 5s 7s",
+      "expect": {
+        "length": 16,
+        "min": 14,
+        "max": 16,
+        "target": 16,
+        "readable": false
+      }
+    }
+  ],
+  "keyOrder": {
+    "description": "THE SAME TILES, KEYED IN ANY ORDER, MUST RESOLVE AND SCORE IDENTICALLY. A player keys a hand tile by tile in whatever order they pick it up; the resolver reads a multiset and must never depend on the sequence of taps.",
+    "cases": [
+      {
+        "id": "order-001",
+        "title": "One concealed kong at fifteen",
+        "variants": [
+          "singapore",
+          "hongkong"
+        ],
+        "ctx": {
+          "seat": "E",
+          "prevailing": "E",
+          "win": "selfDraw",
+          "winningTile": "4m"
+        },
+        "orders": {
+          "kongFirst": "1m 1m 1m 1m 2m 3m 4m 4p 5p 6p 7s 8s 9s 5s 5s",
+          "kongLast": "2m 3m 4m 4p 5p 6p 7s 8s 9s 5s 5s 1m 1m 1m 1m",
+          "kongSplit": "1m 2m 3m 1m 4m 4p 1m 5p 6p 1m 7s 8s 9s 5s 5s",
+          "scattered": "5s 1m 4p 2m 1m 5p 3m 1m 6p 4m 1m 7s 5s 8s 9s"
+        }
+      },
+      {
+        "id": "order-002",
+        "title": "Two concealed kongs at sixteen",
+        "variants": [
+          "singapore",
+          "hongkong"
+        ],
+        "ctx": {
+          "seat": "E",
+          "prevailing": "E",
+          "win": "selfDraw",
+          "winningTile": "5s"
+        },
+        "orders": {
+          "kongFirst": "1m 1m 1m 1m 9s 9s 9s 9s 2m 3m 4m 4p 5p 6p 5s 5s",
+          "kongLast": "2m 3m 4m 4p 5p 6p 5s 5s 1m 1m 1m 1m 9s 9s 9s 9s",
+          "interleaved": "1m 9s 1m 9s 1m 9s 1m 9s 2m 3m 4m 4p 5p 6p 5s 5s",
+          "scattered": "2m 1m 9s 3m 1m 9s 4m 1m 9s 4p 1m 9s 5p 6p 5s 5s"
+        }
+      },
+      {
+        "id": "order-003",
+        "title": "Four copies that are NOT a kong, at fourteen",
+        "variants": [
+          "singapore",
+          "hongkong"
+        ],
+        "ctx": {
+          "seat": "E",
+          "prevailing": "E",
+          "win": "selfDraw",
+          "winningTile": "5s"
+        },
+        "orders": {
+          "quadFirst": "1m 1m 1m 1m 2m 3m 4p 5p 6p 7s 8s 9s 5s 5s",
+          "quadLast": "2m 3m 4p 5p 6p 7s 8s 9s 5s 5s 1m 1m 1m 1m",
+          "scattered": "2m 1m 4p 1m 5p 3m 1m 6p 7s 1m 8s 9s 5s 5s"
+        }
+      }
+    ]
+  }
+}

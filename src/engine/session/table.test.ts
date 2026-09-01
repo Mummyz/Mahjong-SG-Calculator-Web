@@ -12,6 +12,7 @@ import {
   isDealer, legalNextTiles, newTable, playerOnWind, prevailingWind, seatWindOf,
   handIsComplete, handIsReadable, scoreKeyedHand, submissionMatchesHand, tilesRemaining,
   yourSeat, concealedTargets, settleHand, runningTotal, roundNumber, dealInRound,
+  type HandLedger,
 } from './table'
 import { hongkong, singapore } from '../variants'
 
@@ -653,5 +654,53 @@ describe('the round is a round', () => {
     const seen: number[] = []
     for (let i = 0; i < 5; i++) { seen.push(dealInRound(t)); t = advanceTable(t, (t.dealerIndex + 1) % 4) }
     expect(seen).toEqual([1, 2, 3, 4, 1])
+  })
+})
+
+/**
+ * ZERO-SUM IS NOW ENFORCED HERE AND NOWHERE ELSE.
+ *
+ * Run 6C took the "Balances to zero." band off both ledger tabs: per hand it
+ * repeated the four rows above it, and cumulatively it displaced the one
+ * figure a player came to the running total for. The property did not go
+ * anywhere — it is structural in settleHand, which MOVES units between
+ * players rather than writing them — but with the display gone this file is
+ * the only thing left that would notice if it broke.
+ */
+describe('money is conserved, with nothing on screen to prove it', () => {
+  const pay = (fromDiscarder: number | null, fromEachOther: number, winnerTotal: number) =>
+    ({ fromDiscarder, fromEachOther, winnerTotal })
+
+  it('every settlement shape sums to zero', () => {
+    const shapes = [
+      { pay: pay(null, 32, 96), win: 'selfDraw' as const, discarderIndex: null },
+      { pay: pay(20, 10, 40), win: 'discard' as const, discarderIndex: 2 },
+      { pay: pay(96, 0, 96), win: 'discard' as const, discarderIndex: 1 },
+      { pay: pay(48, 24, 96), win: 'discard' as const, discarderIndex: 3 },
+      { pay: pay(null, 1, 3), win: 'selfDraw' as const, discarderIndex: null },
+    ]
+    for (const s of shapes) {
+      for (let winner = 0; winner < 4; winner++) {
+        if (s.discarderIndex === winner) continue
+        const d = settleHand({ playerCount: 4, winnerIndex: winner, ...s })
+        expect(d.reduce((a, b) => a + b, 0), JSON.stringify({ winner, ...s })).toBe(0)
+        expect(d).toHaveLength(4)
+        expect(d[winner]).toBeGreaterThan(0)
+      }
+    }
+  })
+
+  it('a whole night of hands still sums to zero', () => {
+    const history: HandLedger[] = [
+      { handNumber: 1, round: 1, winnerIndex: 0,
+        deltas: settleHand({ playerCount: 4, winnerIndex: 0, pay: pay(20, 10, 40), win: 'discard', discarderIndex: 2 }) },
+      { handNumber: 2, round: 1, winnerIndex: 3,
+        deltas: settleHand({ playerCount: 4, winnerIndex: 3, pay: pay(null, 32, 96), win: 'selfDraw', discarderIndex: null }) },
+      { handNumber: 3, round: 1, winnerIndex: 1,
+        deltas: settleHand({ playerCount: 4, winnerIndex: 1, pay: pay(96, 0, 96), win: 'discard', discarderIndex: 0 }) },
+    ]
+    const totals = runningTotal(history, 4)
+    expect(totals).toHaveLength(4)
+    expect(totals.reduce((a, b) => a + b, 0)).toBe(0)
   })
 })
